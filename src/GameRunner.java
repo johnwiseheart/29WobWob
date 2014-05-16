@@ -13,11 +13,11 @@ public class GameRunner {
     
     private void runGame() {
         MazeDisplay mazeDisplay = new MazeDisplay();
-        gameState = new GameState(23, 31, mazeDisplay);
+        gameState = new GameState(31, 31, mazeDisplay);
         JFrame frame = new JFrame();
         frame.add(mazeDisplay);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(810, 825);
+        frame.setSize(800, 800);
         frame.setVisible(true);
         while (true) {
             try {

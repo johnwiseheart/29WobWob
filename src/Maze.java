@@ -23,6 +23,13 @@ public class Maze {
     private int width;
     private int height;
     
+    public static final int E1 = 8;
+    public static final int P4 = 7;
+    public static final int P3 = 6;
+    public static final int P2 = 5;
+    public static final int P1 = 4;
+    public static final int KEY = 3;
+    public static final int DOOR = 2;
     public static final int WALL = 1;
     public static final int SPACE = 0;
 }
