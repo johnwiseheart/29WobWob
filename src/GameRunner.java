@@ -1,4 +1,9 @@
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
+
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 
 public class GameRunner {
@@ -14,11 +19,12 @@ public class GameRunner {
     private void runGame() {
         MazeDisplay mazeDisplay = new MazeDisplay();
         gameState = new GameState(31, 31, mazeDisplay);
-        JFrame frame = new JFrame();
+        GameFrame frame = new GameFrame();
         frame.add(mazeDisplay);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 800);
         frame.setVisible(true);
+ 
         while (true) {
             try {
                 Thread.sleep(100);
@@ -27,6 +33,35 @@ public class GameRunner {
                 e.printStackTrace();
             }
             gameState.movePlayer(GameState.UP);
+        }
+    }
+    
+    public class GameFrame extends JFrame {    
+        private class MyDispatcher implements KeyEventDispatcher {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent e) {
+                if (e.getID() == KeyEvent.KEY_PRESSED) {
+                	switch (e.getKeyCode()) {
+                		case KeyEvent.VK_LEFT:
+                			System.out.println("Left");
+                			break;
+                		case KeyEvent.VK_RIGHT:
+                			System.out.println("Right");
+                			break;
+                		case KeyEvent.VK_UP:
+                			System.out.println("Up");
+                			break;
+                		case KeyEvent.VK_DOWN:
+                			System.out.println("Down");
+                			break;
+                	} 
+                }
+                return false;
+            }
+        }
+        public GameFrame() {
+            KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+            manager.addKeyEventDispatcher(new MyDispatcher());
         }
     }
     

@@ -59,6 +59,7 @@ public class MazeDisplay extends JComponent {
         repaint();
     }
     
+    // stolen off the internet we need to rewrite this
     public static BufferedImage resizeImage(final Image image, int width, int height) {
         final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D graphics2D = bufferedImage.createGraphics();
