@@ -8,12 +8,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Observer;
+import java.util.Observable;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
 
-public class MazeDisplay extends JComponent {
+public class MazeDisplay extends JComponent implements Observer {
     
     public MazeDisplay() {
         displayMaze = null;
@@ -54,10 +56,19 @@ public class MazeDisplay extends JComponent {
         }
     }
     
+    // Part of the Observer pattern. This method is called when an object being observed notify's it has been changed.
+    public void update(Observable o, Object arg) {
+    	Maze newMaze = (Maze) arg;
+    	displayMaze = newMaze;
+    	repaint();
+    }
+    
+    /*
     public void updateDisplay(Maze newMaze) {
         displayMaze = newMaze;
         repaint();
     }
+    */
     
     // stolen off the internet we need to rewrite this
     public static BufferedImage resizeImage(final Image image, int width, int height) {
