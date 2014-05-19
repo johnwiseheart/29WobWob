@@ -54,6 +54,11 @@ public class MazeDisplay extends JComponent implements Observer {
         	images.put(Maze.WALL_T_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE))));
         	images.put(Maze.WALL_T_E, rotateCw(resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE)));
         	images.put(Maze.WALL_T_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(Maze.WALL_END_N, resizeImage(ImageIO.read(new File("wall_end.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_END_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_end.png")),CELL_SIZE, CELL_SIZE))));
+        	images.put(Maze.WALL_END_E, rotateCw(resizeImage(ImageIO.read(new File("wall_end.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(Maze.WALL_END_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_end.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(Maze.WALL_BLOCK, resizeImage(ImageIO.read(new File("wall_block.png")),CELL_SIZE, CELL_SIZE));
         	
     
         } catch (IOException e) {

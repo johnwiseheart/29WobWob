@@ -46,5 +46,11 @@ public class Maze {
     public static final int WALL_T_S = 28;
     public static final int WALL_T_E = 29;
     public static final int WALL_T_W = 30;
+    public static final int WALL_END_N = 31;
+    public static final int WALL_END_S = 32;
+    public static final int WALL_END_E = 33;
+    public static final int WALL_END_W = 34;
+    public static final int WALL_BLOCK = 35;
+    
     
 }
