@@ -28,7 +28,8 @@ public class MazeDisplay extends JComponent implements Observer {
                 RenderingHints.VALUE_ANTIALIAS_ON);
         ;
         super.paintComponent(g);
-        
+
+        g2d.setBackground(Color.black);
         
         HashMap<Integer, BufferedImage> images = new HashMap<Integer, BufferedImage>();
         try {

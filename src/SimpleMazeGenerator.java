@@ -90,25 +90,33 @@ public class SimpleMazeGenerator implements MazeGenerator {
         // Assign Walls
         for (int x=1; x<width - 1; x++) {
             for (int y=1; y<height - 1; y++) {
-            	if (grid[x][y] == Maze.WALL) {
-            		if (grid[x - 1][y] == Maze.WALL && grid[x + 1][y] == Maze.WALL) {
-            			if (grid[x][y - 1] == Maze.WALL && grid[x][y + 1] == Maze.WALL) {
+            	if (grid[x][y] != Maze.SPACE) {
+            		if (grid[x - 1][y] != Maze.SPACE && grid[x + 1][y] != Maze.SPACE) {
+            			if (grid[x][y - 1] != Maze.SPACE && grid[x][y + 1] != Maze.SPACE) {
             				grid[x][y] = Maze.WALL_CROSS;
-            			} else if (grid[x][y + 1] == Maze.WALL) {
-            				grid[x][y] = Maze.WALL_T_N;
-            			} else if (grid[x][y - 1] == Maze.WALL) {
+            			} else if (grid[x][y + 1] != Maze.SPACE) {
             				grid[x][y] = Maze.WALL_T_S;
+            			} else if (grid[x][y - 1] != Maze.SPACE) {
+            				grid[x][y] = Maze.WALL_T_N;
             			} else {
             				grid[x][y] = Maze.WALL_HOR;
             			}
-            		} else if (grid[x][y - 1] == Maze.WALL && grid[x][y + 1] == Maze.WALL) {
-            			if (grid[x + 1][y] == Maze.WALL) {
+            		} else if (grid[x][y - 1] != Maze.SPACE && grid[x][y + 1] != Maze.SPACE) {
+            			if (grid[x + 1][y] != Maze.SPACE) {
             				grid[x][y] = Maze.WALL_T_E;
-            			} else if (grid[x - 1][y] == Maze.WALL) {
+            			} else if (grid[x - 1][y] != Maze.SPACE) {
             				grid[x][y] = Maze.WALL_T_W;
             			} else {
             				grid[x][y] = Maze.WALL_VERT;
             			}
+            		} else if (grid[x][y - 1] != Maze.SPACE && grid[x - 1][y] != Maze.SPACE) {
+            			grid[x][y] = Maze.WALL_CORN_SE;
+            		} else if (grid[x][y - 1] != Maze.SPACE && grid[x + 1][y] != Maze.SPACE) {
+            			grid[x][y] = Maze.WALL_CORN_SW;
+            		} else if (grid[x][y + 1] != Maze.SPACE && grid[x - 1][y] != Maze.SPACE) {
+            			grid[x][y] = Maze.WALL_CORN_NE;
+            		} else if (grid[x][y + 1] != Maze.SPACE && grid[x + 1][y] != Maze.SPACE) {
+            			grid[x][y] = Maze.WALL_CORN_NW;
             		}
             	}
             }
