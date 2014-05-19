@@ -1,13 +1,19 @@
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
 
 
 public class GameRunner {
-
+	GameFrame frame;
+	JPanel buttonPanel;
+	
     private GameRunner() {
         gameState = null;
     }
@@ -17,25 +23,28 @@ public class GameRunner {
     }
     
     private void runGame() {
+    	
+    	GridBagLayout gbl = new GridBagLayout();
+    	
+    	buttonPanel = new JPanel();
+    	JButton button = new JButton("Play");
+    	buttonPanel.add(button);    	
+    	
+    	frame = new GameFrame();
+        frame.setBackground(Color.black);
+        //frame.setLayout(new FlowLayout());
+        
+        
         MazeDisplay mazeDisplay = new MazeDisplay();
-        gameState = new GameState(31, 31, mazeDisplay);
-        GameFrame frame = new GameFrame();
+        gameState = new GameState(31, 23, mazeDisplay);
+        
+        //frame.add(buttonPanel);
         frame.add(mazeDisplay);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 800);
+        frame.setSize(800, 600);
         frame.setVisible(true);
  
         //press on the keyboard now
-        
-//        while (true) {
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//            gameState.movePlayer(GameState.UP);
-//        }
     }
     
     public class GameFrame extends JFrame {    

@@ -101,13 +101,13 @@ public class SimpleMazeGenerator implements MazeGenerator {
             		if(randomInt==3)
             			grid[x][y] = Maze.P1;
             		if(randomInt==4)
-            			grid[x][y] = Maze.P2;
-            		if(randomInt==5)
-            			grid[x][y] = Maze.P3;
-            		if(randomInt==6)
-            			grid[x][y] = Maze.P4;
-            		if(randomInt==7)
             			grid[x][y] = Maze.E1;
+            		if(randomInt==5)
+            			grid[x][y] = Maze.E2;
+            		if(randomInt==6)
+            			grid[x][y] = Maze.E3;
+            		if(randomInt==7)
+            			grid[x][y] = Maze.E4;
             	}
             }
         }
