@@ -1,5 +1,5 @@
 
-public class Maze {
+public class Maze implements Cloneable{
     
     public Maze(int width, int height, MazeGenerator mazeGenerator) {
         this.width = width;
@@ -11,12 +11,31 @@ public class Maze {
         return grid[x][y];
     }
     
+    public void setCell(int x, int y, int cell) {
+        grid[x][y] = cell;
+    }
+    
     public int getWidth() {
         return width;
     }
     
     public int getHeight() {
         return height;
+    }
+    
+    public Object clone() {
+        try {
+            Maze maze = (Maze)super.clone();
+            maze.grid = new int[width][height];
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    maze.grid[x][y] = grid[x][y];
+                }
+            }
+            return maze;
+        } catch (CloneNotSupportedException e) {
+            return null; // Doesn't happen.
+        }
     }
     
     private int[][] grid;

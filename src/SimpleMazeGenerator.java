@@ -4,7 +4,7 @@ import java.util.Random;
 
 
 public class SimpleMazeGenerator implements MazeGenerator {
-    // This code sucks so much ass.
+    // TODO: This code sucks so much ass.
     
     public int[][] generateMaze(int width, int height) {
         int[][] grid = new int[width][height];
@@ -88,7 +88,7 @@ public class SimpleMazeGenerator implements MazeGenerator {
         }
         
         
-        // actually add keys properly
+        // TODO: Actually add keys properly.
         for (int x=0; x<width; x++) {
             for (int y=0; y<height; y++) {
             	if(grid[x][y] == Maze.SPACE) {

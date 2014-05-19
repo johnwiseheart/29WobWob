@@ -1,6 +1,4 @@
 import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
@@ -8,7 +6,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 
 public class GameRunner {
 	GameFrame frame;
@@ -23,9 +20,6 @@ public class GameRunner {
     }
     
     private void runGame() {
-    	
-    	GridBagLayout gbl = new GridBagLayout();
-    	
     	buttonPanel = new JPanel();
     	JButton button = new JButton("Play");
     	buttonPanel.add(button);    	
@@ -33,7 +27,6 @@ public class GameRunner {
     	frame = new GameFrame();
         frame.setBackground(Color.black);
         //frame.setLayout(new FlowLayout());
-        
         
         MazeDisplay mazeDisplay = new MazeDisplay();
         gameState = new GameState(31, 23, mazeDisplay);
@@ -55,19 +48,19 @@ public class GameRunner {
                 	switch (e.getKeyCode()) {
                 		case KeyEvent.VK_LEFT:
                 			System.out.println("Left");
-                			gameState.movePlayer(GameState.LEFT);
+                			gameState.movePlayer(-1, 0);
                 			break;
                 		case KeyEvent.VK_RIGHT:
                 			System.out.println("Right");
-                			gameState.movePlayer(GameState.RIGHT);
+                			gameState.movePlayer(1, 0);
                 			break;
                 		case KeyEvent.VK_UP:
                 			System.out.println("Up");
-                			gameState.movePlayer(GameState.UP);
+                			gameState.movePlayer(0, -1);
                 			break;
                 		case KeyEvent.VK_DOWN:
                 			System.out.println("Down");
-                			gameState.movePlayer(GameState.DOWN);
+                			gameState.movePlayer(0, 1);
                 			break;
                 	} 
                 }
