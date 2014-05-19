@@ -95,7 +95,7 @@ public class SimpleMazeGenerator implements MazeGenerator {
             		Random randomGenerator = new Random();
             		int randomInt = randomGenerator.nextInt(200);
             		if(randomInt==1 || randomInt==50)
-            			grid[x][y] = Maze.KEY;
+            			grid[x][y] = Maze.WALL_VERT;
             		if(randomInt==2)
             			grid[x][y] = Maze.DOOR;
             		if(randomInt==3)
