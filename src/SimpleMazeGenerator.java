@@ -176,8 +176,6 @@ public class SimpleMazeGenerator implements MazeGenerator {
             			grid[x][y] = Maze.KEY;
             		if(randomInt==2)
             			grid[x][y] = Maze.DOOR;
-            		if(randomInt==3)
-            			grid[x][y] = Maze.P1;
             		if(randomInt==4)
             			grid[x][y] = Maze.E1;
             		if(randomInt==5)

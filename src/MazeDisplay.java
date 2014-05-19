@@ -1,4 +1,5 @@
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -24,11 +25,10 @@ public class MazeDisplay extends JComponent implements Observer {
     public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        ;
+                             RenderingHints.VALUE_ANTIALIAS_ON);
         super.paintComponent(g);
 
-        g2d.setBackground(Color.black);
+        g2d.setBackground(Color.BLACK);
         
         HashMap<Integer, BufferedImage> images = new HashMap<Integer, BufferedImage>();
         try {
@@ -86,7 +86,7 @@ public class MazeDisplay extends JComponent implements Observer {
     }
     */
     
-    // stolen off the internet we need to rewrite this
+    // TODO: stolen off the internet we need to rewrite this
     public static BufferedImage resizeImage( Image image, int width, int height) {
 
     	final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

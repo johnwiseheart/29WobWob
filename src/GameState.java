@@ -13,7 +13,7 @@ public class GameState extends Observable{
     }
     
     public void movePlayer(int x, int y) {
-        if (maze.getCell(player.getX()+x, player.getY()+y) != Maze.WALL) {
+        if (maze.getCell(player.getX()+x, player.getY()+y) < Maze.WALL_VERT) {
             player.move(x, y);
             updateDisplay();
         }
