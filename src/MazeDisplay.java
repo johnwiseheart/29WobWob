@@ -40,6 +40,31 @@ public class MazeDisplay extends JComponent implements Observer {
         	images.put(Maze.E2, resizeImage(ImageIO.read(new File("e2.png")),CELL_SIZE, CELL_SIZE));
         	images.put(Maze.E3, resizeImage(ImageIO.read(new File("e3.png")),CELL_SIZE, CELL_SIZE));
         	images.put(Maze.E4, resizeImage(ImageIO.read(new File("e4.png")),CELL_SIZE, CELL_SIZE));
+        	
+        	images.put(Maze.WALL_VERT, resizeImage(ImageIO.read(new File("wall_straight.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_HOR, resizeImage(ImageIO.read(new File("wall_straight.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_CORN_NW, resizeImage(ImageIO.read(new File("wall_corner.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_CORN_NE, resizeImage(ImageIO.read(new File("wall_corner.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_CORN_SW, resizeImage(ImageIO.read(new File("wall_corner.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_CORN_SE, resizeImage(ImageIO.read(new File("wall_corner.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_CROSS, resizeImage(ImageIO.read(new File("wall_cross.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_T_N, resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_T_S, resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_T_E, resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_T_W, resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE));
+        	
+        	
+//            public static final int WALL_CORN_VERT = 20;
+//            public static final int WALL_CORN_HOR = 21;
+//            public static final int WALL_CORN_NW = 22;
+//            public static final int WALL_CORN_NE = 23;
+//            public static final int WALL_CORN_SW = 24;
+//            public static final int WALL_CORN_SE = 25;
+//            public static final int WALL_CROSS = 26;
+//            public static final int WALL_T_N = 27;
+//            public static final int WALL_T_S = 28;
+//            public static final int WALL_T_E = 29;
+//            public static final int WALL_T_W = 30;
         } catch (IOException e) {
         }
         
