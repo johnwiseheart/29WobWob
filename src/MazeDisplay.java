@@ -1,6 +1,7 @@
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -26,11 +27,12 @@ public class MazeDisplay extends JComponent implements Observer {
                 RenderingHints.VALUE_ANTIALIAS_ON);
         ;
         super.paintComponent(g);
-        
+
+        g2d.setBackground(Color.black);
         
         HashMap<Integer, BufferedImage> images = new HashMap<Integer, BufferedImage>();
         try {
-        	images.put(Maze.WALL, resizeImage(ImageIO.read(new File("wall.png")),CELL_SIZE, CELL_SIZE));
+        	//images.put(Maze.WALL, resizeImage(ImageIO.read(new File("wall.png")),CELL_SIZE, CELL_SIZE));
         	images.put(Maze.SPACE, resizeImage(ImageIO.read(new File("dot.png")),CELL_SIZE, CELL_SIZE));
         	images.put(Maze.KEY, resizeImage(ImageIO.read(new File("key.png")),CELL_SIZE, CELL_SIZE));
         	images.put(Maze.DOOR, resizeImage(ImageIO.read(new File("door.png")),CELL_SIZE, CELL_SIZE));
@@ -39,6 +41,25 @@ public class MazeDisplay extends JComponent implements Observer {
         	images.put(Maze.E2, resizeImage(ImageIO.read(new File("e2.png")),CELL_SIZE, CELL_SIZE));
         	images.put(Maze.E3, resizeImage(ImageIO.read(new File("e3.png")),CELL_SIZE, CELL_SIZE));
         	images.put(Maze.E4, resizeImage(ImageIO.read(new File("e4.png")),CELL_SIZE, CELL_SIZE));
+        	
+        	images.put(Maze.WALL_VERT, resizeImage(ImageIO.read(new File("wall_straight.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_HOR, rotateCw(resizeImage(ImageIO.read(new File("wall_straight.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(Maze.WALL_CORN_NW, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_corner.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(Maze.WALL_CORN_NE, resizeImage(ImageIO.read(new File("wall_corner.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_CORN_SW, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_corner.png")),CELL_SIZE, CELL_SIZE))));
+        	images.put(Maze.WALL_CORN_SE, rotateCw(resizeImage(ImageIO.read(new File("wall_corner.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(Maze.WALL_CROSS, resizeImage(ImageIO.read(new File("wall_cross.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_T_N, resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_T_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE))));
+        	images.put(Maze.WALL_T_E, rotateCw(resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(Maze.WALL_T_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(Maze.WALL_END_N, resizeImage(ImageIO.read(new File("wall_end.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_END_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_end.png")),CELL_SIZE, CELL_SIZE))));
+        	images.put(Maze.WALL_END_E, rotateCw(resizeImage(ImageIO.read(new File("wall_end.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(Maze.WALL_END_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_end.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(Maze.WALL_BLOCK, resizeImage(ImageIO.read(new File("wall_block.png")),CELL_SIZE, CELL_SIZE));
+        	
+    
         } catch (IOException e) {
         }
         
@@ -73,8 +94,21 @@ public class MazeDisplay extends JComponent implements Observer {
         graphics2D.setComposite(AlphaComposite.Src);
         graphics2D.drawImage(image, 0, 0, width, height, null);
         graphics2D.dispose();
- 
+        
         return bufferedImage;
+    }
+ // stolen off the internet we need to rewrite this
+    public static BufferedImage rotateCw( BufferedImage img )
+    {
+		int			width  = img.getWidth();
+		int			height = img.getHeight();
+		BufferedImage	newImage = new BufferedImage( height, width, img.getType() );
+
+		for( int i=0 ; i < width ; i++ )
+			for( int j=0 ; j < height ; j++ )
+				newImage.setRGB( height-1-j, i, img.getRGB(i,j) );
+
+		return newImage;
     }
     
     private Maze displayMaze;

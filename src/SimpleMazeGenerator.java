@@ -86,6 +86,84 @@ public class SimpleMazeGenerator implements MazeGenerator {
                 }
             }
         }
+
+        // Assign Walls IT MAKES MY EYES BLEED!!!!
+        for (int x=1; x<width - 1; x++) {
+            for (int y=1; y<height - 1; y++) {
+            	if (grid[x][y] != Maze.SPACE) {
+            		if (grid[x - 1][y] != Maze.SPACE && grid[x + 1][y] != Maze.SPACE) {
+            			if (grid[x][y - 1] != Maze.SPACE && grid[x][y + 1] != Maze.SPACE) {
+            				grid[x][y] = Maze.WALL_CROSS;
+            			} else if (grid[x][y + 1] != Maze.SPACE) {
+            				grid[x][y] = Maze.WALL_T_S;
+            			} else if (grid[x][y - 1] != Maze.SPACE) {
+            				grid[x][y] = Maze.WALL_T_N;
+            			} else {
+            				grid[x][y] = Maze.WALL_HOR;
+            			}
+            		} else if (grid[x][y - 1] != Maze.SPACE && grid[x][y + 1] != Maze.SPACE) {
+            			if (grid[x + 1][y] != Maze.SPACE) {
+            				grid[x][y] = Maze.WALL_T_E;
+            			} else if (grid[x - 1][y] != Maze.SPACE) {
+            				grid[x][y] = Maze.WALL_T_W;
+            			} else {
+            				grid[x][y] = Maze.WALL_VERT;
+            			}
+            		} else if (grid[x][y - 1] != Maze.SPACE && grid[x - 1][y] != Maze.SPACE) {
+            			grid[x][y] = Maze.WALL_CORN_SE;
+            		} else if (grid[x][y - 1] != Maze.SPACE && grid[x + 1][y] != Maze.SPACE) {
+            			grid[x][y] = Maze.WALL_CORN_SW;
+            		} else if (grid[x][y + 1] != Maze.SPACE && grid[x - 1][y] != Maze.SPACE) {
+            			grid[x][y] = Maze.WALL_CORN_NE;
+            		} else if (grid[x][y + 1] != Maze.SPACE && grid[x + 1][y] != Maze.SPACE) {
+            			grid[x][y] = Maze.WALL_CORN_NW;
+            		} else if (grid[x][y + 1] != Maze.SPACE) {
+            			grid[x][y] = Maze.WALL_END_N;
+            		} else if (grid[x][y - 1] != Maze.SPACE) {
+            			grid[x][y] = Maze.WALL_END_S;
+            		} else if (grid[x + 1][y] != Maze.SPACE) {
+            			grid[x][y] = Maze.WALL_END_W;
+            		} else if (grid[x - 1][y] != Maze.SPACE) {
+            			grid[x][y] = Maze.WALL_END_E;
+            		} else {
+            			grid[x][y] = Maze.WALL_BLOCK;
+            		}
+            	}
+            }
+        }
+        
+        for (int x=0; x < width; x++) {
+        	if (grid[x][1] != Maze.SPACE) {
+        		grid[x][0] = Maze.WALL_T_S;
+        	} else {
+        		grid[x][0] = Maze.WALL_HOR;
+        	}
+        }    
+        for (int x=0; x < width; x++) {
+        	if (grid[x][height - 2] != Maze.SPACE) {
+        		grid[x][height - 1] = Maze.WALL_T_N;
+        	} else {
+        		grid[x][height - 1] = Maze.WALL_HOR;
+        	}
+        }
+        for (int y=0; y < height; y++) {
+        	if (grid[1][y] != Maze.SPACE) {
+        		grid[0][y] = Maze.WALL_T_E;
+        	} else {
+        		grid[0][y] = Maze.WALL_VERT;
+        	}
+        }
+        for (int y=0; y < height; y++) {
+        	if (grid[width - 2][y] != Maze.SPACE) {
+        		grid[width - 1][y] = Maze.WALL_T_W;
+        	} else {
+        		grid[width - 1][y] = Maze.WALL_VERT;
+        	}
+        }
+        grid[0][0] = Maze.WALL_CORN_NW;
+        grid[0][height - 1] = Maze.WALL_CORN_SW;
+        grid[width - 1][0] = Maze.WALL_CORN_NE;
+        grid[width - 1][height - 1] = Maze.WALL_CORN_SE;
         
         
         // TODO: Actually add keys properly.
@@ -111,6 +189,7 @@ public class SimpleMazeGenerator implements MazeGenerator {
             	}
             }
         }
+        
         return grid;
     }
 
