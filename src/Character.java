@@ -5,11 +5,6 @@ public abstract class Character {
         this.y = y;
     }
     
-    public void moveBy(int x, int y) {
-        this.x += x;
-        this.y += y;
-    }
-    
     public void setX(int x) {
         this.x = x;
     }
@@ -31,6 +26,6 @@ public abstract class Character {
         return y;
     }
     
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
 }

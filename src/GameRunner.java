@@ -37,7 +37,16 @@ public class GameRunner {
         frame.setSize(800, 600);
         frame.setVisible(true);
  
-        //press on the keyboard now
+        // Game update loop.
+        while (true) {
+            gameState.tickPlayer();
+            gameState.tickEnemies();
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                // Doesn't happen.
+            }
+        }
     }
     
     public class GameFrame extends JFrame {    
@@ -48,19 +57,19 @@ public class GameRunner {
                 	switch (e.getKeyCode()) {
                 		case KeyEvent.VK_LEFT:
                 			System.out.println("Left");
-                			gameState.movePlayer(-1, 0);
+                			gameState.setPlayerV(-1, 0);
                 			break;
                 		case KeyEvent.VK_RIGHT:
                 			System.out.println("Right");
-                			gameState.movePlayer(1, 0);
+                			gameState.setPlayerV(1, 0);
                 			break;
                 		case KeyEvent.VK_UP:
                 			System.out.println("Up");
-                			gameState.movePlayer(0, -1);
+                			gameState.setPlayerV(0, -1);
                 			break;
                 		case KeyEvent.VK_DOWN:
                 			System.out.println("Down");
-                			gameState.movePlayer(0, 1);
+                			gameState.setPlayerV(0, 1);
                 			break;
                 	} 
                 }

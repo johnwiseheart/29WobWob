@@ -12,12 +12,22 @@ public class GameState extends Observable{
         updateDisplay();
     }
     
-    public void movePlayer(int x, int y) {
-        if (maze.getCell(player.getX()+x, player.getY()+y) < Maze.WALL_VERT) {
-            player.moveBy(x, y);
+    public void setPlayerV(int xV, int yV) {
+        player.setV(xV, yV);
+    }
+    
+    public void tickPlayer() {
+        
+        // Update player position.
+        if (maze.getCell(player.nextPositionX(), player.nextPositionY()) < Maze.WALL_VERT) {
+            player.move();
             maze.setCell(player.getX(), player.getY(), Maze.SPACE);
             updateDisplay();
         }
+    }
+    
+    public void tickEnemies() {
+        // TODO: this.
     }
     
     public void updateDisplay() {
