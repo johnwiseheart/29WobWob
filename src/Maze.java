@@ -43,16 +43,17 @@ public class Maze implements Cloneable{
     private int height;
     
     public static final int SPACE = 0;
-    public static final int WALL = 1;
-    public static final int DOOR = 2;
-    public static final int KEY = 3;
+    public static final int DOT = 1;
+    public static final int WALL = 2;
+    public static final int DOOR = 3;
+    public static final int KEY = 4;
     
-    public static final int P1 = 4;
+    public static final int P1 = 5;
     
-    public static final int E1 = 5;
-    public static final int E2 = 6;
-    public static final int E3 = 7;
-    public static final int E4 = 8;
+    public static final int E1 = 6;
+    public static final int E2 = 7;
+    public static final int E3 = 8;
+    public static final int E4 = 9;
     
     public static final int WALL_VERT = 20;
     public static final int WALL_HOR = 21;

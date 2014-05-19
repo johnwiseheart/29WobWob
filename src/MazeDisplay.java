@@ -28,12 +28,12 @@ public class MazeDisplay extends JComponent implements Observer {
                              RenderingHints.VALUE_ANTIALIAS_ON);
         super.paintComponent(g);
 
-        g2d.setBackground(Color.BLACK);
+        g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
         
         HashMap<Integer, BufferedImage> images = new HashMap<Integer, BufferedImage>();
         try {
         	//images.put(Maze.WALL, resizeImage(ImageIO.read(new File("wall.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.SPACE, resizeImage(ImageIO.read(new File("dot.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.DOT, resizeImage(ImageIO.read(new File("dot.png")),CELL_SIZE, CELL_SIZE));
         	images.put(Maze.KEY, resizeImage(ImageIO.read(new File("key.png")),CELL_SIZE, CELL_SIZE));
         	images.put(Maze.DOOR, resizeImage(ImageIO.read(new File("door.png")),CELL_SIZE, CELL_SIZE));
         	images.put(Maze.P1, resizeImage(ImageIO.read(new File("p1.png")),CELL_SIZE, CELL_SIZE));
@@ -97,7 +97,7 @@ public class MazeDisplay extends JComponent implements Observer {
         
         return bufferedImage;
     }
- // stolen off the internet we need to rewrite this
+ // TODO: stolen off the internet we need to rewrite this.
     public static BufferedImage rotateCw( BufferedImage img )
     {
 		int			width  = img.getWidth();
