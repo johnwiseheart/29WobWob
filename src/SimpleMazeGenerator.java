@@ -86,8 +86,22 @@ public class SimpleMazeGenerator implements MazeGenerator {
                 }
             }
         }
+
+        // Assign Walls
+        for (int x=0; x<width; x++) {
+            for (int y=0; y<height; y++) {
+            	if (grid[x][y] == Maze.WALL) {
+            		if (grid[x - 1][y] == Maze.WALL && grid[x + 1][y] == Maze.WALL) {
+            			if (grid[x][y - 1] == Maze.WALL && grid[x][y + 1] == Maze.WALL) {
+            				grid[x][y] = Maze.T;
+            			}
+            		}
+            	}
+            }
+        }
         
         
+        /*
         // actually add keys properly
         for (int x=0; x<width; x++) {
             for (int y=0; y<height; y++) {
@@ -111,6 +125,7 @@ public class SimpleMazeGenerator implements MazeGenerator {
             	}
             }
         }
+        */
         return grid;
     }
 
