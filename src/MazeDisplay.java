@@ -70,6 +70,8 @@ public class MazeDisplay extends JComponent implements Observer {
             		g2d.drawImage(images.get(displayMaze.getCell(x, y)),x*CELL_SIZE, y*CELL_SIZE, null);
             }
         }
+        this.setBounds(0,100,displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
+        //this.setBounds(0, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
     }
     
     // Part of the Observer pattern. This method is called when an object being observed notify's it has been changed.
