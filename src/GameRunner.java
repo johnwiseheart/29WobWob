@@ -29,7 +29,7 @@ public class GameRunner {
         //frame.setLayout(new FlowLayout());
         
         MazeDisplay mazeDisplay = new MazeDisplay();
-        gameState = new GameState(31, 23, mazeDisplay);
+        gameState = new GameState(7, 30, mazeDisplay);
         
         //frame.add(buttonPanel);
         frame.add(mazeDisplay);

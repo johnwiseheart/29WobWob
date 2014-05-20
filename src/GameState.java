@@ -13,12 +13,16 @@ public class GameState extends Observable{
     }
     
     public void setPlayerV(int xV, int yV) {
-        player.setV(xV, yV);
+        // Only change direction if we can move in that direction.
+        if (maze.getCell(player.getX()+xV, player.getY()+yV) < Maze.WALL_VERT) {
+            player.setV(xV, yV);
+        }
     }
     
     public void tickPlayer() {
         
-        // Update player position.
+        // Update player position if they can move to the next position based on
+        // direction.
         if (maze.getCell(player.nextPositionX(), player.nextPositionY()) < Maze.WALL_VERT) {
             player.move();
             maze.setCell(player.getX(), player.getY(), Maze.SPACE);
