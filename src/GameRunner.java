@@ -53,10 +53,11 @@ public class GameRunner {
 
     	frame = new GameFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
         frame.setBackground(Color.black);
+        frame.setSize(800, 600);
 
 		menuPanel = new JPanel();
+		menuPanel.setBackground(Color.black);
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
 
 		JLabel wobman = makeImageLabel("img/wobby.png", -1, -1);
@@ -110,20 +111,18 @@ public class GameRunner {
     }
 
     private void runGame() {
-
-
-    	frame = new GameFrame();
-
     	gamePanel = new JPanel();
-
+    	gamePanel.setBackground(Color.black);
 
     	BoxLayout boxLayout = new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS); // top to bottom
     	frame.setLayout(boxLayout);
 
     	JPanel buttonPanel = new JPanel();
+    	buttonPanel.setBackground(Color.black);
     	buttonPanel.setLayout(new FlowLayout());
 
     	JPanel leftPanel = new JPanel();
+    	leftPanel.setBackground(Color.black);
     	leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
 
     	leftPanel.add(makeButton("Pause", 20));
@@ -146,6 +145,7 @@ public class GameRunner {
     	buttonPanel.add(makeImageLabel("img/wobby.png", 337, 62));
 
     	JPanel rightPanel = new JPanel();
+    	rightPanel.setBackground(Color.black);
     	rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.PAGE_AXIS));
 
     	rightPanel.add(makeLabel("Score", 20));
@@ -188,7 +188,8 @@ public class GameRunner {
       // Game update loop.
 
     }
-
+    
+    // TODO: menus have different actions for buttons.
     public class GameFrame extends JFrame {
         private class MyDispatcher implements KeyEventDispatcher {
             @Override
