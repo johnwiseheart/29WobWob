@@ -33,31 +33,31 @@ public class MazeDisplay extends JComponent implements Observer {
         HashMap<Integer, BufferedImage> images = new HashMap<Integer, BufferedImage>();
         try {
         	//images.put(Maze.WALL, resizeImage(ImageIO.read(new File("wall.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.DOT, resizeImage(ImageIO.read(new File("dot.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.KEY, resizeImage(ImageIO.read(new File("key.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.DOOR, resizeImage(ImageIO.read(new File("door.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.P1, resizeImage(ImageIO.read(new File("p1.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.E1, resizeImage(ImageIO.read(new File("e1.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.E2, resizeImage(ImageIO.read(new File("e2.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.E3, resizeImage(ImageIO.read(new File("e3.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.E4, resizeImage(ImageIO.read(new File("e4.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.DOT, resizeImage(ImageIO.read(new File("img/dot.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.KEY, resizeImage(ImageIO.read(new File("img/key.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.DOOR, resizeImage(ImageIO.read(new File("img/door.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.P1, resizeImage(ImageIO.read(new File("img/p1.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.E1, resizeImage(ImageIO.read(new File("img/e1.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.E2, resizeImage(ImageIO.read(new File("img/e2.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.E3, resizeImage(ImageIO.read(new File("img/e3.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.E4, resizeImage(ImageIO.read(new File("img/e4.png")),CELL_SIZE, CELL_SIZE));
         	
-        	images.put(Maze.WALL_VERT, resizeImage(ImageIO.read(new File("wall_straight.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.WALL_HOR, rotateCw(resizeImage(ImageIO.read(new File("wall_straight.png")),CELL_SIZE, CELL_SIZE)));
-        	images.put(Maze.WALL_CORN_NW, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_corner.png")),CELL_SIZE, CELL_SIZE)))));
-        	images.put(Maze.WALL_CORN_NE, resizeImage(ImageIO.read(new File("wall_corner.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.WALL_CORN_SW, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_corner.png")),CELL_SIZE, CELL_SIZE))));
-        	images.put(Maze.WALL_CORN_SE, rotateCw(resizeImage(ImageIO.read(new File("wall_corner.png")),CELL_SIZE, CELL_SIZE)));
-        	images.put(Maze.WALL_CROSS, resizeImage(ImageIO.read(new File("wall_cross.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.WALL_T_N, resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.WALL_T_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE))));
-        	images.put(Maze.WALL_T_E, rotateCw(resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE)));
-        	images.put(Maze.WALL_T_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_t.png")),CELL_SIZE, CELL_SIZE)))));
-        	images.put(Maze.WALL_END_N, resizeImage(ImageIO.read(new File("wall_end.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.WALL_END_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_end.png")),CELL_SIZE, CELL_SIZE))));
-        	images.put(Maze.WALL_END_E, rotateCw(resizeImage(ImageIO.read(new File("wall_end.png")),CELL_SIZE, CELL_SIZE)));
-        	images.put(Maze.WALL_END_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("wall_end.png")),CELL_SIZE, CELL_SIZE)))));
-        	images.put(Maze.WALL_BLOCK, resizeImage(ImageIO.read(new File("wall_block.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_VERT, resizeImage(ImageIO.read(new File("img/wall_straight.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_HOR, rotateCw(resizeImage(ImageIO.read(new File("img/wall_straight.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(Maze.WALL_CORN_NW, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(Maze.WALL_CORN_NE, resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_CORN_SW, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE))));
+        	images.put(Maze.WALL_CORN_SE, rotateCw(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(Maze.WALL_CROSS, resizeImage(ImageIO.read(new File("img/wall_cross.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_T_N, resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_T_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE))));
+        	images.put(Maze.WALL_T_E, rotateCw(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(Maze.WALL_T_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(Maze.WALL_END_N, resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(Maze.WALL_END_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE))));
+        	images.put(Maze.WALL_END_E, rotateCw(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(Maze.WALL_END_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(Maze.WALL_BLOCK, resizeImage(ImageIO.read(new File("img/wall_block.png")),CELL_SIZE, CELL_SIZE));
         	
     
         } catch (IOException e) {
@@ -70,6 +70,8 @@ public class MazeDisplay extends JComponent implements Observer {
             		g2d.drawImage(images.get(displayMaze.getCell(x, y)),x*CELL_SIZE, y*CELL_SIZE, null);
             }
         }
+        this.setBounds(0,100,displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
+        //this.setBounds(0, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
     }
     
     // Part of the Observer pattern. This method is called when an object being observed notify's it has been changed.
