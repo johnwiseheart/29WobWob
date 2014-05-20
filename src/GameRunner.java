@@ -1,12 +1,9 @@
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -28,7 +25,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 public class GameRunner {
 	GameFrame frame;
@@ -45,7 +41,7 @@ public class GameRunner {
     
     public static void main(String[] args) {
 		try{
-	    	InputStream is = new FileInputStream("joystix.ttf");
+	    	InputStream is = new FileInputStream("font/joystix.ttf");
 	    	joystix = Font.createFont(Font.TRUETYPE_FONT, is);
 		} catch (Exception e) {
 		}
@@ -63,7 +59,7 @@ public class GameRunner {
 		menuPanel = new JPanel();
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
 		
-		JLabel wobman = makeImageLabel("wobby.png", -1, -1);
+		JLabel wobman = makeImageLabel("img/wobby.png", -1, -1);
 		wobman.setBorder(BorderFactory.createEmptyBorder(70,0,100,0));
 		menuPanel.add(wobman);
 		
@@ -118,7 +114,7 @@ public class GameRunner {
     private void runGame() {
     	
         
-          
+    	frame = new GameFrame();
     	
     	gamePanel = new JPanel();
     	
@@ -141,6 +137,7 @@ public class GameRunner {
             	   
             	   if (thr1.isAlive())
             		   thr1.interrupt();
+            	   
             	   runMenu();
             	   
                }
@@ -148,7 +145,7 @@ public class GameRunner {
     	leftPanel.add(button);
     	
     	buttonPanel.add(leftPanel);
-    	buttonPanel.add(makeImageLabel("wobby.png", 337, 62));
+    	buttonPanel.add(makeImageLabel("img/wobby.png", 337, 62));
     	
     	JPanel rightPanel = new JPanel();
     	rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.PAGE_AXIS));
@@ -181,9 +178,6 @@ public class GameRunner {
           		    	execute = false;
           		    }
           		}
-          	}
-          	public void terminate() {
-          		this.execute = false;
           	}
              
         };
@@ -231,27 +225,6 @@ public class GameRunner {
             manager.addKeyEventDispatcher(new MyDispatcher());
         }
     }
-    
-    public class gameTick implements Runnable {
-    	private volatile boolean execute;
-      	public void run() {
-      		this.execute = true;
-      		while (execute) {
-      		    gameState.tickPlayer();
-      		    gameState.tickEnemies();
-      		    try {
-      		        Thread.sleep(200);
-      		    } catch (InterruptedException e) {
-      		    	execute = false;
-      		    }
-      		}
-      	}
-      	public void terminate() {
-      		this.execute = false;
-      	}
-         
-    }
-   
     
     // TODO: stolen off the internet we need to rewrite this
     public static BufferedImage resizeImage( Image image, int width, int height) {
