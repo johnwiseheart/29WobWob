@@ -36,13 +36,11 @@ public class GameRunner {
 	JPanel gamePanel;
 	static Font joystix = null;
 	final static Color ourGreen = new Color(0xA1FF9C);
+	Thread thr1;
 	
     private GameRunner() {
         gameState = null;
-        frame = new GameFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-        frame.setBackground(Color.black);
+        
     }
     
     public static void main(String[] args) {
@@ -56,6 +54,11 @@ public class GameRunner {
     }
     
     private void runMenu() {
+    	
+    	frame = new GameFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setBackground(Color.black);
     	
 		menuPanel = new JPanel();
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
@@ -113,8 +116,10 @@ public class GameRunner {
     }
     
     private void runGame() {
-
-    	frame.setVisible(false);
+    	
+        
+          
+    	
     	gamePanel = new JPanel();
     	
     	
@@ -128,7 +133,19 @@ public class GameRunner {
     	leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
     	
     	leftPanel.add(makeButton("Pause", 20));
-    	leftPanel.add(makeButton("Menu", 20));
+    	JButton button = makeButton("Menu", 20);
+		
+    	button.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   
+            	   if (thr1.isAlive())
+            		   thr1.interrupt();
+            	   runMenu();
+            	   
+               }
+            });
+    	leftPanel.add(button);
     	
     	buttonPanel.add(leftPanel);
     	buttonPanel.add(makeImageLabel("wobby.png", 337, 62));
@@ -151,22 +168,31 @@ public class GameRunner {
     	frame.repaint();
         frame.setVisible(true);
         
+        Runnable r1 = new Runnable (){
+        	private volatile boolean execute;
+          	public void run() {
+          		this.execute = true;
+          		while (execute) {
+          		    gameState.tickPlayer();
+          		    gameState.tickEnemies();
+          		    try {
+          		        Thread.sleep(200);
+          		    } catch (InterruptedException e) {
+          		    	execute = false;
+          		    }
+          		}
+          	}
+          	public void terminate() {
+          		this.execute = false;
+          	}
+             
+        };
+        thr1 = new Thread(r1);
+        thr1.start();
+        
       // we tick in a new thread so we can do other stuff
-      Runnable r1 = new Runnable() {
-      	public void run() {
-      		while (true) {
-      		    gameState.tickPlayer();
-      		    gameState.tickEnemies();
-      		    try {
-      		        Thread.sleep(200);
-      		    } catch (InterruptedException e) {
-      		        // Doesn't happen.
-      		    }
-      		}
-      	}
-      };
-      Thread thr1 = new Thread(r1);
-      thr1.start();
+      
+     
       // Game update loop.
         
     }
@@ -204,6 +230,26 @@ public class GameRunner {
             KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             manager.addKeyEventDispatcher(new MyDispatcher());
         }
+    }
+    
+    public class gameTick implements Runnable {
+    	private volatile boolean execute;
+      	public void run() {
+      		this.execute = true;
+      		while (execute) {
+      		    gameState.tickPlayer();
+      		    gameState.tickEnemies();
+      		    try {
+      		        Thread.sleep(200);
+      		    } catch (InterruptedException e) {
+      		    	execute = false;
+      		    }
+      		}
+      	}
+      	public void terminate() {
+      		this.execute = false;
+      	}
+         
     }
    
     
