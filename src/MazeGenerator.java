@@ -1,5 +1,5 @@
 
 public interface MazeGenerator {
 
-    public int[][] generateMaze(int width, int height);
+    public CellType[][] generateMaze(int width, int height);
 }

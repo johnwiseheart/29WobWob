@@ -6,14 +6,14 @@ import java.util.Random;
 public class SimpleMazeGenerator implements MazeGenerator {
     // TODO: This code sucks so much ass.
     
-    public int[][] generateMaze(int width, int height) {
-        int[][] grid = new int[width][height];
+    public CellType[][] generateMaze(int width, int height) {
+        CellType[][] grid = new CellType[width][height];
         for (int x=0; x<width; x++) {
             for (int y=0; y<height; y++) {
                 if ((x%2==1 && y%2==0) || x%2==0) {
-                    grid[x][y] = Maze.WALL;
+                    grid[x][y] = CellType.WALL;
                 } else {
-                    grid[x][y] = Maze.DOT;
+                    grid[x][y] = CellType.DOT;
                 }
             }
         }
@@ -48,10 +48,10 @@ public class SimpleMazeGenerator implements MazeGenerator {
                     walls.remove(wall);
                     // Connect back sometimes.
                     if (rand.nextInt(15) == 0) {
-                        grid[x][y] = Maze.DOT;
+                        grid[x][y] = CellType.DOT;
                     }
                 } else {
-                    grid[x][y] = Maze.DOT;
+                    grid[x][y] = CellType.DOT;
                     if (partOfMaze[x-1][y]) {
                         partOfMaze[x+1][y] = true;
                         x = x+1;
@@ -70,10 +70,10 @@ public class SimpleMazeGenerator implements MazeGenerator {
                     walls.remove(wall);
                     // Connect back sometimes.
                     if (rand.nextInt(15) == 0) {
-                        grid[x][y] = Maze.DOT;
+                        grid[x][y] = CellType.DOT;
                     }
                 } else {
-                    grid[x][y] = Maze.DOT;
+                    grid[x][y] = CellType.DOT;
                     if (partOfMaze[x][y-1]) {
                         partOfMaze[x][y+1] = true;
                         y = y+1;
@@ -92,100 +92,100 @@ public class SimpleMazeGenerator implements MazeGenerator {
         // Assign Walls IT MAKES MY EYES BLEED!!!!
         for (int x=1; x<width - 1; x++) {
             for (int y=1; y<height - 1; y++) {
-            	if (grid[x][y] != Maze.DOT) {
-            		if (grid[x - 1][y] != Maze.DOT && grid[x + 1][y] != Maze.DOT) {
-            			if (grid[x][y - 1] != Maze.DOT && grid[x][y + 1] != Maze.DOT) {
-            				grid[x][y] = Maze.WALL_CROSS;
-            			} else if (grid[x][y + 1] != Maze.DOT) {
-            				grid[x][y] = Maze.WALL_T_S;
-            			} else if (grid[x][y - 1] != Maze.DOT) {
-            				grid[x][y] = Maze.WALL_T_N;
+            	if (grid[x][y] != CellType.DOT) {
+            		if (grid[x - 1][y] != CellType.DOT && grid[x + 1][y] != CellType.DOT) {
+            			if (grid[x][y - 1] != CellType.DOT && grid[x][y + 1] != CellType.DOT) {
+            				grid[x][y] = CellType.WALL_CROSS;
+            			} else if (grid[x][y + 1] != CellType.DOT) {
+            				grid[x][y] = CellType.WALL_T_S;
+            			} else if (grid[x][y - 1] != CellType.DOT) {
+            				grid[x][y] = CellType.WALL_T_N;
             			} else {
-            				grid[x][y] = Maze.WALL_HOR;
+            				grid[x][y] = CellType.WALL_HOR;
             			}
-            		} else if (grid[x][y - 1] != Maze.DOT && grid[x][y + 1] != Maze.DOT) {
-            			if (grid[x + 1][y] != Maze.DOT) {
-            				grid[x][y] = Maze.WALL_T_E;
-            			} else if (grid[x - 1][y] != Maze.DOT) {
-            				grid[x][y] = Maze.WALL_T_W;
+            		} else if (grid[x][y - 1] != CellType.DOT && grid[x][y + 1] != CellType.DOT) {
+            			if (grid[x + 1][y] != CellType.DOT) {
+            				grid[x][y] = CellType.WALL_T_E;
+            			} else if (grid[x - 1][y] != CellType.DOT) {
+            				grid[x][y] = CellType.WALL_T_W;
             			} else {
-            				grid[x][y] = Maze.WALL_VERT;
+            				grid[x][y] = CellType.WALL_VERT;
             			}
-            		} else if (grid[x][y - 1] != Maze.DOT && grid[x - 1][y] != Maze.DOT) {
-            			grid[x][y] = Maze.WALL_CORN_SE;
-            		} else if (grid[x][y - 1] != Maze.DOT && grid[x + 1][y] != Maze.DOT) {
-            			grid[x][y] = Maze.WALL_CORN_SW;
-            		} else if (grid[x][y + 1] != Maze.DOT && grid[x - 1][y] != Maze.DOT) {
-            			grid[x][y] = Maze.WALL_CORN_NE;
-            		} else if (grid[x][y + 1] != Maze.DOT && grid[x + 1][y] != Maze.DOT) {
-            			grid[x][y] = Maze.WALL_CORN_NW;
-            		} else if (grid[x][y + 1] != Maze.DOT) {
-            			grid[x][y] = Maze.WALL_END_N;
-            		} else if (grid[x][y - 1] != Maze.DOT) {
-            			grid[x][y] = Maze.WALL_END_S;
-            		} else if (grid[x + 1][y] != Maze.DOT) {
-            			grid[x][y] = Maze.WALL_END_W;
-            		} else if (grid[x - 1][y] != Maze.DOT) {
-            			grid[x][y] = Maze.WALL_END_E;
+            		} else if (grid[x][y - 1] != CellType.DOT && grid[x - 1][y] != CellType.DOT) {
+            			grid[x][y] = CellType.WALL_CORN_SE;
+            		} else if (grid[x][y - 1] != CellType.DOT && grid[x + 1][y] != CellType.DOT) {
+            			grid[x][y] = CellType.WALL_CORN_SW;
+            		} else if (grid[x][y + 1] != CellType.DOT && grid[x - 1][y] != CellType.DOT) {
+            			grid[x][y] = CellType.WALL_CORN_NE;
+            		} else if (grid[x][y + 1] != CellType.DOT && grid[x + 1][y] != CellType.DOT) {
+            			grid[x][y] = CellType.WALL_CORN_NW;
+            		} else if (grid[x][y + 1] != CellType.DOT) {
+            			grid[x][y] = CellType.WALL_END_N;
+            		} else if (grid[x][y - 1] != CellType.DOT) {
+            			grid[x][y] = CellType.WALL_END_S;
+            		} else if (grid[x + 1][y] != CellType.DOT) {
+            			grid[x][y] = CellType.WALL_END_W;
+            		} else if (grid[x - 1][y] != CellType.DOT) {
+            			grid[x][y] = CellType.WALL_END_E;
             		} else {
-            			grid[x][y] = Maze.WALL_BLOCK;
+            			grid[x][y] = CellType.WALL_BLOCK;
             		}
             	}
             }
         }
         
         for (int x=0; x < width; x++) {
-        	if (grid[x][1] != Maze.DOT) {
-        		grid[x][0] = Maze.WALL_T_S;
+        	if (grid[x][1] != CellType.DOT) {
+        		grid[x][0] = CellType.WALL_T_S;
         	} else {
-        		grid[x][0] = Maze.WALL_HOR;
+        		grid[x][0] = CellType.WALL_HOR;
         	}
         }    
         for (int x=0; x < width; x++) {
-        	if (grid[x][height - 2] != Maze.DOT) {
-        		grid[x][height - 1] = Maze.WALL_T_N;
+        	if (grid[x][height - 2] != CellType.DOT) {
+        		grid[x][height - 1] = CellType.WALL_T_N;
         	} else {
-        		grid[x][height - 1] = Maze.WALL_HOR;
+        		grid[x][height - 1] = CellType.WALL_HOR;
         	}
         }
         for (int y=0; y < height; y++) {
-        	if (grid[1][y] != Maze.DOT) {
-        		grid[0][y] = Maze.WALL_T_E;
+        	if (grid[1][y] != CellType.DOT) {
+        		grid[0][y] = CellType.WALL_T_E;
         	} else {
-        		grid[0][y] = Maze.WALL_VERT;
+        		grid[0][y] = CellType.WALL_VERT;
         	}
         }
         for (int y=0; y < height; y++) {
-        	if (grid[width - 2][y] != Maze.DOT) {
-        		grid[width - 1][y] = Maze.WALL_T_W;
+        	if (grid[width - 2][y] != CellType.DOT) {
+        		grid[width - 1][y] = CellType.WALL_T_W;
         	} else {
-        		grid[width - 1][y] = Maze.WALL_VERT;
+        		grid[width - 1][y] = CellType.WALL_VERT;
         	}
         }
-        grid[0][0] = Maze.WALL_CORN_NW;
-        grid[0][height - 1] = Maze.WALL_CORN_SW;
-        grid[width - 1][0] = Maze.WALL_CORN_NE;
-        grid[width - 1][height - 1] = Maze.WALL_CORN_SE;
+        grid[0][0] = CellType.WALL_CORN_NW;
+        grid[0][height - 1] = CellType.WALL_CORN_SW;
+        grid[width - 1][0] = CellType.WALL_CORN_NE;
+        grid[width - 1][height - 1] = CellType.WALL_CORN_SE;
         
         
         // TODO: Actually add keys properly.
         for (int x=0; x<width; x++) {
             for (int y=0; y<height; y++) {
-            	if(grid[x][y] == Maze.DOT) {
+            	if(grid[x][y] == CellType.DOT) {
             		Random randomGenerator = new Random();
             		int randomInt = randomGenerator.nextInt(200);
             		if(randomInt==1 || randomInt==50)
-            			grid[x][y] = Maze.KEY;
+            			grid[x][y] = CellType.KEY;
             		if(randomInt==2)
-            			grid[x][y] = Maze.DOOR;
+            			grid[x][y] = CellType.DOOR;
             		if(randomInt==4)
-            			grid[x][y] = Maze.E1;
+            			grid[x][y] = CellType.ENEMY1;
             		if(randomInt==5)
-            			grid[x][y] = Maze.E2;
+            			grid[x][y] = CellType.ENEMY2;
             		if(randomInt==6)
-            			grid[x][y] = Maze.E3;
+            			grid[x][y] = CellType.ENEMY3;
             		if(randomInt==7)
-            			grid[x][y] = Maze.E4;
+            			grid[x][y] = CellType.ENEMY4;
             	}
             }
         }

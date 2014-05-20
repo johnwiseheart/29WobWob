@@ -30,34 +30,34 @@ public class MazeDisplay extends JComponent implements Observer {
 
         g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
         
-        HashMap<Integer, BufferedImage> images = new HashMap<Integer, BufferedImage>();
+        HashMap<CellType, BufferedImage> images = new HashMap<CellType, BufferedImage>();
         try {
-        	//images.put(Maze.WALL, resizeImage(ImageIO.read(new File("wall.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.DOT, resizeImage(ImageIO.read(new File("img/dot.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.KEY, resizeImage(ImageIO.read(new File("img/key.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.DOOR, resizeImage(ImageIO.read(new File("img/door.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.P1, resizeImage(ImageIO.read(new File("img/p1.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.E1, resizeImage(ImageIO.read(new File("img/e1.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.E2, resizeImage(ImageIO.read(new File("img/e2.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.E3, resizeImage(ImageIO.read(new File("img/e3.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.E4, resizeImage(ImageIO.read(new File("img/e4.png")),CELL_SIZE, CELL_SIZE));
+        	//images.put(CellType.WALL, resizeImage(ImageIO.read(new File("wall.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.DOT, resizeImage(ImageIO.read(new File("img/dot.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.KEY, resizeImage(ImageIO.read(new File("img/key.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.DOOR, resizeImage(ImageIO.read(new File("img/door.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.PLAYER, resizeImage(ImageIO.read(new File("img/p1.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY1, resizeImage(ImageIO.read(new File("img/e1.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY2, resizeImage(ImageIO.read(new File("img/e2.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY3, resizeImage(ImageIO.read(new File("img/e3.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY4, resizeImage(ImageIO.read(new File("img/e4.png")),CELL_SIZE, CELL_SIZE));
         	
-        	images.put(Maze.WALL_VERT, resizeImage(ImageIO.read(new File("img/wall_straight.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.WALL_HOR, rotateCw(resizeImage(ImageIO.read(new File("img/wall_straight.png")),CELL_SIZE, CELL_SIZE)));
-        	images.put(Maze.WALL_CORN_NW, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE)))));
-        	images.put(Maze.WALL_CORN_NE, resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.WALL_CORN_SW, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE))));
-        	images.put(Maze.WALL_CORN_SE, rotateCw(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE)));
-        	images.put(Maze.WALL_CROSS, resizeImage(ImageIO.read(new File("img/wall_cross.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.WALL_T_N, resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.WALL_T_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE))));
-        	images.put(Maze.WALL_T_E, rotateCw(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE)));
-        	images.put(Maze.WALL_T_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE)))));
-        	images.put(Maze.WALL_END_N, resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(Maze.WALL_END_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE))));
-        	images.put(Maze.WALL_END_E, rotateCw(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE)));
-        	images.put(Maze.WALL_END_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE)))));
-        	images.put(Maze.WALL_BLOCK, resizeImage(ImageIO.read(new File("img/wall_block.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.WALL_VERT, resizeImage(ImageIO.read(new File("img/wall_straight.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.WALL_HOR, rotateCw(resizeImage(ImageIO.read(new File("img/wall_straight.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(CellType.WALL_CORN_NW, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(CellType.WALL_CORN_NE, resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.WALL_CORN_SW, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE))));
+        	images.put(CellType.WALL_CORN_SE, rotateCw(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(CellType.WALL_CROSS, resizeImage(ImageIO.read(new File("img/wall_cross.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.WALL_T_N, resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.WALL_T_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE))));
+        	images.put(CellType.WALL_T_E, rotateCw(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(CellType.WALL_T_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(CellType.WALL_END_N, resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.WALL_END_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE))));
+        	images.put(CellType.WALL_END_E, rotateCw(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(CellType.WALL_END_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(CellType.WALL_BLOCK, resizeImage(ImageIO.read(new File("img/wall_block.png")),CELL_SIZE, CELL_SIZE));
         	
     
         } catch (IOException e) {

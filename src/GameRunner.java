@@ -172,6 +172,7 @@ public class GameRunner {
           		while (execute) {
           		    gameState.tickPlayer();
           		    gameState.tickEnemies();
+          		    gameState.updateDisplay();
           		    try {
           		        Thread.sleep(200);
           		    } catch (InterruptedException e) {
@@ -199,19 +200,19 @@ public class GameRunner {
                 	switch (e.getKeyCode()) {
                 		case KeyEvent.VK_LEFT:
                 			//System.out.println("Left");
-                			gameState.setPlayerV(-1, 0);
+                			gameState.setPlayerVelocity(-1, 0);
                 			break;
                 		case KeyEvent.VK_RIGHT:
                 			//System.out.println("Right");
-                			gameState.setPlayerV(1, 0);
+                			gameState.setPlayerVelocity(1, 0);
                 			break;
                 		case KeyEvent.VK_UP:
                 			//System.out.println("Up");
-                			gameState.setPlayerV(0, -1);
+                			gameState.setPlayerVelocity(0, -1);
                 			break;
                 		case KeyEvent.VK_DOWN:
                 			//System.out.println("Down");
-                			gameState.setPlayerV(0, 1);
+                			gameState.setPlayerVelocity(0, 1);
                 			break;
                 		
                 			
