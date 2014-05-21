@@ -63,13 +63,23 @@ public class MazeDisplay extends JComponent implements Observer {
         } catch (IOException e) {
         }
         
-       
+        // Display maze.
         for (int x=0; x<displayMaze.getWidth(); x++) {
             for (int y=0; y<displayMaze.getHeight(); y++) {
             	if(images.containsKey(displayMaze.getCell(x, y)))
             		g2d.drawImage(images.get(displayMaze.getCell(x, y)),x*CELL_SIZE, y*CELL_SIZE, null);
             }
         }
+        // Display player.
+        g2d.drawImage(images.get(CellType.PLAYER),
+                      displayMaze.playerLocation().x()*CELL_SIZE,
+                      displayMaze.playerLocation().y()*CELL_SIZE, null);
+        // Display enemies.
+        for (Vector enemyLocation : displayMaze.enemyLocations()) {
+            g2d.drawImage(images.get(CellType.ENEMY1), enemyLocation.x()*CELL_SIZE,
+                          enemyLocation.y()*CELL_SIZE, null);
+        }
+        
         this.setBounds(0,100,displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
         //this.setBounds(0, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
     }

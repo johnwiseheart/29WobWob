@@ -43,7 +43,8 @@ public class Enemy implements Character {
 			return location;
 		} else {
 			Random r = new Random();
-			return possibilities.get(r.nextInt(possibilities.size()));
+			location = possibilities.get(r.nextInt(possibilities.size()));
+			return location;
 		}
 	}
 	

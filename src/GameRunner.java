@@ -86,6 +86,7 @@ public class GameRunner {
             	  runGame();
                }
             });
+		
     	menuPanel.add(playButton);
 
     	JButton optionsButton = makeButton("Options", 36);
@@ -149,6 +150,7 @@ public class GameRunner {
             	   runMenu();
                }
             });
+    	
     	leftPanel.add(menuButton);
 
     	buttonPanel.add(leftPanel);
@@ -187,7 +189,6 @@ public class GameRunner {
           		    }
           		}
           	}
-
         };
         thr1 = new Thread(r1);
         thr1.start();
@@ -198,8 +199,8 @@ public class GameRunner {
 
     }
 
-    // TODO: stolen off the internet we need to rewrite this
-    public static BufferedImage resizeImage( Image image, int width, int height) {
+    // TODO: stolen off the Internet we need to rewrite this
+    private static BufferedImage resizeImage( Image image, int width, int height) {
 
     	final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D graphics2D = bufferedImage.createGraphics();
@@ -210,8 +211,7 @@ public class GameRunner {
         return bufferedImage;
     }
 
-
-    public static JButton makeButton(String text, float font_size) {
+    private static JButton makeButton(String text, float font_size) {
     	JButton button = new JButton(text);
     	button.setAlignmentX(Component.CENTER_ALIGNMENT);
     	button.setFont(joystix.deriveFont(font_size));
@@ -222,7 +222,7 @@ public class GameRunner {
     	return button;
     }
 
-    public static JLabel makeLabel(String text, float font_size) {
+    private static JLabel makeLabel(String text, float font_size) {
     	JLabel label = new JLabel(text);
     	label.setAlignmentX(Component.CENTER_ALIGNMENT);
     	label.setFont(joystix.deriveFont(font_size));
@@ -232,7 +232,7 @@ public class GameRunner {
     	return label;
     }
 
-    public static JLabel makeImageLabel(String fileName, int height, int width) {
+    private static JLabel makeImageLabel(String fileName, int height, int width) {
     	BufferedImage image = null;
     	JLabel wobman = null;
     	try {

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 
 public class Maze implements Cloneable{
     
@@ -5,6 +7,9 @@ public class Maze implements Cloneable{
         this.width = width;
         this.height = height;
         grid = mazeGenerator.generateMaze(width, height);
+        player = new Player(new Vector(width/2, 1));
+        enemies = new ArrayList<Enemy>();
+        enemies.add(new Enemy(new Vector(3, 3), CellType.ENEMY1));
     }
     
     public CellType getCell(int x, int y) {
@@ -58,6 +63,38 @@ public class Maze implements Cloneable{
         return height;
     }
     
+    public void updatePlayer() {
+        Vector newLoc = player.move(this);
+        if (getCell(newLoc) == CellType.DOT) {
+            setCell(newLoc, CellType.SPACE); // eat dot
+        }else if (getCell(newLoc) == CellType.KEY) {
+            setCell(newLoc, CellType.SPACE); // collect key
+        }
+    }
+
+    public void updateEnemies() {
+        for (Enemy enemy : enemies) {
+            enemy.move(this);
+        }
+    }
+
+    public void setPlayerVelocity(Vector velocity) {
+        player.setVelocity(velocity);
+    }
+    
+    public Vector playerLocation() {
+        return player.location();
+    }
+    
+    public ArrayList<Vector> enemyLocations() {
+        ArrayList<Vector> locations = new ArrayList<Vector>();
+        for (Enemy enemy : enemies) {
+            locations.add(enemy.location());
+        }
+        return locations;
+    }
+    
+    /*
     public Object clone() {
         try {
             Maze maze = (Maze)super.clone();
@@ -71,10 +108,11 @@ public class Maze implements Cloneable{
         } catch (CloneNotSupportedException e) {
             return null; // Doesn't happen.
         }
-    }
+    }*/
     
     private CellType[][] grid;
     private int width;
-    private int height;    
-    
+    private int height;
+    private Player player;
+    private ArrayList<Enemy> enemies;
 }

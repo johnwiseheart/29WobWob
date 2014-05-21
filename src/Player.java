@@ -49,6 +49,7 @@ public class Player implements Character {
     	}
     	
     	if (!maze.isWall(newLocation)) {
+    	    location = newLocation;
     		return newLocation;
     	} else {
     		return location;
