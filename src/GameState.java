@@ -28,7 +28,6 @@ public class GameState extends Observable{
     }
     
     public void tickPlayer() {
-        
     	Vector oldLoc = player.location();
     	Vector newLoc = player.move(maze);
     	
@@ -44,12 +43,10 @@ public class GameState extends Observable{
     }
     
     public void tickEnemies() {
-    	
     	// trust enemies to know what they're doing
     	for (Enemy enemy : enemies) {
     		enemy.setLocation(enemy.move(maze));
     	}
-    	
     }
     
     public void updateDisplay() {

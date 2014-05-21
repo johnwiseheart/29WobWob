@@ -176,19 +176,11 @@ public class SimpleMazeGenerator implements MazeGenerator {
             		int randomInt = randomGenerator.nextInt(200);
             		if(randomInt==1 || randomInt==50)
             			grid[x][y] = CellType.KEY;
-            		if(randomInt==2)
-            			grid[x][y] = CellType.DOOR;
-            		if(randomInt==4)
-            			grid[x][y] = CellType.ENEMY1;
-            		if(randomInt==5)
-            			grid[x][y] = CellType.ENEMY2;
-            		if(randomInt==6)
-            			grid[x][y] = CellType.ENEMY3;
-            		if(randomInt==7)
-            			grid[x][y] = CellType.ENEMY4;
             	}
             }
         }
+        
+        grid[width/2][0] = CellType.DOOR;
         
         return grid;
     }

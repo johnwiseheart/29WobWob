@@ -5,10 +5,9 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,7 +17,6 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,36 +25,52 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class GameRunner {
-	GameFrame frame;
-	JPanel menuPanel;
-	JPanel gamePanel;
-	static Font joystix = null;
-	final static Color ourGreen = new Color(0xA1FF9C);
-	Thread thr1;
-
     private GameRunner() {
         gameState = null;
-
+        frame = new JFrame();
+        frame.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent event) {
+                switch (event.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    //System.out.println("Left");
+                    gameState.setPlayerVelocity(-1, 0);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    //System.out.println("Right");
+                    gameState.setPlayerVelocity(1, 0);
+                    break;
+                case KeyEvent.VK_UP:
+                    //System.out.println("Up");
+                    gameState.setPlayerVelocity(0, -1);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    //System.out.println("Down");
+                    gameState.setPlayerVelocity(0, 1);
+                    break;
+                }
+            }
+        });
+        frame.setFocusable(true);
+        
+        try{
+            InputStream is = new FileInputStream("font/joystix.ttf");
+            joystix = Font.createFont(Font.TRUETYPE_FONT, is);
+        } catch (Exception e) {
+        }
     }
 
     public static void main(String[] args) {
-		try{
-	    	InputStream is = new FileInputStream("font/joystix.ttf");
-	    	joystix = Font.createFont(Font.TRUETYPE_FONT, is);
-		} catch (Exception e) {
-		}
-
         new GameRunner().runMenu();
     }
 
     private void runMenu() {
-
-    	frame = new GameFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setBackground(Color.black);
+        frame.getContentPane().setBackground(Color.black);
         frame.setSize(800, 600);
+        frame.setResizable(false);
 
-		menuPanel = new JPanel();
+		JPanel menuPanel = new JPanel();
 		menuPanel.setBackground(Color.black);
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
 
@@ -64,54 +78,52 @@ public class GameRunner {
 		wobman.setBorder(BorderFactory.createEmptyBorder(70,0,100,0));
 		menuPanel.add(wobman);
 
-    	JButton button = makeButton("Play", 36);
-		button.addActionListener(new
+    	JButton playButton = makeButton("Play", 36);
+		playButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
-            	  frame.remove(menuPanel);
+            	  frame.getContentPane().removeAll();
             	  runGame();
                }
             });
-    	menuPanel.add(button);
+    	menuPanel.add(playButton);
 
-    	button = makeButton("Options", 36);
-		button.addActionListener(new
+    	JButton optionsButton = makeButton("Options", 36);
+		optionsButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
             	   //TODO: Add a options interface
                }
             });
 
-    	menuPanel.add(button);
+    	menuPanel.add(optionsButton);
 
-    	button = makeButton("Controls", 36);
-		button.addActionListener(new
+    	JButton controlsButton = makeButton("Controls", 36);
+		controlsButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
             	   //TODO: Add a controls interface
                }
             });
 
-    	menuPanel.add(button);
+    	menuPanel.add(controlsButton);
 
-    	button = makeButton("Exit", 36);
-		button.addActionListener(new
+    	JButton exitButton = makeButton("Exit", 36);
+		exitButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
             	   System.exit(0);
                }
             });
 
-    	menuPanel.add(button);
-
+    	menuPanel.add(exitButton);
         frame.add(menuPanel);
-
+        frame.repaint();
         frame.setVisible(true);
-
     }
 
     private void runGame() {
-    	gamePanel = new JPanel();
+    	JPanel gamePanel = new JPanel();
     	gamePanel.setBackground(Color.black);
 
     	BoxLayout boxLayout = new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS); // top to bottom
@@ -126,20 +138,18 @@ public class GameRunner {
     	leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
 
     	leftPanel.add(makeButton("Pause", 20));
-    	JButton button = makeButton("Menu", 20);
+    	JButton menuButton = makeButton("Menu", 20);
 
-    	button.addActionListener(new
+    	menuButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
-
             	   if (thr1.isAlive())
             		   thr1.interrupt();
-
+            	   frame.getContentPane().removeAll();
             	   runMenu();
-
                }
             });
-    	leftPanel.add(button);
+    	leftPanel.add(menuButton);
 
     	buttonPanel.add(leftPanel);
     	buttonPanel.add(makeImageLabel("img/wobby.png", 337, 62));
@@ -157,7 +167,6 @@ public class GameRunner {
     	MazeDisplay mazeDisplay = new MazeDisplay();
         gameState = new GameState(31, 19, mazeDisplay);
     	gamePanel.add(mazeDisplay);
-
 
     	frame.add(gamePanel);
     	frame.repaint();
@@ -185,45 +194,8 @@ public class GameRunner {
 
       // we tick in a new thread so we can do other stuff
 
-
       // Game update loop.
 
-    }
-    
-    // TODO: menus have different actions for buttons.
-    public class GameFrame extends JFrame {
-        private class MyDispatcher implements KeyEventDispatcher {
-            @Override
-            public boolean dispatchKeyEvent(KeyEvent e) {
-                if (e.getID() == KeyEvent.KEY_PRESSED) {
-                	switch (e.getKeyCode()) {
-                		case KeyEvent.VK_LEFT:
-                			//System.out.println("Left");
-                			gameState.setPlayerVelocity(-1, 0);
-                			break;
-                		case KeyEvent.VK_RIGHT:
-                			//System.out.println("Right");
-                			gameState.setPlayerVelocity(1, 0);
-                			break;
-                		case KeyEvent.VK_UP:
-                			//System.out.println("Up");
-                			gameState.setPlayerVelocity(0, -1);
-                			break;
-                		case KeyEvent.VK_DOWN:
-                			//System.out.println("Down");
-                			gameState.setPlayerVelocity(0, 1);
-                			break;
-
-
-                	}
-                }
-                return false;
-            }
-        }
-        public GameFrame() {
-            KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-            manager.addKeyEventDispatcher(new MyDispatcher());
-        }
     }
 
     // TODO: stolen off the internet we need to rewrite this
@@ -278,7 +250,11 @@ public class GameRunner {
     	return wobman;
     }
 
-    GameState gameState;
+    private JFrame frame;
+    private static Font joystix = null;
+    private final static Color ourGreen = new Color(0xA1FF9C);
+    private Thread thr1;
+    private GameState gameState;
 }
 
 
