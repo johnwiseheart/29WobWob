@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.Observable;
 
 public class GameState extends Observable{
@@ -12,6 +13,9 @@ public class GameState extends Observable{
         //this.player = new Player(width/2, 1);
         player = new Player(new Vector(width/2, 1));
         
+        enemies = new ArrayList<Enemy>();
+        enemies.add(new Enemy(new Vector(3, 3), CellType.ENEMY1));
+        
         updateDisplay();
     }
     
@@ -19,7 +23,7 @@ public class GameState extends Observable{
     	player.setVelocity(velocity);
     }
     
-    public void setPlayerVelocity(int x, int y) {
+    public void setPlayerVelocity(int x, int y) { // TODO: perhaps this should be replaced with just the vector version?
     	setPlayerVelocity(new Vector(x, y));
     }
     
@@ -31,19 +35,21 @@ public class GameState extends Observable{
     	if (!oldLoc.equals(newLoc)) {
     		// Can they move here?
     		// TODO: beef this up with key/enemy detection, just checking for walls at the moment
-    		if (!maze.isWall(newLoc)) {
-    			// all good (Y)
-    			
-    			player.setLocation(newLoc); // update location
-    			
-    			maze.setCell(newLoc, CellType.SPACE); // eat dot
-    		}
+    		
+			player.setLocation(newLoc); // update location
+			
+			maze.setCell(newLoc, CellType.SPACE); // eat dot
     	}
     	
     }
     
     public void tickEnemies() {
-        // TODO: this.
+    	
+    	// trust enemies to know what they're doing
+    	for (Enemy enemy : enemies) {
+    		enemy.setLocation(enemy.move(maze));
+    	}
+    	
     }
     
     public void updateDisplay() {
@@ -52,10 +58,15 @@ public class GameState extends Observable{
         // put player in the maze
         displayMaze.setCell(player.location(), CellType.PLAYER);
         
+        for (Enemy enemy : enemies) {
+        	displayMaze.setCell(enemy.location(), enemy.type());
+        }
+        
         this.setChanged();
         this.notifyObservers(displayMaze);
     }
     
     private Player player;
+    private ArrayList<Enemy> enemies;
     private Maze maze;
 }

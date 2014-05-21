@@ -8,6 +8,7 @@ public class Player implements Character {
     public Player(Vector location) {
         this.location = location;
         this.velocity = new Vector(0, 0);
+        this.nextVelocity = null;
     }
     
     public void setLocation(Vector location) {
@@ -24,15 +25,37 @@ public class Player implements Character {
      * @param velocity Amount by which to move in the x and y directions
      */
     public void setVelocity(Vector velocity) {
-    	this.velocity = velocity;
+    	//this.velocity = velocity;
+    	
+    	// set this as the velocity to consider next time we try to move
+    	this.nextVelocity = velocity;
     }
     
     public Vector move(Maze maze) {
-    	Vector newLocation = location.add(velocity);
+    	Vector newLocation = location.add(velocity); // using the current velocity
     	
-    	return newLocation;
+    	if (nextVelocity != null) {
+    		// there is a direction we want to move in (nextVelocity)
+    		// see if we can change our direction yet
+    		
+    		Vector nextNewLocation = location.add(nextVelocity);
+    		if (!maze.isWall(nextNewLocation)) {
+    			// yes we can, america
+    			velocity = nextVelocity;
+    			nextVelocity = null;
+    			
+    			newLocation = nextNewLocation;
+    		}
+    	}
+    	
+    	if (!maze.isWall(newLocation)) {
+    		return newLocation;
+    	} else {
+    		return location;
+    	}
     }
     
     private Vector location;
-    private Vector velocity;
+    private Vector velocity; // direction we're moving in
+    private Vector nextVelocity; // direction we want to try to move in as soon as we can
 }
