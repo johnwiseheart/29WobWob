@@ -30,7 +30,7 @@ public class Enemy implements Character {
 				
 				if (manhattan != 0 && manhattan != 2) { // don't go diagonally/stay still
 					Vector newLoc = location.add(new Vector(dx, dy));
-					if (!maze.isWall(newLoc)) {
+					if (!maze.isWall(newLoc) && !newLoc.equals(lastLocation)) { // Don't move into walls or backwards.
 						possibilities.add(newLoc);
 					}
 				}
@@ -38,14 +38,16 @@ public class Enemy implements Character {
 		}
 		
 		if (possibilities.size() == 0) {
-			// shit, can't move, wtf
-			System.out.println("Can't move!!");
-			return location;
+			//Move backwards;
+		    Vector temp = location;
+		    location = lastLocation;
+		    lastLocation = temp;
 		} else {
 			Random r = new Random();
+			lastLocation = location;
 			location = possibilities.get(r.nextInt(possibilities.size()));
-			return location;
 		}
+		return location;
 	}
 	
 	public CellType type() {
@@ -53,5 +55,6 @@ public class Enemy implements Character {
 	}
 
 	private Vector location;
+	private Vector lastLocation;
 	private CellType type;
 }

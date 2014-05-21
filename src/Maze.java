@@ -3,13 +3,17 @@ import java.util.ArrayList;
 
 public class Maze implements Cloneable{
     
-    public Maze(int width, int height, MazeGenerator mazeGenerator) {
+    public Maze(int width, int height, MazeGenerator mazeGenerator, int numEnemy, int score) {
         this.width = width;
         this.height = height;
-        grid = mazeGenerator.generateMaze(width, height);
+        grid = mazeGenerator.generateMaze(width, height, numEnemy);
         player = new Player(new Vector(width/2, 1));
         enemies = new ArrayList<Enemy>();
         enemies.add(new Enemy(new Vector(3, 3), CellType.ENEMY1));
+        enemies.add(new Enemy(new Vector(7, 7), CellType.ENEMY2));
+        enemies.add(new Enemy(new Vector(12, 12), CellType.ENEMY3));
+        this.numKeysCollected = 0;
+        this.score = score;
     }
     
     public CellType getCell(int x, int y) {
@@ -41,6 +45,7 @@ public class Maze implements Cloneable{
 	    	case WALL_END_E:
 	    	case WALL_END_W:
 	    	case WALL_BLOCK:
+	    	case DOOR:
 	    		return true;
     		default:
     			return false;
@@ -69,6 +74,8 @@ public class Maze implements Cloneable{
             setCell(newLoc, CellType.SPACE); // eat dot
         }else if (getCell(newLoc) == CellType.KEY) {
             setCell(newLoc, CellType.SPACE); // collect key
+            numKeysCollected++;
+            score++;
         }
     }
 
@@ -110,9 +117,19 @@ public class Maze implements Cloneable{
         }
     }*/
     
+    public int getNumKeysCollected() {
+        return this.numKeysCollected;
+    }
+    
+    public int getScore() {
+        return this.score;
+    }
+    
     private CellType[][] grid;
     private int width;
     private int height;
     private Player player;
     private ArrayList<Enemy> enemies;
+    private int numKeysCollected;
+    private int score;
 }
