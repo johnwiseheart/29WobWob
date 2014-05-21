@@ -80,7 +80,9 @@ public class MazeDisplay extends JComponent implements Observer {
                           enemyLocation.y()*CELL_SIZE, null);
         }
         
-        this.setBounds(0,100,displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
+        //TODO: fix this shit its not responsive
+        //this.setSize(displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
+        this.setBounds(12,100,displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
         //this.setBounds(0, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
     }
     
