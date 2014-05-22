@@ -93,7 +93,8 @@ public class GameRunner {
 		optionsButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
-            	   //TODO: Add a options interface
+            	   frame.getContentPane().removeAll();
+            	   runOptions();
                }
             });
 
@@ -119,6 +120,38 @@ public class GameRunner {
 
     	menuPanel.add(exitButton);
         frame.add(menuPanel);
+        frame.repaint();
+        frame.setVisible(true);
+    }
+    
+    private void runOptions() {
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setBackground(Color.black);
+        frame.getContentPane().setBackground(Color.black);
+        frame.setSize(800, 600);
+        frame.setResizable(false);
+
+		JPanel optionsPanel = new JPanel();
+		optionsPanel.setBackground(Color.black);
+		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
+
+		JLabel heading = makeLabel("Options", 50);
+		heading.setBorder(BorderFactory.createEmptyBorder(70,0,100,0));
+		optionsPanel.add(heading);
+
+		
+		
+    	JButton backButton = makeButton("Back", 36);
+		backButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   frame.getContentPane().removeAll();
+            	   runMenu();
+               }
+            });
+
+    	optionsPanel.add(backButton);
+        frame.add(optionsPanel);
         frame.repaint();
         frame.setVisible(true);
     }
