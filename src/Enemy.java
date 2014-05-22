@@ -7,9 +7,9 @@ import java.util.Random;
 
 public class Enemy implements Character {
 
-	public Enemy(Vector location, CellType type, Integer searchDistance, Double randomMoveProbability) {
+	public Enemy(Vector location, Integer searchDistance, Double randomMoveProbability) {
 		this.location = location;
-		this.type = type;
+		
 		this.searchDistance = searchDistance;
 		this.randomMoveProbability = randomMoveProbability;
 		
@@ -42,7 +42,7 @@ public class Enemy implements Character {
 					if (dist == 1) {
 						
 						Vector move = location.add(new Vector(dx, dy));
-						if (!maze.isWall(move) && !move.equals(lastLocation)) {
+						if (!maze.isWall(move) && !move.equals(lastLocation) && !move.equals(maze.doorLocation())) {
 							moves.add(move);
 						}
 						
@@ -131,14 +131,10 @@ public class Enemy implements Character {
 		
 		return location;
 	}
-	
-	public CellType type() {
-		return type;
-	}
 
 	private Vector location;
 	private Vector lastLocation;
-	private CellType type;
+
 	private Integer searchDistance;
 	private Double randomMoveProbability;
 }

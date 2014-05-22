@@ -74,16 +74,33 @@ public class MazeComponent extends JComponent implements Observer {
         g2d.drawImage(images.get(CellType.PLAYER),
                       displayMaze.playerLocation().x()*CELL_SIZE,
                       displayMaze.playerLocation().y()*CELL_SIZE, null);
+        
         // Display enemies.
-        // TODO: Display the correct image.
+        int i = 0;
         for (Vector enemyLocation : displayMaze.enemyLocations()) {
-            g2d.drawImage(images.get(CellType.ENEMY1), enemyLocation.x()*CELL_SIZE,
+            CellType c = CellType.ENEMY1;
+            switch(i) {
+            case 0:
+                c = CellType.ENEMY1;
+                break;
+            case 1:
+                c = CellType.ENEMY2;
+                break;
+            case 2:
+                c = CellType.ENEMY3;
+                break;
+            case 3:
+                c = CellType.ENEMY4;
+                break;
+            }
+            g2d.drawImage(images.get(c), enemyLocation.x()*CELL_SIZE,
                           enemyLocation.y()*CELL_SIZE, null);
+            i++;
         }
         
         //TODO: fix this shit its not responsive
         //this.setSize(displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
-        this.setBounds(12,100,displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
+        this.setBounds(12, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
         //this.setBounds(0, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
     }
     

@@ -7,7 +7,7 @@ import java.util.Random;
 public class SimpleMazeGenerator implements MazeGenerator {
     // TODO: This code sucks so much ass.
     
-    public CellType[][] generateMaze(int width, int height, int numEnemy) {
+    public CellType[][] generateMaze(int width, int height) {
         CellType[][] grid = new CellType[width][height];
         for (int x=0; x<width; x++) {
             for (int y=0; y<height; y++) {
