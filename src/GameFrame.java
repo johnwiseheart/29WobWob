@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -107,7 +106,8 @@ public class GameFrame extends JFrame {
 		controlsButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
-            	   //TODO: Add a controls interface
+            	   getContentPane().removeAll();
+            	   runControls();
                }
             });
 
@@ -217,6 +217,38 @@ public class GameFrame extends JFrame {
 		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
 
 		JLabel heading = makeLabel("Options", 50);
+		heading.setBorder(BorderFactory.createEmptyBorder(70,0,100,0));
+		optionsPanel.add(heading);
+
+		
+		
+    	JButton backButton = makeButton("Back", 36);
+		backButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   getContentPane().removeAll();
+            	   runMenu();
+               }
+            });
+
+    	optionsPanel.add(backButton);
+        this.add(optionsPanel);
+        this.repaint();
+        this.setVisible(true);
+    }
+    
+    private void runControls() {
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setBackground(Color.black);
+        this.getContentPane().setBackground(Color.black);
+        this.setSize(800, 600);
+        this.setResizable(false);
+
+		JPanel optionsPanel = new JPanel();
+		optionsPanel.setBackground(Color.black);
+		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
+
+		JLabel heading = makeLabel("Controls", 50);
 		heading.setBorder(BorderFactory.createEmptyBorder(70,0,100,0));
 		optionsPanel.add(heading);
 
