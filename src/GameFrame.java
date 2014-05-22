@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.KeyEventDispatcher;
@@ -33,7 +34,8 @@ public class GameFrame extends JFrame {
             InputStream is = new FileInputStream("font/joystix.ttf");
             joystix = Font.createFont(Font.TRUETYPE_FONT, is);
         } catch (Exception e) {
-        }
+        } 
+		options = new Options();
 		runMenu();
 		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 	    manager.addKeyEventDispatcher(new GameKeyDispatcher());
@@ -143,7 +145,17 @@ public class GameFrame extends JFrame {
     	leftPanel.setBackground(Color.black);
     	leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
 
-    	leftPanel.add(makeButton("Pause", 20));
+    	JButton pauseButton = makeButton("Pause", 20);
+    	pauseButton.addActionListener(new
+                ActionListener() {
+                   public void actionPerformed(ActionEvent event) {
+                	   if (thr1.isAlive()) {
+                		   //thr1.interrupt();
+                	   }
+                	   runPauseFrame();
+                   }
+                });
+    	leftPanel.add(pauseButton);
     	JButton menuButton = makeButton("Menu", 20);
 
     	menuButton.addActionListener(new
@@ -205,6 +217,45 @@ public class GameFrame extends JFrame {
 
     }
     
+    // TODO ARE WORK
+    private void runPauseFrame() {
+    	
+    	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setBackground(Color.black);
+        this.getContentPane().setBackground(Color.black);
+        this.setSize(800, 600);
+        this.setResizable(false);
+
+    	JPanel pausePanel = new JPanel();
+    	pausePanel.setBackground(Color.black);
+    	pausePanel.setLayout(new BoxLayout(pausePanel, BoxLayout.PAGE_AXIS));
+
+    	JLabel heading = makeLabel("Paused", 50);
+    	heading.setBorder(BorderFactory.createEmptyBorder(70,0,70,0));
+    	pausePanel.add(heading);
+
+    	/*
+    	JLabel controls = makeImageLabel("img/controls.png", -1, -1);
+    	controls.setBorder(BorderFactory.createEmptyBorder(0,0,70,0));
+    	optionsPanel.add(controls);
+    	*/
+    	
+    	JButton resumeButton = makeButton("resume", 36);
+    	resumeButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   getContentPane().removeAll();
+            	   runMenu();
+               }
+            });
+
+    	pausePanel.add(resumeButton);
+        this.add(pausePanel);
+        this.repaint();
+        this.setVisible(true);
+    	
+    }
+    
     private void runOptions() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setBackground(Color.black);
@@ -217,11 +268,102 @@ public class GameFrame extends JFrame {
 		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
 
 		JLabel heading = makeLabel("Options", 50);
-		heading.setBorder(BorderFactory.createEmptyBorder(70,0,100,0));
+		heading.setBorder(BorderFactory.createEmptyBorder(70,0,50,0));
 		optionsPanel.add(heading);
 
 		
+		JPanel musicOptions = new JPanel(); // New Panel for music options.
+		musicOptions.setLayout(new FlowLayout());
+
+    	JLabel musicLabel = makeLabel("music:", 36);
+		musicOptions.add(musicLabel);
+    	JButton musicOnButton = makeButton("on", 36);
+		musicOnButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   options.setMusic(true);
+            	   //TODO: Start Music
+               }
+            });
+		musicOptions.add(musicOnButton);
+    	JButton musicOffButton = makeButton("off", 36);
+		musicOffButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   options.setMusic(false);
+            	   //TODO: Stop Music
+               }
+            });
+		musicOptions.add(musicOffButton);
+		musicOptions.setBackground(Color.black);
+    	optionsPanel.add(musicOptions);
+    	
+    	JPanel effectsOptions = new JPanel(); // New Panel for music options.
+		effectsOptions.setLayout(new FlowLayout());
+
+    	JLabel effectsLabel = makeLabel("sfx:", 36);
+		effectsOptions.add(effectsLabel);
+    	JButton effectsOnButton = makeButton("on", 36);
+		effectsOnButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   options.setEffects(true); 
+               }
+            });
+		effectsOptions.add(effectsOnButton);
+    	JButton effectsOffButton = makeButton("off", 36);
+		effectsOffButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   options.setEffects(false);
+               }
+            });
+		effectsOptions.add(effectsOffButton);
+		effectsOptions.setBackground(Color.black);
+    	optionsPanel.add(effectsOptions);
 		
+    	JPanel difficultyOptions = new JPanel(); // New Panel for music options.
+    	difficultyOptions.setLayout(new FlowLayout());
+
+    	JLabel difficultyLabel = makeLabel("diff:", 36);
+    	difficultyOptions.add(difficultyLabel);
+    	JButton difficultyEasyButton = makeButton("easy", 36);
+    	difficultyEasyButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   options.setDifficulty(options.EASY); 
+               }
+            });
+		difficultyOptions.add(difficultyEasyButton);
+    	JButton difficultyMedButton = makeButton("med", 36);
+    	difficultyMedButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   options.setDifficulty(options.MEDIUM); 
+               }
+            });
+    	difficultyOptions.add(difficultyMedButton);
+    	JButton difficultyHardButton = makeButton("hard", 36);
+    	difficultyHardButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   options.setDifficulty(options.HARD); 
+               }
+            });
+    	difficultyOptions.add(difficultyHardButton);
+    	/*
+    	JButton difficultyInsaneButton = makeButton("INSANE", 36);
+    	difficultyInsaneButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   options.setDifficulty(options.HARD); 
+               }
+            });
+    	difficultyOptions.add(difficultyInsaneButton);
+    	*/
+		difficultyOptions.setBackground(Color.black);
+    	optionsPanel.add(difficultyOptions);
+    	
     	JButton backButton = makeButton("Back", 36);
 		backButton.addActionListener(new
             ActionListener() {
@@ -249,10 +391,12 @@ public class GameFrame extends JFrame {
 		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
 
 		JLabel heading = makeLabel("Controls", 50);
-		heading.setBorder(BorderFactory.createEmptyBorder(70,0,100,0));
+		heading.setBorder(BorderFactory.createEmptyBorder(70,0,70,0));
 		optionsPanel.add(heading);
 
-		
+		JLabel controls = makeImageLabel("img/controls.png", -1, -1);
+		controls.setBorder(BorderFactory.createEmptyBorder(0,0,70,0));
+		optionsPanel.add(controls);
 		
     	JButton backButton = makeButton("Back", 36);
 		backButton.addActionListener(new
@@ -324,4 +468,5 @@ public class GameFrame extends JFrame {
     private final static Color ourGreen = new Color(0xA1FF9C);
     private Thread thr1;
     private GameState gameState;
+    private Options options;
 }

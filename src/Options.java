@@ -35,8 +35,8 @@ public class Options {
 	private boolean effects;
 	private boolean music;
 	private int difficulty;
-	public final static int EASY = 0;
-	public final static int MEDIUM = 1;
-	public final static int HARD = 2;
-	public final static int IMPOSSIBLE = 3;
+	public final int EASY = 0;
+	public final int MEDIUM = 1;
+	public final int HARD = 2;
+	public final int IMPOSSIBLE = 3;
 }
