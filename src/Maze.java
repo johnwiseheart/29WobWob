@@ -6,7 +6,7 @@ public class Maze {
     public Maze(int width, int height, MazeGenerator mazeGenerator, int numEnemy, int score, int lives) {
         this.width = width;
         this.height = height;
-        grid = mazeGenerator.generateMaze(width, height, numEnemy);
+        grid = mazeGenerator.generateMaze(width, height);
         player = new Player(new Vector(width/2, 1), lives);
         enemies = new ArrayList<Enemy>();
         placeEnemies(numEnemy);
@@ -17,13 +17,19 @@ public class Maze {
     
     private void placeEnemies(int numEnemy) {
         Random random = new Random();
+        // Place each ghost in one of the cells of the map that always starts
+        // empty.
         for (int i=0; i<numEnemy; i++) {
             int x = random.nextInt(width/2)*2 + 1;
             // Place ghosts in lower half so they don't start near the player.
             int y = random.nextInt(height/4)*2 + height/2 + 1;
+            if (y%2 == 0) {
+                y += 1;
+            }
             Vector v = new Vector(x, y);
             
             if (isEnemy(v)) {
+                i--;
                 continue;
             }
             

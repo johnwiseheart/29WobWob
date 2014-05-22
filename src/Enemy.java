@@ -84,12 +84,14 @@ public class Enemy implements Character {
 			}
 			visited.add(n.location);
 			
-			System.out.println("testing " + n.location.x() + " " + n.location.y() + " " + maze.getCell(n.location).name());
+			//System.out.println("testing " + n.location.x() + " " + n.location.y() + " " + maze.getCell(n.location).name());
 			
 			// did we find the wobman?
-			if (maze.getCell(n.location) == CellType.PLAYER) {
+			if (n.location.equals(maze.playerLocation())) {
 				// yeah we did, so use this move
 				System.out.println("sweet");
+				location = n.firstMove;
+				//TODO: fix this sometimes being null.
 				return n.firstMove;
 			}
 			

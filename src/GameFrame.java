@@ -33,10 +33,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-
-
 public class GameFrame extends JFrame {
 
 	//TODO: stop game from farting
