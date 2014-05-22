@@ -3,7 +3,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.KeyEventDispatcher;
@@ -11,8 +10,6 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,6 +18,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -43,6 +47,7 @@ public class GameFrame extends JFrame {
         } catch (Exception e) {
         } 
 		options = new Options();
+		this.setTitle("Wobman the Key Master");
 		runMenu();
 		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 	    manager.addKeyEventDispatcher(new GameKeyDispatcher());
@@ -90,15 +95,19 @@ public class GameFrame extends JFrame {
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
 
 		JLabel wobman = makeImageLabel("img/wobby.png", -1, -1);
-		wobman.setBorder(BorderFactory.createEmptyBorder(70,0,100,0));
+		wobman.setBorder(BorderFactory.createEmptyBorder(70,0,20,0));
 		menuPanel.add(wobman);
+	
+		JLabel keymaster = makeLabel("The Key Master", 32f);
+		keymaster.setBorder(BorderFactory.createEmptyBorder(0,0,80,0));
+		menuPanel.add(keymaster);
 
     	JButton playButton = makeButton("Play", 36);
 		playButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
             	  getContentPane().removeAll();
-            	  menuMusic.interrupt();
+            	  clip.stop();
             	  runGame();
                }
             });
@@ -140,44 +149,36 @@ public class GameFrame extends JFrame {
         this.repaint();
         this.setVisible(true);
         
+        playMusic("music/menu.wav");
         
         
-        Runnable musicRunnable = new Runnable (){
-        	private volatile boolean execute;
-        	InputStream in = null;
-            AudioStream as = null;
-            
-          	public void run() {
-          		this.execute = true;
-          		while (execute) {
-          			try{
-          				in = new FileInputStream ("music/menu.wav");
-          				as = new AudioStream (in);
-          			} catch (FileNotFoundException e) {
-          				e.printStackTrace();
-          			} catch (IOException e) {
-          				e.printStackTrace();
-          			}
-          			AudioPlayer.player.start (as); 
-          	        
-          		    try {
-          		        Thread.sleep(16000);
-          		    } catch (InterruptedException e) {
-          		    	AudioPlayer.player.stop(as);
-          		    	execute = false;
-          		    }
-          		}
-          	}
-        };
-        
-        menuMusic = new Thread(musicRunnable);
-        menuMusic.start();
     }
 	
+	private void playMusic(String file_name) {
+		File soundFile = new File(file_name);
+        AudioInputStream ais;
+		try {
+			ais = AudioSystem.getAudioInputStream(soundFile);
+			AudioInputStream soundIn = AudioSystem
+			        .getAudioInputStream(soundFile);
+			        AudioFormat format = soundIn.getFormat();
+			        DataLine.Info info = new DataLine.Info(Clip.class, format);
 
+			        clip = (Clip) AudioSystem.getLine(info);
+			        clip.open(ais);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        
+        clip.loop(Clip.LOOP_CONTINUOUSLY);
+        clip.start();
+	}
 
  
     private void runGame() {
+    	clip.stop();
     	JPanel gamePanel = new JPanel();
     	gamePanel.setBackground(Color.black);
 
@@ -196,7 +197,7 @@ public class GameFrame extends JFrame {
     	pauseButton.addActionListener(new
                 ActionListener() {
                    public void actionPerformed(ActionEvent event) {
-                	   if (thr1.isAlive()) {
+                	   if (tickThread.isAlive()) {
                 		   //thr1.interrupt();
                 	   }
                 	   runPauseFrame();
@@ -211,7 +212,7 @@ public class GameFrame extends JFrame {
             	   if (tickThread.isAlive())
             		   tickThread.interrupt();
             	   getContentPane().removeAll();
-            	   gameMusic.interrupt();
+            	   clip.stop();
             	   runMenu();
                }
             });
@@ -259,36 +260,7 @@ public class GameFrame extends JFrame {
         tickThread = new Thread(r1);
         tickThread.start();
         
-        Runnable musicRunnable = new Runnable (){
-        	private volatile boolean execute;
-        	InputStream in = null;
-            AudioStream as = null;
-            
-          	public void run() {
-          		this.execute = true;
-          		while (execute) {
-          			try{
-          				in = new FileInputStream ("music/game.wav");
-          				as = new AudioStream (in);
-          			} catch (FileNotFoundException e) {
-          				e.printStackTrace();
-          			} catch (IOException e) {
-          				e.printStackTrace();
-          			}
-          			AudioPlayer.player.start (as); 
-          	        
-          		    try {
-          		        Thread.sleep(8000);
-          		    } catch (InterruptedException e) {
-          		    	AudioPlayer.player.stop(as);
-          		    	execute = false;
-          		    }
-          		}
-          	}
-        };
-        
-        gameMusic = new Thread(musicRunnable);
-        gameMusic.start();
+        playMusic("music/game.wav");
 
     }
     
@@ -542,8 +514,7 @@ public class GameFrame extends JFrame {
     private static Font joystix = null;
     private final static Color ourGreen = new Color(0xA1FF9C);
     private Thread tickThread;
-    private Thread menuMusic;
-    private Thread gameMusic;
     private GameState gameState;
     private Options options;
+    private Clip clip;
 }
