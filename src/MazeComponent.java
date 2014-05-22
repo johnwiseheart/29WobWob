@@ -75,6 +75,7 @@ public class MazeComponent extends JComponent implements Observer {
                       displayMaze.playerLocation().x()*CELL_SIZE,
                       displayMaze.playerLocation().y()*CELL_SIZE, null);
         // Display enemies.
+        // TODO: Display the correct image.
         for (Vector enemyLocation : displayMaze.enemyLocations()) {
             g2d.drawImage(images.get(CellType.ENEMY1), enemyLocation.x()*CELL_SIZE,
                           enemyLocation.y()*CELL_SIZE, null);

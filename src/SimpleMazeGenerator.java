@@ -6,7 +6,7 @@ import java.util.Random;
 public class SimpleMazeGenerator implements MazeGenerator {
     // TODO: This code sucks so much ass.
     
-    public CellType[][] generateMaze(int width, int height) {
+    public CellType[][] generateMaze(int width, int height, int numEnemy) {
         CellType[][] grid = new CellType[width][height];
         for (int x=0; x<width; x++) {
             for (int y=0; y<height; y++) {
@@ -162,10 +162,16 @@ public class SimpleMazeGenerator implements MazeGenerator {
         		grid[width - 1][y] = CellType.WALL_VERT;
         	}
         }
+        // Corner walls.
         grid[0][0] = CellType.WALL_CORN_NW;
         grid[0][height - 1] = CellType.WALL_CORN_SW;
         grid[width - 1][0] = CellType.WALL_CORN_NE;
         grid[width - 1][height - 1] = CellType.WALL_CORN_SE;
+        
+        // Walls around the door.
+        // TODO: not actually correct if walls connect to these.
+        grid[width/2+1][0] = CellType.WALL_END_W;
+        grid[width/2-1][0] = CellType.WALL_END_E;
         
         
         // TODO: Actually add keys properly.
