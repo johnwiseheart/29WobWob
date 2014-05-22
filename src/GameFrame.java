@@ -87,7 +87,8 @@ public class GameFrame extends JFrame {
 		optionsButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
-            	   //TODO: Add a options interface
+            	   getContentPane().removeAll();
+            	   runOptions();
                }
             });
 
@@ -193,6 +194,38 @@ public class GameFrame extends JFrame {
 
       // Game update loop.
 
+    }
+    
+    private void runOptions() {
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setBackground(Color.black);
+        this.getContentPane().setBackground(Color.black);
+        this.setSize(800, 600);
+        this.setResizable(false);
+
+		JPanel optionsPanel = new JPanel();
+		optionsPanel.setBackground(Color.black);
+		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
+
+		JLabel heading = makeLabel("Options", 50);
+		heading.setBorder(BorderFactory.createEmptyBorder(70,0,100,0));
+		optionsPanel.add(heading);
+
+		
+		
+    	JButton backButton = makeButton("Back", 36);
+		backButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   getContentPane().removeAll();
+            	   runMenu();
+               }
+            });
+
+    	optionsPanel.add(backButton);
+        this.add(optionsPanel);
+        this.repaint();
+        this.setVisible(true);
     }
 
     // TODO: stolen off the Internet we need to rewrite this
