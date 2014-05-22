@@ -17,6 +17,9 @@ public class Maze implements Cloneable{
     }
     
     public CellType getCell(int x, int y) {
+    	if (x < 0 || x >= this.width || y < 0 || y >= this.height)
+    		return CellType.WALL;
+    	
         return grid[x][y];
     }
     
