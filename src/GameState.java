@@ -4,13 +4,11 @@ public class GameState extends Observable{
     
     public GameState(int width, int height, MazeComponent mazeDisplay) {
         this.addObserver(mazeDisplay);
-        maze = new Maze(width, height, new SimpleMazeGenerator(), 3, 0);
+        maze = new Maze(width, height, new SimpleMazeGenerator(), 3, 0, 3);
         // On any change we just need to call setChanged() and then notifyObervers().
         // Anything observing the GameState will have it's update() method called.
-        
-        //this.player = new Player(width/2, 1);
-        
         updateDisplay();
+        level = 0;
     }
     
     public void setPlayerVelocity(Vector velocity) {
@@ -23,10 +21,9 @@ public class GameState extends Observable{
     
     public void tickPlayer() {
         maze.updatePlayer();
-        if (getNumKeysCollected() >= 2) {
-            maze.setCell(maze.getWidth()/2, 0, CellType.SPACE);
-        }
-        if (maze.playerLocation().equals(new Vector(maze.getWidth()/2, 0))) {
+        if (maze.hasDied()) { // Lose a life.
+            loseLife();
+        } else if (maze.hasWon()) { // Move on to the next level.
             nextLevel();
         }
     }
@@ -34,6 +31,19 @@ public class GameState extends Observable{
     public void tickEnemies() {
     	// trust enemies to know what they're doing
     	maze.updateEnemies();
+    }
+    
+    public void loseLife() {
+        if (maze.loseLife() == 0) {
+            finishGame();
+        } else {
+            maze.resetPlayer();
+        }
+    }
+    
+    public void finishGame() {
+        // TODO: not this.
+        System.exit(1);
     }
     
     public void updateDisplay() {
@@ -50,8 +60,10 @@ public class GameState extends Observable{
     }
     
     private void nextLevel() {
-        maze = new Maze(maze.getWidth(), maze.getHeight(), new SimpleMazeGenerator(), 3, maze.getScore());
+        level++;
+        maze = new Maze(maze.getWidth(), maze.getHeight(), new SimpleMazeGenerator(), 3, maze.getScore(), maze.getLives());
     }
     
     private Maze maze;
+    private int level;
 }

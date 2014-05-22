@@ -5,10 +5,11 @@ public class Player implements Character {
 	 * Creates a new player starting at the given location in the maze.
 	 * @param location Starting point of player in maze
 	 */
-    public Player(Vector location) {
+    public Player(Vector location, int lives) {
         this.location = location;
         this.velocity = new Vector(0, 0);
         this.nextVelocity = null;
+        this.lives = lives; // TODO: Adjust for difficulty.
     }
     
     public void setLocation(Vector location) {
@@ -56,7 +57,23 @@ public class Player implements Character {
     	}
     }
     
+    public int loseLife() {
+        lives--;
+        return lives;
+    }
+    
+    public int getLives() {
+        return lives;
+    }
+    
+    public void reset(Vector location) {
+        this.location = location;
+        this.velocity = new Vector(0, 0);
+        this.nextVelocity = null;
+    }
+    
     private Vector location;
     private Vector velocity; // direction we're moving in
     private Vector nextVelocity; // direction we want to try to move in as soon as we can
+    private int lives;
 }
