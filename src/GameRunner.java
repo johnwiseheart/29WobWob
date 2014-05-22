@@ -28,29 +28,13 @@ public class GameRunner {
     private GameRunner() {
         gameState = null;
         frame = new JFrame();
-        frame.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent event) {
-                switch (event.getKeyCode()) {
-                case KeyEvent.VK_LEFT:
-                    //System.out.println("Left");
-                    gameState.setPlayerVelocity(-1, 0);
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    //System.out.println("Right");
-                    gameState.setPlayerVelocity(1, 0);
-                    break;
-                case KeyEvent.VK_UP:
-                    //System.out.println("Up");
-                    gameState.setPlayerVelocity(0, -1);
-                    break;
-                case KeyEvent.VK_DOWN:
-                    //System.out.println("Down");
-                    gameState.setPlayerVelocity(0, 1);
-                    break;
-                }
-            }
-        });
+        frame.setFocusTraversalKeysEnabled(false);
         frame.setFocusable(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setBackground(Color.black);
+        frame.getContentPane().setBackground(Color.black);
+        frame.setSize(800, 600);
+        frame.setResizable(false);
         
         try{
             InputStream is = new FileInputStream("font/joystix.ttf");
@@ -64,12 +48,6 @@ public class GameRunner {
     }
 
     private void runMenu() {
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setBackground(Color.black);
-        frame.getContentPane().setBackground(Color.black);
-        frame.setSize(800, 600);
-        frame.setResizable(false);
-
 		JPanel menuPanel = new JPanel();
 		menuPanel.setBackground(Color.black);
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
@@ -124,6 +102,25 @@ public class GameRunner {
     }
 
     private void runGame() {
+        frame.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent event) {
+                switch (event.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    gameState.setPlayerVelocity(-1, 0);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    gameState.setPlayerVelocity(1, 0);
+                    break;
+                case KeyEvent.VK_UP:
+                    gameState.setPlayerVelocity(0, -1);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    gameState.setPlayerVelocity(0, 1);
+                    break;
+                }
+            }
+        });
+        
     	JPanel gamePanel = new JPanel();
     	gamePanel.setBackground(Color.black);
 
