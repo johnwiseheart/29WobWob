@@ -10,9 +10,12 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -25,9 +28,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+
 
 public class GameFrame extends JFrame {
 
+	//TODO: stop game from farting
 	public GameFrame() {
 		 try{
             InputStream is = new FileInputStream("font/joystix.ttf");
@@ -44,18 +51,22 @@ public class GameFrame extends JFrame {
         public boolean dispatchKeyEvent(KeyEvent event) {
         	 switch (event.getKeyCode()) {
              case KeyEvent.VK_LEFT:
+             case KeyEvent.VK_A:
                  //System.out.println("Left");
                  gameState.setPlayerVelocity(-1, 0);
                  break;
              case KeyEvent.VK_RIGHT:
+             case KeyEvent.VK_D:
                  //System.out.println("Right");
                  gameState.setPlayerVelocity(1, 0);
                  break;
              case KeyEvent.VK_UP:
+             case KeyEvent.VK_W:
                  //System.out.println("Up");
                  gameState.setPlayerVelocity(0, -1);
                  break;
              case KeyEvent.VK_DOWN:
+             case KeyEvent.VK_S:
                  //System.out.println("Down");
                  gameState.setPlayerVelocity(0, 1);
                  break;
@@ -85,6 +96,7 @@ public class GameFrame extends JFrame {
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
             	  getContentPane().removeAll();
+            	  menuMusic.interrupt();
             	  runGame();
                }
             });
@@ -125,8 +137,43 @@ public class GameFrame extends JFrame {
         this.add(menuPanel);
         this.repaint();
         this.setVisible(true);
-       
+        
+        
+        
+        Runnable musicRunnable = new Runnable (){
+        	private volatile boolean execute;
+        	InputStream in = null;
+            AudioStream as = null;
+            
+          	public void run() {
+          		this.execute = true;
+          		while (execute) {
+          			try{
+          				in = new FileInputStream ("music/menu.wav");
+          				as = new AudioStream (in);
+          			} catch (FileNotFoundException e) {
+          				e.printStackTrace();
+          			} catch (IOException e) {
+          				e.printStackTrace();
+          			}
+          			AudioPlayer.player.start (as); 
+          	        
+          		    try {
+          		        Thread.sleep(16000);
+          		    } catch (InterruptedException e) {
+          		    	AudioPlayer.player.stop(as);
+          		    	execute = false;
+          		    }
+          		}
+          	}
+        };
+        
+        menuMusic = new Thread(musicRunnable);
+        menuMusic.start();
     }
+	
+
+
  
     private void runGame() {
     	JPanel gamePanel = new JPanel();
@@ -149,9 +196,10 @@ public class GameFrame extends JFrame {
     	menuButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
-            	   if (thr1.isAlive())
-            		   thr1.interrupt();
+            	   if (tickThread.isAlive())
+            		   tickThread.interrupt();
             	   getContentPane().removeAll();
+            	   gameMusic.interrupt();
             	   runMenu();
                }
             });
@@ -196,12 +244,39 @@ public class GameFrame extends JFrame {
           		}
           	}
         };
-        thr1 = new Thread(r1);
-        thr1.start();
-
-      // we tick in a new thread so we can do other stuff
-
-      // Game update loop.
+        tickThread = new Thread(r1);
+        tickThread.start();
+        
+        Runnable musicRunnable = new Runnable (){
+        	private volatile boolean execute;
+        	InputStream in = null;
+            AudioStream as = null;
+            
+          	public void run() {
+          		this.execute = true;
+          		while (execute) {
+          			try{
+          				in = new FileInputStream ("music/game.wav");
+          				as = new AudioStream (in);
+          			} catch (FileNotFoundException e) {
+          				e.printStackTrace();
+          			} catch (IOException e) {
+          				e.printStackTrace();
+          			}
+          			AudioPlayer.player.start (as); 
+          	        
+          		    try {
+          		        Thread.sleep(8000);
+          		    } catch (InterruptedException e) {
+          		    	AudioPlayer.player.stop(as);
+          		    	execute = false;
+          		    }
+          		}
+          	}
+        };
+        
+        gameMusic = new Thread(musicRunnable);
+        gameMusic.start();
 
     }
     
@@ -322,6 +397,8 @@ public class GameFrame extends JFrame {
     
     private static Font joystix = null;
     private final static Color ourGreen = new Color(0xA1FF9C);
-    private Thread thr1;
+    private Thread tickThread;
+    private Thread menuMusic;
+    private Thread gameMusic;
     private GameState gameState;
 }
