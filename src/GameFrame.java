@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -34,28 +36,35 @@ public class GameFrame extends JFrame {
         } catch (Exception e) {
         }
 		runMenu();
+		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+	    manager.addKeyEventDispatcher(new GameKeyDispatcher());
 	}
-
-	public void keyPressed(KeyEvent event) {
-         switch (event.getKeyCode()) {
-         case KeyEvent.VK_LEFT:
-             //System.out.println("Left");
-             gameState.setPlayerVelocity(-1, 0);
-             break;
-         case KeyEvent.VK_RIGHT:
-             //System.out.println("Right");
-             gameState.setPlayerVelocity(1, 0);
-             break;
-         case KeyEvent.VK_UP:
-             //System.out.println("Up");
-             gameState.setPlayerVelocity(0, -1);
-             break;
-         case KeyEvent.VK_DOWN:
-             //System.out.println("Down");
-             gameState.setPlayerVelocity(0, 1);
-             break;
-         }
-     }
+	
+	private class GameKeyDispatcher implements KeyEventDispatcher {
+        @Override
+        public boolean dispatchKeyEvent(KeyEvent event) {
+        	 switch (event.getKeyCode()) {
+             case KeyEvent.VK_LEFT:
+                 //System.out.println("Left");
+                 gameState.setPlayerVelocity(-1, 0);
+                 break;
+             case KeyEvent.VK_RIGHT:
+                 //System.out.println("Right");
+                 gameState.setPlayerVelocity(1, 0);
+                 break;
+             case KeyEvent.VK_UP:
+                 //System.out.println("Up");
+                 gameState.setPlayerVelocity(0, -1);
+                 break;
+             case KeyEvent.VK_DOWN:
+                 //System.out.println("Down");
+                 gameState.setPlayerVelocity(0, 1);
+                 break;
+                
+             }
+        	 return false;
+        }
+    }
 	
 	private void runMenu() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
