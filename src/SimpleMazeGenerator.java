@@ -1,4 +1,5 @@
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -87,6 +88,54 @@ public class SimpleMazeGenerator implements MazeGenerator {
                     walls.add(new Point(x, y-1));
                 }
             }
+        }
+        
+        // eliminate dead ends
+        for (int x = 1; x < width - 1; x++) {
+        	for (int y = 1; y < height - 1; y++) {
+        		if (grid[x][y] == CellType.DOT) {
+        			// get number of neighbour walls
+        			ArrayList<Vector> neighbours = new ArrayList<Vector>();
+        			
+        			int[] dirs = {-1, 0, 1};
+        			
+        			for (int dx : dirs) {
+        				for (int dy : dirs) {
+        					int manhattan = Math.abs(dx) + Math.abs(dy);
+        					if (manhattan == 1) {
+        						// chek your wall b4 u wrek ur wall
+        						int x2 = x+dx;
+        						int y2 = y+dy;
+        						
+        						if (grid[x2][y2] != CellType.DOT && !(x2 == 0 || y2 == 0 || x2 == width-1 || y2 == height-1)) {
+        							neighbours.add(new Vector(x2, y2));
+        						}
+        					}
+        				}
+        			}
+        			
+        			// add outer walls if necessary
+        			int outerWalls = 0;
+        			
+        			if (x == 1) {
+        				outerWalls++;
+        			} else if (x == width-2) {
+        				outerWalls++;
+        			}
+        			
+        			if (y == 1) {
+        				outerWalls++;
+        			} else if (y == height-2) {
+        				outerWalls++;
+        			}
+        			
+        			Random r = new Random();
+        			while (neighbours.size() + outerWalls >= 3) {
+        				Vector n = neighbours.remove(r.nextInt(neighbours.size()));
+        				grid[n.x()][n.y()] = CellType.DOT;
+        			}
+        		}
+        	}
         }
 
         // Assign Walls IT MAKES MY EYES BLEED!!!!
