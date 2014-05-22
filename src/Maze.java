@@ -9,9 +9,13 @@ public class Maze implements Cloneable{
         grid = mazeGenerator.generateMaze(width, height, numEnemy);
         player = new Player(new Vector(width/2, 1));
         enemies = new ArrayList<Enemy>();
-        enemies.add(new Enemy(new Vector(3, 3), CellType.ENEMY1));
-        enemies.add(new Enemy(new Vector(7, 7), CellType.ENEMY2));
-        enemies.add(new Enemy(new Vector(12, 12), CellType.ENEMY3));
+        
+        Integer searchDistance = 10;
+        Double randomMoveProbability = 0.3;
+        
+        enemies.add(new Enemy(new Vector(3, 3), CellType.ENEMY1, searchDistance, randomMoveProbability));
+        enemies.add(new Enemy(new Vector(7, 7), CellType.ENEMY2, searchDistance, randomMoveProbability));
+        enemies.add(new Enemy(new Vector(12, 12), CellType.ENEMY3, searchDistance, randomMoveProbability));
         this.numKeysCollected = 0;
         this.score = score;
     }
