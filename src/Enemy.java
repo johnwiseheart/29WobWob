@@ -4,9 +4,8 @@ import java.util.Random;
 
 public class Enemy implements Character {
 
-	public Enemy(Vector location, CellType type) { // TODO: difficulty stuff?
+	public Enemy(Vector location) { // TODO: difficulty stuff?
 		this.location = location;
-		this.type = type;
 	}
 	
 	public Vector location() {
@@ -30,7 +29,7 @@ public class Enemy implements Character {
 				
 				if (manhattan != 0 && manhattan != 2) { // don't go diagonally/stay still
 					Vector newLoc = location.add(new Vector(dx, dy));
-					if (!maze.isWall(newLoc) && !newLoc.equals(lastLocation)) { // Don't move into walls or backwards.
+					if (!maze.isWall(newLoc) && !newLoc.equals(lastLocation) && !newLoc.equals(maze.doorLocation())) { // Don't move into walls or backwards.
 						possibilities.add(newLoc);
 					}
 				}
@@ -49,12 +48,7 @@ public class Enemy implements Character {
 		}
 		return location;
 	}
-	
-	public CellType type() {
-		return type;
-	}
 
 	private Vector location;
 	private Vector lastLocation;
-	private CellType type;
 }
