@@ -12,7 +12,8 @@ public class GameRunner {
 			e.printStackTrace();
 		}
     	
-        new GameFrame();
+        GameFrame frame = new GameFrame();
+        frame.startGame();
     }
     
 }

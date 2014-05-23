@@ -37,13 +37,15 @@ public class GameFrame extends JFrame {
         } 
 		options = new Options();
 		this.setTitle("Wobman the Key Master");
-		runMenu();
+		
 		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-	    manager.addKeyEventDispatcher(new GameKeyDispatcher());
-	    
-	    menuMusic = new AudioManager("music/menu.wav");
+	    manager.addKeyEventDispatcher(new GameKeyDispatcher());   
+	}
+	
+	public void startGame() {
+		runMenu();
+		menuMusic = new AudioManager("music/menu.wav");
 	    menuMusic.play(true);
-	    
 	}
 	
 	private class GameKeyDispatcher implements KeyEventDispatcher {
@@ -87,7 +89,7 @@ public class GameFrame extends JFrame {
 		menuPanel.setBackground(Color.black);
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
 
-		JLabel wobman = makeImageLabel("img/wobby.png", -1, -1);
+		JLabel wobman = makeImageLabel("img/wobman.png", -1, -1);
 		wobman.setBorder(BorderFactory.createEmptyBorder(70,0,20,0));
 		menuPanel.add(wobman);
 		//TODO: fix the image for wobby
@@ -141,12 +143,6 @@ public class GameFrame extends JFrame {
         this.add(menuPanel);
         this.repaint();
         this.setVisible(true);
-       
-        System.out.println(menuMusic);
-	   // menuMusic.play(true);
-	    
-
-        
     }
 	
 	
@@ -195,7 +191,7 @@ public class GameFrame extends JFrame {
     	leftPanel.add(menuButton);
 
     	buttonPanel.add(leftPanel);
-    	buttonPanel.add(makeImageLabel("img/wobby.png", 337, 62));
+    	buttonPanel.add(makeImageLabel("img/wobman.png", 337, 62));
 
     	JPanel rightPanel = new JPanel();
     	rightPanel.setBackground(Color.black);
