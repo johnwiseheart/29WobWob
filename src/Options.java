@@ -4,7 +4,7 @@ public class Options {
 	public Options() {
 		this.effects = true;
 		this.music = true;
-		this.difficulty = EASY;
+		this.difficulty = DifficultyType.EASY;
 	}
 	
 	
@@ -24,19 +24,21 @@ public class Options {
 		this.music = music;
 	}
 	
-	public int getDifficulty() {
+	public DifficultyType getDifficulty() {
 		return difficulty;
 	}
 	
-	public void setDifficulty(int difficulty) {
+	public void setDifficulty(DifficultyType difficulty) {
 		this.difficulty = difficulty;
 	}
 
 	private boolean effects;
 	private boolean music;
-	private int difficulty;
-	public final int EASY = 0;
-	public final int MEDIUM = 1;
-	public final int HARD = 2;
-	public final int IMPOSSIBLE = 3;
+	private DifficultyType difficulty;
+	public enum DifficultyType {
+		EASY,
+		MEDIUM,
+		HARD,
+		IMPOSSIBLE
+	}
 }

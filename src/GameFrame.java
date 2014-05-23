@@ -15,11 +15,9 @@ import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -29,7 +27,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 public class GameFrame extends JFrame {
 
@@ -393,7 +390,7 @@ public class GameFrame extends JFrame {
     	difficultyEasyButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
-            	   options.setDifficulty(options.EASY); 
+            	   options.setDifficulty(Options.DifficultyType.EASY); 
                }
             });
 		difficultyOptions.add(difficultyEasyButton);
@@ -401,7 +398,7 @@ public class GameFrame extends JFrame {
     	difficultyMedButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
-            	   options.setDifficulty(options.MEDIUM); 
+            	   options.setDifficulty(Options.DifficultyType.MEDIUM); 
                }
             });
     	difficultyOptions.add(difficultyMedButton);
@@ -409,7 +406,7 @@ public class GameFrame extends JFrame {
     	difficultyHardButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
-            	   options.setDifficulty(options.HARD); 
+            	   options.setDifficulty(Options.DifficultyType.HARD); 
                }
             });
     	difficultyOptions.add(difficultyHardButton);
@@ -469,7 +466,19 @@ public class GameFrame extends JFrame {
         this.repaint();
         this.setVisible(true);
     }
-
+    
+    public void updateScore(int score) {
+    	scoreLabel.setText(score + "");
+    }
+    
+    public void updateLives(int lives) {
+    	livesLabel.setText(lives + "");
+    }
+    
+    public void updateLevel(int level) {
+    	levelLabel.setText(level + "");
+    }
+    
     // TODO: stolen off the Internet we need to rewrite this
     private static BufferedImage resizeImage( Image image, int width, int height) {
 

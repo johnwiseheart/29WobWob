@@ -6,72 +6,60 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 
-
+/**
+ * Represents and manages a piece of audio that can be played in the game.
+ * 
+ * @author john
+ * 
+ */
 public class AudioManager {
+
 	public AudioManager(String file_name) {
-		this.file_name = file_name;
 		load(file_name);
 	}
-	public void load(String file_name) {
-		this.file_name = file_name;
-		File soundFile = new File(file_name);
-        AudioInputStream ais;
-		try {
-			ais = AudioSystem.getAudioInputStream(soundFile);
-			AudioInputStream soundIn = AudioSystem
-			        .getAudioInputStream(soundFile);
-			        AudioFormat format = soundIn.getFormat();
-			        DataLine.Info info = new DataLine.Info(Clip.class, format);
 
-			        clip = (Clip) AudioSystem.getLine(info);
-			        clip.open(ais);
+	/**
+	 * Loads a piece of audio into the clip.
+	 * 
+	 * @param file_name
+	 *            The location and name of the file in the local file system.
+	 */
+	public void load(String file_name) {
+		File file = new File(file_name);
+		AudioInputStream audio;
+		try {
+			audio = AudioSystem.getAudioInputStream(file);
+			AudioInputStream soundIn = AudioSystem.getAudioInputStream(file);
+			AudioFormat format = soundIn.getFormat();
+			clip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class,
+					format));
+			clip.open(audio);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((file_name == null) ? 0 : file_name.hashCode());
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AudioManager other = (AudioManager) obj;
-		if (file_name == null) {
-			if (other.file_name != null)
-				return false;
-		} else if (!file_name.equals(other.file_name))
-			return false;
-		return true;
-	}
+
+	/**
+	 * Starts the clip playing.
+	 * 
+	 * @param loop
+	 *            Whether or not the clip should loop
+	 */
 	public void play(boolean loop) {
-		if(clip.isRunning()) {
+		if (clip.isRunning())
 			return;
-		}
-		if(loop) {
+		if (loop)
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
-		}
-        clip.start();
+		clip.start();
 	}
-	
+
+	/**
+	 * Stops the clip from playing
+	 */
 	public void stop() {
 		clip.stop();
 	}
-	
-	public boolean isPlaying() {
-		return clip.isRunning();
-	}
-	private String file_name;
-    private Clip clip;
+
+	private Clip clip;
 }

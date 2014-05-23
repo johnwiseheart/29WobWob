@@ -1,9 +1,7 @@
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -14,13 +12,16 @@ import java.util.Observer;
 import java.util.Observable;
 
 import javax.imageio.ImageIO;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 
 public class MazePanel extends JPanel implements Observer {
     
-    public MazePanel() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -600678118735264063L;
+	public MazePanel() {
         displayMaze = null;
     }
 
