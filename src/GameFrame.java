@@ -1,6 +1,7 @@
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -10,12 +11,15 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -25,6 +29,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 public class GameFrame extends JFrame {
 
@@ -33,10 +38,19 @@ public class GameFrame extends JFrame {
 		 try{
             InputStream is = new FileInputStream("font/joystix.ttf");
             joystix = Font.createFont(Font.TRUETYPE_FONT, is);
+            
+            HashMap<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+            attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+            joystixul = joystix.deriveFont(attributes);
         } catch (Exception e) {
         } 
 		options = new Options();
-		this.setTitle("Wobman the Key Master");
+		setTitle("Wobman the Key Master");
+		setMinimumSize(new Dimension(800,600));
+		setSize(800, 600);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBackground(Color.black);
+        getContentPane().setBackground(Color.black);
 		
 		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 	    manager.addKeyEventDispatcher(new GameKeyDispatcher());   
@@ -79,12 +93,6 @@ public class GameFrame extends JFrame {
     }
 	
 	private void runMenu() {
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setBackground(Color.black);
-        this.getContentPane().setBackground(Color.black);
-        this.setSize(800, 600);
-        this.setResizable(false);
-
 		JPanel menuPanel = new JPanel();
 		menuPanel.setBackground(Color.black);
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
@@ -97,7 +105,7 @@ public class GameFrame extends JFrame {
 		keymaster.setBorder(BorderFactory.createEmptyBorder(0,0,80,0));
 		menuPanel.add(keymaster);
 
-    	JButton playButton = makeButton("Play", 36);
+    	JButton playButton = makeButton("Play", joystix, 36);
 		playButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -109,7 +117,7 @@ public class GameFrame extends JFrame {
 		
     	menuPanel.add(playButton);
 
-    	JButton optionsButton = makeButton("Options", 36);
+    	JButton optionsButton = makeButton("Options", joystix, 36);
 		optionsButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -120,7 +128,7 @@ public class GameFrame extends JFrame {
 
     	menuPanel.add(optionsButton);
 
-    	JButton controlsButton = makeButton("Controls", 36);
+    	JButton controlsButton = makeButton("Controls", joystix, 36);
 		controlsButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -131,7 +139,7 @@ public class GameFrame extends JFrame {
 
     	menuPanel.add(controlsButton);
 
-    	JButton exitButton = makeButton("Exit", 36);
+    	JButton exitButton = makeButton("Exit", joystix, 36);
 		exitButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -163,7 +171,7 @@ public class GameFrame extends JFrame {
     	menuPanel.setBackground(Color.black);
     	menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
 
-    	JButton pauseButton = makeButton("Pause", 20);
+    	JButton pauseButton = makeButton("Pause", joystix, 20);
     	pauseButton.addActionListener(new
                 ActionListener() {
                    public void actionPerformed(ActionEvent event) {
@@ -174,7 +182,7 @@ public class GameFrame extends JFrame {
                    }
                 });
     	menuPanel.add(pauseButton);
-    	JButton menuButton = makeButton("Menu", 20);
+    	JButton menuButton = makeButton("Menu", joystix, 20);
 
     	menuButton.addActionListener(new
             ActionListener() {
@@ -196,7 +204,7 @@ public class GameFrame extends JFrame {
     	livePanel.setLayout(new BoxLayout(livePanel, BoxLayout.PAGE_AXIS));
 
     	livePanel.add(makeLabel("Lives", 20));
-    	livePanel.add(makeButton("3", 20));
+    	livePanel.add(makeButton("3", joystix, 20));
     	
     	
     	
@@ -208,7 +216,7 @@ public class GameFrame extends JFrame {
     	scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.PAGE_AXIS));
 
     	scorePanel.add(makeLabel("Score", 20));
-    	scorePanel.add(makeButton("3889", 20));
+    	scorePanel.add(makeButton("3889", joystix, 20));
     	buttonPanel.add(scorePanel);
     	
     	JPanel levelPanel = new JPanel();
@@ -216,7 +224,7 @@ public class GameFrame extends JFrame {
     	levelPanel.setLayout(new BoxLayout(levelPanel, BoxLayout.PAGE_AXIS));
 
     	levelPanel.add(makeLabel("Level", 20));
-    	levelPanel.add(makeButton("8", 20));
+    	levelPanel.add(makeButton("8", joystix, 20));
     	
     	buttonPanel.add(levelPanel);
 
@@ -224,9 +232,11 @@ public class GameFrame extends JFrame {
 
     	MazeComponent mazeDisplay = new MazeComponent();
         gameState = new GameState(31, 19, mazeDisplay);
-    	gamePanel.add(mazeDisplay);
-
+        //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        gamePanel.setMaximumSize(new Dimension(1000,100));
     	this.add(gamePanel);
+    	this.add(mazeDisplay);
     	this.repaint();
         this.setVisible(true);
 
@@ -248,7 +258,7 @@ public class GameFrame extends JFrame {
           	}
         };
         tickThread = new Thread(r1);
-        tickThread.start();
+        //tickThread.start();
         
         gameMusic = new AudioManager("music/game.wav");
 	    gameMusic.play(true);
@@ -257,12 +267,6 @@ public class GameFrame extends JFrame {
     
     // TODO ARE WORK
     private void runPauseFrame() {
-    	
-    	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setBackground(Color.black);
-        this.getContentPane().setBackground(Color.black);
-        this.setSize(800, 600);
-        this.setResizable(false);
 
     	JPanel pausePanel = new JPanel();
     	pausePanel.setBackground(Color.black);
@@ -278,7 +282,7 @@ public class GameFrame extends JFrame {
     	optionsPanel.add(controls);
     	*/
     	
-    	JButton resumeButton = makeButton("resume", 36);
+    	JButton resumeButton = makeButton("resume", joystix, 36);
     	resumeButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -295,18 +299,21 @@ public class GameFrame extends JFrame {
     }
     
     private void runOptions() {
+    	//TODO: Indication of which option is pressed
+    	//TODO: Save options to a file
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setBackground(Color.black);
         this.getContentPane().setBackground(Color.black);
         this.setSize(800, 600);
-        this.setResizable(false);
+        //this.setResizable(false);
 
 		JPanel optionsPanel = new JPanel();
 		optionsPanel.setBackground(Color.black);
 		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
 
 		JLabel heading = makeLabel("Options", 50);
-		heading.setBorder(BorderFactory.createEmptyBorder(70,0,50,0));
+		
+		heading.setBorder(BorderFactory.createEmptyBorder(30,0,50,0));
 		optionsPanel.add(heading);
 
 		
@@ -315,21 +322,34 @@ public class GameFrame extends JFrame {
 
     	JLabel musicLabel = makeLabel("music:", 36);
 		musicOptions.add(musicLabel);
-    	JButton musicOnButton = makeButton("on", 36);
+    	JButton musicOnButton = makeButton("on", joystixul, 36);
 		musicOnButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
+            	   Object source = event.getSource();
+                   if (source instanceof JButton) {
+                       JButton btn = (JButton)source;
+                       btn.setFont(joystix.deriveFont(36f));
+                   }
+            	   
             	   options.setMusic(true);
-            	   //TODO: Start Music
+            	   menuMusic.play(true);
                }
             });
 		musicOptions.add(musicOnButton);
-    	JButton musicOffButton = makeButton("off", 36);
+    	JButton musicOffButton = makeButton("off", joystix, 36);
 		musicOffButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
+            	   Object source = event.getSource();
+                   if (source instanceof JButton) {
+                       JButton btn = (JButton)source;
+                       btn.setFont(joystixul.deriveFont(36f));
+                       
+                   }
+                   
             	   options.setMusic(false);
-            	   //TODO: Stop Music
+            	   menuMusic.stop();
                }
             });
 		musicOptions.add(musicOffButton);
@@ -341,7 +361,7 @@ public class GameFrame extends JFrame {
 
     	JLabel effectsLabel = makeLabel("sfx:", 36);
 		effectsOptions.add(effectsLabel);
-    	JButton effectsOnButton = makeButton("on", 36);
+    	JButton effectsOnButton = makeButton("on", joystixul, 36);
 		effectsOnButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -349,7 +369,7 @@ public class GameFrame extends JFrame {
                }
             });
 		effectsOptions.add(effectsOnButton);
-    	JButton effectsOffButton = makeButton("off", 36);
+    	JButton effectsOffButton = makeButton("off", joystix, 36);
 		effectsOffButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -365,7 +385,8 @@ public class GameFrame extends JFrame {
 
     	JLabel difficultyLabel = makeLabel("diff:", 36);
     	difficultyOptions.add(difficultyLabel);
-    	JButton difficultyEasyButton = makeButton("easy", 36);
+    	JButton difficultyEasyButton = makeButton("easy", joystixul, 36);
+    	
     	difficultyEasyButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -373,7 +394,7 @@ public class GameFrame extends JFrame {
                }
             });
 		difficultyOptions.add(difficultyEasyButton);
-    	JButton difficultyMedButton = makeButton("med", 36);
+    	JButton difficultyMedButton = makeButton("med", joystix, 36);
     	difficultyMedButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -381,7 +402,7 @@ public class GameFrame extends JFrame {
                }
             });
     	difficultyOptions.add(difficultyMedButton);
-    	JButton difficultyHardButton = makeButton("hard", 36);
+    	JButton difficultyHardButton = makeButton("hard", joystix, 36);
     	difficultyHardButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -402,7 +423,7 @@ public class GameFrame extends JFrame {
 		difficultyOptions.setBackground(Color.black);
     	optionsPanel.add(difficultyOptions);
     	
-    	JButton backButton = makeButton("Back", 36);
+    	JButton backButton = makeButton("Back", joystix, 36);
 		backButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -418,25 +439,20 @@ public class GameFrame extends JFrame {
     }
     
     private void runControls() {
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setBackground(Color.black);
-        this.getContentPane().setBackground(Color.black);
-        this.setSize(800, 600);
-        this.setResizable(false);
 
 		JPanel optionsPanel = new JPanel();
 		optionsPanel.setBackground(Color.black);
 		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
 
 		JLabel heading = makeLabel("Controls", 50);
-		heading.setBorder(BorderFactory.createEmptyBorder(70,0,70,0));
+		heading.setBorder(BorderFactory.createEmptyBorder(30,0,70,0));
 		optionsPanel.add(heading);
 
 		JLabel controls = makeImageLabel("img/controls.png", -1, -1);
 		controls.setBorder(BorderFactory.createEmptyBorder(0,0,70,0));
 		optionsPanel.add(controls);
 		
-    	JButton backButton = makeButton("Back", 36);
+    	JButton backButton = makeButton("Back", joystix, 36);
 		backButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -463,14 +479,15 @@ public class GameFrame extends JFrame {
         return bufferedImage;
     }
 
-    private static JButton makeButton(String text, float font_size) {
+    private static JButton makeButton(String text, Font font, float font_size) {
     	JButton button = new JButton(text);
     	button.setAlignmentX(Component.CENTER_ALIGNMENT);
-    	button.setFont(joystix.deriveFont(font_size));
+    	button.setFont(font.deriveFont(font_size));
     	button.setForeground(ourGreen);
     	button.setBackground(Color.black);
     	button.setOpaque(true);
     	button.setBorderPainted(false);
+    	
     	return button;
     }
 
@@ -504,6 +521,7 @@ public class GameFrame extends JFrame {
     private static AudioManager gameMusic;
     private static AudioManager menuMusic;
     private static Font joystix = null;
+    private static Font joystixul = null;
     private final static Color ourGreen = new Color(0xA1FF9C);
     private Thread tickThread;
     private GameState gameState;

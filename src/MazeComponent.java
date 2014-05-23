@@ -1,5 +1,6 @@
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -14,9 +15,10 @@ import java.util.Observable;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 
-public class MazeComponent extends JComponent implements Observer {
+public class MazeComponent extends JPanel implements Observer {
     
     public MazeComponent() {
         displayMaze = null;
@@ -99,8 +101,9 @@ public class MazeComponent extends JComponent implements Observer {
         }
         
         //TODO: fix this shit its not responsive
-        //this.setSize(displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
-        this.setBounds(12, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
+       // this.setSize(displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
+        setMaximumSize(new Dimension(displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE));
+        //this.setBounds(12, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
         //this.setBounds(0, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
     }
     
