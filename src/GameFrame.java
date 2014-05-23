@@ -260,7 +260,7 @@ public class GameFrame extends JFrame {
         tickThread = new Thread(r1);
         tickThread.start();
         
-        gameMusic = new AudioManager("music/game.wav");
+        gameMusic = new AudioManager("music/game2.wav");
 	    gameMusic.play(true);
 
     }
