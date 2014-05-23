@@ -204,9 +204,8 @@ public class GameFrame extends JFrame {
     	livePanel.setLayout(new BoxLayout(livePanel, BoxLayout.PAGE_AXIS));
 
     	livePanel.add(makeLabel("Lives", 20));
-    	livePanel.add(makeButton("3", joystix, 20));
-    	
-    	
+    	livesLabel = makeLabel("8", 20);
+    	livePanel.add(livesLabel);
     	
     	buttonPanel.add(livePanel);
     	buttonPanel.add(makeImageLabel("img/wobman.png", 337, 62));
@@ -216,7 +215,10 @@ public class GameFrame extends JFrame {
     	scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.PAGE_AXIS));
 
     	scorePanel.add(makeLabel("Score", 20));
-    	scorePanel.add(makeButton("3889", joystix, 20));
+    	scoreLabel = makeLabel("3889", 20);
+    	scorePanel.add(scoreLabel);
+    	
+    	
     	buttonPanel.add(scorePanel);
     	
     	JPanel levelPanel = new JPanel();
@@ -224,13 +226,14 @@ public class GameFrame extends JFrame {
     	levelPanel.setLayout(new BoxLayout(levelPanel, BoxLayout.PAGE_AXIS));
 
     	levelPanel.add(makeLabel("Level", 20));
-    	levelPanel.add(makeButton("8", joystix, 20));
+    	levelLabel = makeLabel("8", 20);
+    	levelPanel.add(levelLabel);
     	
     	buttonPanel.add(levelPanel);
 
     	gamePanel.add(buttonPanel);
 
-    	MazeComponent mazeDisplay = new MazeComponent();
+    	MazePanel mazeDisplay = new MazePanel();
         gameState = new GameState(31, 19, mazeDisplay);
         //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
         
@@ -258,7 +261,7 @@ public class GameFrame extends JFrame {
           	}
         };
         tickThread = new Thread(r1);
-        //tickThread.start();
+        tickThread.start();
         
         gameMusic = new AudioManager("music/game.wav");
 	    gameMusic.play(true);
@@ -526,5 +529,9 @@ public class GameFrame extends JFrame {
     private Thread tickThread;
     private GameState gameState;
     private Options options;
+    
+    private JLabel livesLabel;
+    private JLabel scoreLabel;
+    private JLabel levelLabel;
 
 }

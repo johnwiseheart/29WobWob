@@ -2,7 +2,7 @@ import java.util.Observable;
 
 public class GameState extends Observable{
     
-    public GameState(int width, int height, MazeComponent mazeDisplay) {
+    public GameState(int width, int height, MazePanel mazeDisplay) {
         this.addObserver(mazeDisplay);
         maze = new Maze(width, height, new SimpleMazeGenerator(), 3, 0, 3);
         // On any change we just need to call setChanged() and then notifyObervers().

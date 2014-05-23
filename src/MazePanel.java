@@ -18,9 +18,9 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 
-public class MazeComponent extends JPanel implements Observer {
+public class MazePanel extends JPanel implements Observer {
     
-    public MazeComponent() {
+    public MazePanel() {
         displayMaze = null;
     }
 
