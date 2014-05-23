@@ -44,7 +44,7 @@ public class GameFrame extends JFrame {
 	
 	public void startGame() {
 		runMenu();
-		menuMusic = new AudioManager("music/menu.wav");
+		menuMusic = new AudioManager("music/wob2.wav");
 	    menuMusic.play(true);
 	}
 	
@@ -155,13 +155,13 @@ public class GameFrame extends JFrame {
     	BoxLayout boxLayout = new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS); // top to bottom
     	this.setLayout(boxLayout);
 
-    	JPanel buttonPanel = new JPanel();
+    	JPanel buttonPanel = new JPanel(new FlowLayout());
     	buttonPanel.setBackground(Color.black);
-    	buttonPanel.setLayout(new FlowLayout());
+    	
 
-    	JPanel leftPanel = new JPanel();
-    	leftPanel.setBackground(Color.black);
-    	leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
+    	JPanel menuPanel = new JPanel();
+    	menuPanel.setBackground(Color.black);
+    	menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
 
     	JButton pauseButton = makeButton("Pause", 20);
     	pauseButton.addActionListener(new
@@ -173,7 +173,7 @@ public class GameFrame extends JFrame {
                 	   runPauseFrame();
                    }
                 });
-    	leftPanel.add(pauseButton);
+    	menuPanel.add(pauseButton);
     	JButton menuButton = makeButton("Menu", 20);
 
     	menuButton.addActionListener(new
@@ -188,18 +188,37 @@ public class GameFrame extends JFrame {
                }
             });
     	
-    	leftPanel.add(menuButton);
+    	menuPanel.add(menuButton);
+    	buttonPanel.add(menuPanel);
+    	
+    	JPanel livePanel = new JPanel();
+    	livePanel.setBackground(Color.black);
+    	livePanel.setLayout(new BoxLayout(livePanel, BoxLayout.PAGE_AXIS));
 
-    	buttonPanel.add(leftPanel);
+    	livePanel.add(makeLabel("Lives", 20));
+    	livePanel.add(makeButton("3", 20));
+    	
+    	
+    	
+    	buttonPanel.add(livePanel);
     	buttonPanel.add(makeImageLabel("img/wobman.png", 337, 62));
 
-    	JPanel rightPanel = new JPanel();
-    	rightPanel.setBackground(Color.black);
-    	rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.PAGE_AXIS));
+    	JPanel scorePanel = new JPanel();
+    	scorePanel.setBackground(Color.black);
+    	scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.PAGE_AXIS));
 
-    	rightPanel.add(makeLabel("Score", 20));
-    	rightPanel.add(makeButton("3889", 20));
-    	buttonPanel.add(rightPanel);
+    	scorePanel.add(makeLabel("Score", 20));
+    	scorePanel.add(makeButton("3889", 20));
+    	buttonPanel.add(scorePanel);
+    	
+    	JPanel levelPanel = new JPanel();
+    	levelPanel.setBackground(Color.black);
+    	levelPanel.setLayout(new BoxLayout(levelPanel, BoxLayout.PAGE_AXIS));
+
+    	levelPanel.add(makeLabel("Level", 20));
+    	levelPanel.add(makeButton("8", 20));
+    	
+    	buttonPanel.add(levelPanel);
 
     	gamePanel.add(buttonPanel);
 
