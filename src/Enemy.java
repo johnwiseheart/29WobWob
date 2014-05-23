@@ -1,12 +1,19 @@
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 
 
 public class Enemy implements Character {
 
-	public Enemy(Vector location) { // TODO: difficulty stuff?
+	public Enemy(Vector location, Integer searchDistance, Double randomMoveProbability) {
 		this.location = location;
+		
+		this.searchDistance = searchDistance;
+		this.randomMoveProbability = randomMoveProbability;
+		
+		lastLocation = null;
 	}
 	
 	public Vector location() {
@@ -20,101 +27,114 @@ public class Enemy implements Character {
 	public Vector move(Maze maze) {
 		// make a god damn move
 		
-		/*int[] directions = {1, -1, 0};
+		Random r = new Random();
+		int[] dirs = {-1, 0, 1};
 		
-		ArrayList<Vector> possibilities = new ArrayList<Vector>();
-		
-		for (int dx : directions) {
-			for (int dy : directions) {
-				int manhattan = Math.abs(dx) + Math.abs(dy);
-				
-				if (manhattan != 0 && manhattan != 2) { // don't go diagonally/stay still
-					Vector newLoc = location.add(new Vector(dx, dy));
-					if (!maze.isWall(newLoc) && !newLoc.equals(lastLocation) && !newLoc.equals(maze.doorLocation())) { // Don't move into walls or backwards.
-						possibilities.add(newLoc);
+		Double prob = r.nextDouble();
+		if (prob <= randomMoveProbability) {
+			
+			ArrayList<Vector> moves = new ArrayList<Vector>();
+			
+			for (int dx : dirs) {
+				for (int dy : dirs) {
+					int dist = Math.abs(dx) + Math.abs(dy);
+					
+					if (dist == 1) {
+						
+						Vector move = location.add(new Vector(dx, dy));
+						if (!maze.isWall(move) && !move.equals(lastLocation) && !move.equals(maze.doorLocation())) {
+							moves.add(move);
+						}
+						
 					}
 				}
 			}
-		}
-		
-		if (possibilities.size() == 0) {
-			//Move backwards;
-		    Vector temp = location;
-		    location = lastLocation;
-		    lastLocation = temp;
-		} else {
-			Random r = new Random();
-			return possibilities.get(r.nextInt(possibilities.size()));
-		}*/
-		
-		// BFS for wobman
-		
-		class Node {
-			Vector location;
-			Vector firstMove;
 			
-			public Node(Vector start) {
-				location = start;
-				firstMove = null;
-			}
-			
-			public Node(Node prev, int dx, int dy) {
-				location = prev.location.add(new Vector(dx, dy));
+			if (!moves.isEmpty()) {
+				Vector move = moves.get(r.nextInt(moves.size()));
 				
-				if (prev.firstMove != null) {
-					firstMove = prev.firstMove;
-				} else {
-					firstMove = location;
+				lastLocation = location;
+				location = move;
+			} else {
+				Vector tmp = location;
+				location = lastLocation;
+				lastLocation = tmp;
+			}
+			
+		} else {
+			// start by BFSing for the player
+			
+			class BFSNode {
+				Vector location;
+				Vector firstMove;
+				int distance;
+				
+				public BFSNode(Vector start) {
+					location = start;
+					firstMove = null;
+					distance = 0;
 				}
-			}
-		};
-		
-		Queue<Node> q = new LinkedList<Node>();
-		HashSet<Vector> visited = new HashSet<Vector>();
-		
-		int[] directions = {-1, 0, 1};
-
-		q.add(new Node(location));
-		
-		while (!q.isEmpty()) {
-			Node n = q.remove();
+				
+				public BFSNode(BFSNode prev, int dx, int dy) {
+					location = prev.location.add(new Vector(dx, dy));
+					
+					firstMove = prev.firstMove;
+					if (firstMove == null)
+						firstMove = location;
+				}
+			};
 			
-			if (visited.contains(n.location)) {
-				continue;
-			}
-			visited.add(n.location);
+			Queue<BFSNode> queue = new LinkedList<BFSNode>();
+			HashSet<Vector> visited = new HashSet<Vector>();
+			Vector target = maze.playerLocation();
 			
-			//System.out.println("testing " + n.location.x() + " " + n.location.y() + " " + maze.getCell(n.location).name());
+			Vector optimalMove = null;
 			
-			// did we find the wobman?
-			if (n.location.equals(maze.playerLocation())) {
-				// yeah we did, so use this move
-				System.out.println("sweet");
-				location = n.firstMove;
-				//TODO: fix this sometimes being null.
-				return n.firstMove;
-			}
+			// add initial node
+			queue.add(new BFSNode(location));
 			
-			// expand node
-			for (int dx : directions) {
-				for (int dy : directions) {
-					int manhattan = Math.abs(dx) + Math.abs(dy);
-					if (manhattan == 1) {
-						Node n2 = new Node(n, dx, dy);
-						
-						if (!maze.isWall(n2.location)) {
-							q.add(n2);
+			while (!queue.isEmpty()) {
+				BFSNode node = queue.remove();
+				
+				if (visited.contains(node.location)) {
+					continue;
+				}
+				
+				visited.add(node.location);
+				
+				if (target.equals(node.location)) {
+					optimalMove = node.firstMove;
+					break;
+				}
+				
+				if (node.distance <= searchDistance) {
+					for (int dx : dirs) {
+						for (int dy : dirs) {
+							int dist = Math.abs(dx) + Math.abs(dy);
+							
+							if (dist == 1) {
+								
+								BFSNode newNode = new BFSNode(node, dx, dy);
+								if (!maze.isWall(newNode.location)) { 
+									queue.add(newNode);
+								}
+								
+							}
 						}
 					}
 				}
 			}
+			
+			lastLocation = location;
+			location = optimalMove;
 		}
 		
-		// u wob
-		System.out.println("U wob");
 		return location;
 	}
 
 	private Vector location;
 	private Vector lastLocation;
+
+	private Integer searchDistance;
+	private Double randomMoveProbability;
 }

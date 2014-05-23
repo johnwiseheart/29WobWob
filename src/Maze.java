@@ -9,7 +9,9 @@ public class Maze {
         grid = mazeGenerator.generateMaze(width, height);
         player = new Player(new Vector(width/2, 1), lives);
         enemies = new ArrayList<Enemy>();
+
         placeEnemies(numEnemy);
+
         this.numKeysCollected = 0;
         this.score = score;
         this.hasDied = false;
@@ -33,7 +35,7 @@ public class Maze {
                 continue;
             }
             
-            enemies.add(new Enemy(v));
+            enemies.add(new Enemy(v, 10, 0.3)); // TODO: actual difficulty stuff from some place
         }
     }
     
