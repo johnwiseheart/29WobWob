@@ -4,6 +4,11 @@ import java.util.Random;
 
 public class GameState extends Observable{
     
+    /**
+     * Creates a new GameState
+     * @param width the starting width of the maze
+     * @param height the starting height of the maze
+     */
     public GameState(int width, int height) {
         maze = new Maze(width, height, new BraidedMazeGenerator(), 6, 4);
         
@@ -19,6 +24,7 @@ public class GameState extends Observable{
         hasDied = false;
         score = 0;
         numKeysCollected = 0;
+        gameFinished = false;
         
         // On any change we just need to call setChanged() and then notifyObervers().
         // Anything observing the GameState will have it's update() method called.
@@ -26,8 +32,8 @@ public class GameState extends Observable{
     }
     
     /**
-     * Sets the player's velocity.
-     * @param velocity the player's new velocity.
+     * Sets the player's velocity
+     * @param velocity the player's new velocity
      */
     public void setPlayerVelocity(Vector velocity) {
     	player.setVelocity(velocity);
@@ -43,15 +49,18 @@ public class GameState extends Observable{
     }
     
     /**
-     * Update the player on each tick.
+     * Update the player on each tick
      */
     public void tickPlayer() {
         Vector newLoc = player.move(maze, null);
+        // Check if the player touched an enemy.
         for (Vector v : enemyLocations()) {
             if (v.equals(newLoc)) {
                 hasDied = true;
             }
         }
+        
+        updateDisplay();
         
         if (hasDied) { // Lose a life.
             loseLife();
@@ -80,11 +89,10 @@ public class GameState extends Observable{
             }
             score += 10;
         }
-        
     }
     
     /**
-     * 
+     * Update all the enemies each tick
      */
     public void tickEnemies() {
     	// Trust enemies to know what they're doing.
@@ -93,9 +101,13 @@ public class GameState extends Observable{
                 hasDied = true;
             }
         }
+        updateDisplay();
     }
     
-    public void loseLife() {
+    /**
+     * Make the player lose a life, resetting their position or ending the game
+     */
+    private void loseLife() {
     	//TODO: put this in the right place.
     	AudioManager dieSound = new AudioManager("music/dieing.wav");
     	dieSound.play();
@@ -106,32 +118,57 @@ public class GameState extends Observable{
         }
     }
     
-    public void finishGame() {
-        // TODO: not this.
-        System.exit(1);
+    /**
+     * Finish the game once the player loses all lives
+     */
+    private void finishGame() {
+        gameFinished = true;
     }
     
-    public void updateDisplay() {
+    /**
+     * Notify all observers that the GameState has changed
+     */
+    private void updateDisplay() {
         this.setChanged();
         this.notifyObservers();
     }
     
+    /**
+     * Returns the number of keys the player has collected
+     * @return the number of keys the player has collected
+     */
     public int getNumKeysCollected() {
         return numKeysCollected;
     }
     
+    /**
+     * Returns the current score of the player
+     * @return the current score of the player
+     */
     public int getScore() {
         return score;
     }
     
+    /**
+     * Returns the current state of the maze
+     * @return the current state of the maze
+     */
     public Maze getMaze() {
         return maze;
     }
     
+    /**
+     * Returns the player's current location
+     * @return the player's current location
+     */
     public Vector playerLocation() {
         return player.location();
     }
     
+    /**
+     * Returns the current locations of all the enemies
+     * @return the current locations of all the enemies
+     */
     public ArrayList<Vector> enemyLocations() {
         ArrayList<Vector> locations = new ArrayList<Vector>();
         for (Enemy enemy : enemies) {
@@ -140,11 +177,23 @@ public class GameState extends Observable{
         return locations;
     }
     
-    public void resetPlayer() {
+    public boolean gameFinished() {
+        return gameFinished;
+    }
+    
+    /**
+     * Resets the player after they lose a life or a new level starts
+     */
+    private void resetPlayer() {
         hasDied = false;
         player.reset(new Vector(maze.getWidth()/2, 1));
     }
     
+    /**
+     * Places a number of enemies randomly, sufficiently far away from the
+     * starting location of the player
+     * @param numEnemy the number of enemies to place
+     */
     private void placeNewEnemies(int numEnemy) {
         enemies.clear();
         Random random = new Random();
@@ -152,8 +201,8 @@ public class GameState extends Observable{
         // empty.
         for (int i=0; i<numEnemy; i++) {
             int x = random.nextInt(maze.getWidth()/2)*2 + 1;
-            // Place enemies in lower half so they don't start near the player.
-            int y = random.nextInt(maze.getHeight()/4)*2 + maze.getHeight()/2 + 1;
+            // Place enemies in upper half so they don't start near the player.
+            int y = random.nextInt(maze.getHeight()/4)*2 + 1;
             if (y%2 == 0) {
                 y += 1;
             }
@@ -210,4 +259,5 @@ public class GameState extends Observable{
     private boolean hasDied;
     private int numKeysCollected;
     private int score;
+    private boolean gameFinished;
 }

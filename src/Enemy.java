@@ -29,6 +29,7 @@ public class Enemy implements Character {
 	
 	/**
 	 * Returns the enemy's location
+	 * @return the enemy's location
 	 */
 	public Vector location() {
 		return location;

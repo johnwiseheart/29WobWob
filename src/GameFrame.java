@@ -362,7 +362,6 @@ public class GameFrame extends JFrame {
 	          		    gameState.tickPlayer();
 	          		    gameState.tickEnemies();
           			//}
-          		    gameState.updateDisplay();
           		    counter++;
           		    if(counter == 20)
           		    	counter = 0;
