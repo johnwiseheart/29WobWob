@@ -35,7 +35,8 @@ public class Maze {
                 continue;
             }
             
-            enemies.add(new Enemy(v, 10, 0.3)); // TODO: actual difficulty stuff from some place
+            //enemies.add(new Enemy(v, 10, 0.3)); // TODO: actual difficulty stuff from some place
+            enemies.add(new Enemy(v, 15, 0.3, 20, 7));
         }
     }
     
@@ -79,17 +80,16 @@ public class Maze {
     }
     
     public boolean isEnemy(Vector location) {
-        CellType cell = getCell(location);
-        
-        switch (cell) {
-            case ENEMY1:
-            case ENEMY2:
-            case ENEMY3:
-            case ENEMY4:
-                return true;
-            default:
-                return false;
+        for (Vector enemyLoc : enemyLocations()) {
+        	if (location.equals(enemyLoc)) {
+        		return true;
+        	}
         }
+        return false;
+    }
+    
+    public boolean canEnemyMove(Vector location) {
+    	return !(isWall(location) || isEnemy(location) || doorLocation().equals(location));
     }
     
     public void setCell(int x, int y, CellType cell) {
