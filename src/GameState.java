@@ -34,6 +34,9 @@ public class GameState extends Observable{
     }
     
     public void loseLife() {
+    	//TODO: put this in the right place
+    	AudioManager dieSound = new AudioManager("music/dieing.wav");
+    	dieSound.play();
         if (maze.loseLife() == 0) {
             finishGame();
         } else {
