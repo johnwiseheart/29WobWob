@@ -56,6 +56,16 @@ public class Vector {
 		return new Vector(this.x + other.x, this.y + other.y);
 	}
 	
+	/**
+	 * Finds the distance between the end-points of two vectors
+	 * @param the other vector involved
+	 * @return the distance between the end points of the two vectors
+	 */
+	public int distanceTo(Vector other) {
+	    return (int) Math.round(Math.sqrt((this.x - other.x)*(this.x - other.x) +
+	                                      (this.y - other.y)*(this.y - other.y)));
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

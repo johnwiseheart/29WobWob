@@ -15,6 +15,7 @@ import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -22,6 +23,11 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.SourceDataLine;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -29,6 +35,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 public class GameFrame extends JFrame {
 
@@ -55,11 +62,94 @@ public class GameFrame extends JFrame {
 	    manager.addKeyEventDispatcher(new GameKeyDispatcher());   
 	}
 	
+	class PlayThread extends Thread {
+		byte tempBuffer[] = new byte[5];
+		public void run() {
+			try {
+				while (true) {
+					audioInputStream = AudioSystem.getAudioInputStream(new File("music/wob.wav"));
+					audioFormat = audioInputStream.getFormat();
+					
+					DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
+					sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
+					
+					sourceDataLine.open(audioFormat);
+					sourceDataLine.start();
+					int cnt = audioInputStream.read(tempBuffer, 0, tempBuffer.length);
+					while (cnt != -1) {
+						
+							sourceDataLine.write(tempBuffer, 0, cnt);
+						
+						cnt = audioInputStream.read(tempBuffer, 0, tempBuffer.length);
+					}
+					
+					sourceDataLine.drain();
+					sourceDataLine.close();
+					System.out.println("Audio Closed");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(0);
+			}
+		}
+	}
+	
+	AudioFormat audioFormat;
+	AudioInputStream audioInputStream;
+	SourceDataLine sourceDataLine;
+	boolean muted;
+	
 	public void startGame() {
 		runMenu();
 		menuMusic = new AudioManager("music/wob2.wav");
 	    menuMusic.play(true);
+		
+		//** add this into your application code as appropriate
+		// Open an input stream  to the audio file.
+		
+		
+//		Runnable musicRun = new Runnable (){
+//        	private volatile boolean execute;
+//          	public void run() {
+//          		InputStream in;
+//        		AudioStream as = null;
+//          		this.execute = true;
+//          		while (execute) {
+//          			try {
+//          				in = new FileInputStream("music/wob.wav");
+//          				// Create an AudioStream object from the input stream.
+//          				as = new AudioStream(in);   
+//          			} catch (FileNotFoundException e) {
+//          				// TODO Auto-generated catch block
+//          				e.printStackTrace();
+//          			} catch (IOException e) {
+//          				// TODO Auto-generated catch block
+//          				e.printStackTrace();
+//          			}
+//          			AudioPlayer.player.start(as);
+//          		    try {
+//          		        Thread.sleep(64000);
+//          		    } catch (InterruptedException e) {
+//          		    	execute = false;
+//          		    }
+//          		}
+//          	}
+//        };
+//        Thread musicThread = new Thread(musicRun);
+//        musicThread.start();
+//        
+//		new PlayThread().start();
+		
+		
+		      
+		// Use the static class member "player" from class AudioPlayer to play
+		// clip.
+		            
+		// Similarly, to stop the audio.
+//		AudioPlayer.player.stop(as); 
 	}
+	
+	
 	
 	private class GameKeyDispatcher implements KeyEventDispatcher {
         @Override
@@ -151,20 +241,17 @@ public class GameFrame extends JFrame {
         repaint();
         setVisible(true);
     }
-	
-	
-
  
-    private void runGame() {
-    	JPanel gamePanel = new JPanel();
-    	gamePanel.setBackground(Color.black);
-
+    public void runGame() {
+    	
     	BoxLayout boxLayout = new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS); // top to bottom
-    	setLayout(boxLayout);
+    	this.setLayout(boxLayout);
+    	
+    	JPanel metaGamePanel = new JPanel();
+    	metaGamePanel.setBackground(Color.black);
 
     	JPanel buttonPanel = new JPanel(new FlowLayout());
-    	buttonPanel.setBackground(Color.black);
-    	
+    	buttonPanel.setBackground(Color.black);   	
 
     	JPanel menuPanel = new JPanel();
     	menuPanel.setBackground(Color.black);
@@ -175,8 +262,11 @@ public class GameFrame extends JFrame {
                 ActionListener() {
                    public void actionPerformed(ActionEvent event) {
                 	   if (tickThread.isAlive()) {
-                		   //thr1.interrupt();
+                		   tickThread.interrupt();
                 	   }
+                	   gameMusic.stop();
+                	   menuMusic.play(true);
+                	   getContentPane().removeAll();
                 	   runPauseFrame();
                    }
                 });
@@ -230,27 +320,52 @@ public class GameFrame extends JFrame {
     	
     	buttonPanel.add(levelPanel);
 
-    	gamePanel.add(buttonPanel);
-
-    	MazePanel mazeDisplay = new MazePanel();
-        gameState = new GameState(31, 19, mazeDisplay);
-        //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
+    	metaGamePanel.add(buttonPanel);
         
-        gamePanel.setMaximumSize(new Dimension(1000,100));
+        metaGamePanel.setMaximumSize(new Dimension(1000,100));
+    	
+    	mazeDisplay = new MazePanel();
+        gameState = new GameState(31, 19);
+        gameState.addObserver(mazeDisplay);
+        //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
+    	gamePanel = new JPanel();
+    	gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.PAGE_AXIS));
+    	gamePanel.add(metaGamePanel);
+    	gamePanel.add(mazeDisplay);
+        
+   
     	this.add(gamePanel);
-    	this.add(mazeDisplay);
-    	this.repaint();
+    	
+
+        
+        newTickThread();
+        tickThread.start();
+        
+        gameMusic = new AudioManager("music/game2.wav");
+	    gameMusic.play(true);
+	    
+	    this.repaint();
         this.setVisible(true);
 
-        
-        Runnable r1 = new Runnable (){
+    }
+    
+    //TODO: this is bad
+    private void newTickThread() {
+    	Runnable r1 = new Runnable (){
         	private volatile boolean execute;
+        	private int counter = 0;
           	public void run() {
+          		
           		this.execute = true;
           		while (execute) {
-          		    gameState.tickPlayer();
-          		    gameState.tickEnemies();
+          			//if(counter==0) {
+	          		    gameState.tickPlayer();
+	          		    gameState.tickEnemies();
+          			//}
           		    gameState.updateDisplay();
+          		    counter++;
+          		    if(counter == 20)
+          		    	counter = 0;
           		    try {
           		        Thread.sleep(200);
           		    } catch (InterruptedException e) {
@@ -260,11 +375,6 @@ public class GameFrame extends JFrame {
           	}
         };
         tickThread = new Thread(r1);
-        tickThread.start();
-        
-        gameMusic = new AudioManager("music/game2.wav");
-	    gameMusic.play(true);
-
     }
     
     private void runEndGame() {
@@ -326,20 +436,18 @@ public class GameFrame extends JFrame {
     private void runPauseFrame() {
 
     	JPanel pausePanel = new JPanel();
+    	//pausePanel.setMinimumSize(new Dimension(getWidth(), getHeight()));
+    	//pausePanel.setBounds(0, 0, getWidth(), getHeight());
+    	//pausePanel.setBorder(new EmptyBorder(200, 200, 200, 200));
     	pausePanel.setBackground(Color.black);
-    	pausePanel.setLayout(new BoxLayout(pausePanel, BoxLayout.PAGE_AXIS));
+    	pausePanel.setLayout(new BoxLayout(pausePanel, BoxLayout.Y_AXIS)); // top to bottom
+
 
     	JLabel heading = makeLabel("Paused", 50);
     	heading.setBorder(BorderFactory.createEmptyBorder(70,0,70,0));
     	pausePanel.add(heading);
-
-    	/*
-    	JLabel controls = makeImageLabel("img/controls.png", -1, -1);
-    	controls.setBorder(BorderFactory.createEmptyBorder(0,0,70,0));
-    	optionsPanel.add(controls);
-    	*/
     	
-    	JButton resumeButton = makeButton("resume", joystix, 36);
+    	JButton resumeButton = makeButton("menu", joystix, 36);
     	resumeButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -347,8 +455,25 @@ public class GameFrame extends JFrame {
             	   runMenu();
                }
             });
-
     	pausePanel.add(resumeButton);
+
+    	JButton menuButton = makeButton("resume", joystix, 36);
+    	menuButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   //TODO: this is bad
+            	   getContentPane().removeAll();
+            	   getContentPane().add(gamePanel);
+            	   getContentPane().repaint();
+            	   getContentPane().setVisible(true);
+            	   newTickThread();
+            	   tickThread.start();
+            	   menuMusic.stop();
+            	   gameMusic.play(true); //TODO: why does this only play once
+               }
+            });
+    	pausePanel.add(menuButton);
+    	
         this.add(pausePanel);
         this.repaint();
         this.setVisible(true);
@@ -551,7 +676,7 @@ public class GameFrame extends JFrame {
     }
     
     // TODO: stolen off the Internet we need to rewrite this
-    private static BufferedImage resizeImage( Image image, int width, int height) {
+    public static BufferedImage resizeImage( Image image, int width, int height) {
 
     	final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D graphics2D = bufferedImage.createGraphics();
@@ -562,7 +687,7 @@ public class GameFrame extends JFrame {
         return bufferedImage;
     }
 
-    private static JButton makeButton(String text, Font font, float font_size) {
+    public static JButton makeButton(String text, Font font, float font_size) {
     	JButton button = new JButton(text);
     	button.setAlignmentX(Component.CENTER_ALIGNMENT);
     	button.setFont(font.deriveFont(font_size));
@@ -574,7 +699,7 @@ public class GameFrame extends JFrame {
     	return button;
     }
 
-    private static JLabel makeLabel(String text, float font_size) {
+    public  static JLabel makeLabel(String text, float font_size) {
     	JLabel label = new JLabel(text);
     	label.setAlignmentX(Component.CENTER_ALIGNMENT);
     	label.setFont(joystix.deriveFont(font_size));
@@ -584,7 +709,7 @@ public class GameFrame extends JFrame {
     	return label;
     }
 
-    private static JLabel makeImageLabel(String fileName, int height, int width) {
+    public static JLabel makeImageLabel(String fileName, int height, int width) {
     	BufferedImage image = null;
     	JLabel wobman = null;
     	try {
@@ -603,11 +728,13 @@ public class GameFrame extends JFrame {
     }
     private static AudioManager gameMusic;
     private static AudioManager menuMusic;
-    private static Font joystix = null;
-    private static Font joystixul = null;
+    public static Font joystix = null;
+    public static Font joystixul = null;
     private final static Color ourGreen = new Color(0xA1FF9C);
     private Thread tickThread;
     private GameState gameState;
+    private MazePanel mazeDisplay;
+    private JPanel gamePanel;
     private Options options;
     
     private JLabel livesLabel;

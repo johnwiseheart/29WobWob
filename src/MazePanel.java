@@ -22,11 +22,15 @@ public class MazePanel extends JPanel implements Observer {
 	 */
 	private static final long serialVersionUID = -600678118735264063L;
 	public MazePanel() {
-        displayMaze = null;
+        gameState = null;
     }
 
     public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
+        if (gameState == null) {
+            return;
+        }
+        Maze displayMaze = gameState.getMaze();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                              RenderingHints.VALUE_ANTIALIAS_ON);
         super.paintComponent(g);
@@ -75,14 +79,14 @@ public class MazePanel extends JPanel implements Observer {
         }
         // Display player.
         g2d.drawImage(images.get(CellType.PLAYER),
-                      displayMaze.playerLocation().x()*CELL_SIZE,
-                      displayMaze.playerLocation().y()*CELL_SIZE, null);
+                      gameState.playerLocation().x()*CELL_SIZE,
+                      gameState.playerLocation().y()*CELL_SIZE, null);
         
         // Display enemies.
         int i = 0;
-        for (Vector enemyLocation : displayMaze.enemyLocations()) {
+        for (Vector enemyLocation : gameState.enemyLocations()) {
             CellType c = CellType.ENEMY1;
-            switch(i) {
+            switch(i%4) {
             case 0:
                 c = CellType.ENEMY1;
                 break;
@@ -103,15 +107,14 @@ public class MazePanel extends JPanel implements Observer {
         
         //TODO: fix this shit its not responsive
        // this.setSize(displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
-        setMaximumSize(new Dimension(displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE));
+        setMaximumSize(new Dimension(gameState.getMaze().getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE));
         //this.setBounds(12, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
         //this.setBounds(0, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
     }
     
     // Part of the Observer pattern. This method is called when an object being observed notify's it has been changed.
     public void update(Observable o, Object arg) {
-    	Maze newMaze = (Maze) arg;
-    	displayMaze = newMaze;
+    	gameState = (GameState) o;
     	repaint();
     }
     
@@ -147,6 +150,6 @@ public class MazePanel extends JPanel implements Observer {
 		return newImage;
     }
     
-    private Maze displayMaze;
+    private GameState gameState;
     public static final int CELL_SIZE = 25;
 }
