@@ -18,6 +18,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -145,9 +147,9 @@ public class GameFrame extends JFrame {
             });
 
     	menuPanel.add(exitButton);
-        this.add(menuPanel);
-        this.repaint();
-        this.setVisible(true);
+        add(menuPanel);
+        repaint();
+        setVisible(true);
     }
 	
 	
@@ -158,7 +160,7 @@ public class GameFrame extends JFrame {
     	gamePanel.setBackground(Color.black);
 
     	BoxLayout boxLayout = new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS); // top to bottom
-    	this.setLayout(boxLayout);
+    	setLayout(boxLayout);
 
     	JPanel buttonPanel = new JPanel(new FlowLayout());
     	buttonPanel.setBackground(Color.black);
@@ -265,6 +267,61 @@ public class GameFrame extends JFrame {
 
     }
     
+    private void runEndGame() {
+    	JPanel menuPanel = new JPanel();
+		menuPanel.setBackground(Color.black);
+		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
+
+		JLabel keymaster = makeLabel("GAME OVER", 64f);
+		keymaster.setBorder(BorderFactory.createEmptyBorder(80,0,80,0));
+		menuPanel.add(keymaster);
+		
+		
+		JLabel scoreLabel = makeLabel("Score: 33", 32f);
+		menuPanel.add(scoreLabel);
+		
+		JLabel highScoreLabel = makeLabel("NEW HIGH SCORE", 32f);
+		highScoreLabel.setBorder(BorderFactory.createEmptyBorder(0,0,80,0));
+		menuPanel.add(highScoreLabel);
+
+    	JButton restartButton = makeButton("Restart", joystix, 36);
+    	restartButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	  getContentPane().removeAll();
+            	  menuMusic.stop();
+            	  runGame();
+               }
+            });
+		
+    	menuPanel.add(restartButton);
+
+    	JButton menuButton = makeButton("Menu", joystix, 36);
+    	menuButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   getContentPane().removeAll();
+            	   runMenu();
+               }
+            });
+
+    	menuPanel.add(menuButton);
+
+    	JButton quitButton = makeButton("Quit", joystix, 36);
+    	quitButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   System.exit(0);
+               }
+            });
+
+    	menuPanel.add(quitButton);
+
+        add(menuPanel);
+        repaint();
+        setVisible(true);
+    }
+    
     // TODO ARE WORK
     private void runPauseFrame() {
 
@@ -301,12 +358,7 @@ public class GameFrame extends JFrame {
     private void runOptions() {
     	//TODO: Indication of which option is pressed
     	//TODO: Save options to a file
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setBackground(Color.black);
-        this.getContentPane().setBackground(Color.black);
-        this.setSize(800, 600);
-        //this.setResizable(false);
-
+    	
 		JPanel optionsPanel = new JPanel();
 		optionsPanel.setBackground(Color.black);
 		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
@@ -329,11 +381,20 @@ public class GameFrame extends JFrame {
             	   Object source = event.getSource();
                    if (source instanceof JButton) {
                        JButton btn = (JButton)source;
-                       btn.setFont(joystix.deriveFont(36f));
+                       btn.setFont(joystixul.deriveFont(36f));
                    }
+                   
+            	   for(Component component:getContentPane().getComponents()) {
+            		   if (component instanceof JButton) {
+            			   JButton btn = (JButton) component;
+            			   if(btn.getText().equals("on")) {
+            				   btn.setFont(joystix.deriveFont(36f));
+            			   }
+            		   }
+            	   }
             	   
             	   options.setMusic(true);
-            	   menuMusic.play(true);
+            	   menuMusic.play();
                }
             });
 		musicOptions.add(musicOnButton);
@@ -347,6 +408,16 @@ public class GameFrame extends JFrame {
                        btn.setFont(joystixul.deriveFont(36f));
                        
                    }
+                   
+                   
+            	   for(Component component:getContentPane().getComponents()) {
+            		   if (component instanceof JButton) {
+            			   JButton btn = (JButton) component;
+            			   if(btn.getText().equals("on")) {
+            				   btn.setFont(joystix.deriveFont(36f));
+            			   }
+            		   }
+            	   }
                    
             	   options.setMusic(false);
             	   menuMusic.stop();
@@ -542,5 +613,5 @@ public class GameFrame extends JFrame {
     private JLabel livesLabel;
     private JLabel scoreLabel;
     private JLabel levelLabel;
-
+  
 }
