@@ -37,7 +37,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class GameFrame extends JFrame {
+public class GameFrame extends JFrame implements Observer {
 
 	//TODO: stop game from farting
 	public GameFrame() {
@@ -327,6 +327,7 @@ public class GameFrame extends JFrame {
     	mazeDisplay = new MazePanel();
         gameState = new GameState(31, 19);
         gameState.addObserver(mazeDisplay);
+        gameState.addObserver(this);
         //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
     	gamePanel = new JPanel();
     	gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.PAGE_AXIS));
@@ -739,5 +740,24 @@ public class GameFrame extends JFrame {
     private JLabel livesLabel;
     private JLabel scoreLabel;
     private JLabel levelLabel;
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		GameState gs = (GameState) arg1;
+		System.out.println("FUK U M8");
+		if(gs!=null) {
+		if(gs.gameFinished()) {
+			System.out.println("U WOB");
+			 if (tickThread.isAlive()) {
+      		   tickThread.interrupt();
+      	   }
+      	   gameMusic.stop();
+      	   menuMusic.play(true);
+      	   getContentPane().removeAll();
+      	   runEndGame();
+		}
+		}	
+		
+	}
   
 }

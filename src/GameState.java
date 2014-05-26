@@ -123,6 +123,7 @@ public class GameState extends Observable{
      */
     private void finishGame() {
         gameFinished = true;
+        updateDisplay();
     }
     
     /**
