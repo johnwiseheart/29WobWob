@@ -119,8 +119,14 @@ public class Maze {
         
         if (getCell(newLoc) == CellType.DOT) {
             setCell(newLoc, CellType.SPACE); // eat dot
+            //TODO: put this in the right place
+            AudioManager dotSound = new AudioManager("music/kk.wav");
+        	dotSound.play();
         } else if (getCell(newLoc) == CellType.KEY) {
             setCell(newLoc, CellType.SPACE); // collect key
+            //TODO: put this in the right place
+            AudioManager keySound = new AudioManager("music/keypickup.wav");
+        	keySound.play();
             numKeysCollected++;
             if (numKeysCollected == 2) {
                 setCell(width/2, 0, CellType.SPACE); // Remove door.

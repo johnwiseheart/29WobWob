@@ -15,11 +15,19 @@ import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.SourceDataLine;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -27,6 +35,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 public class GameFrame extends JFrame {
 
@@ -53,11 +64,94 @@ public class GameFrame extends JFrame {
 	    manager.addKeyEventDispatcher(new GameKeyDispatcher());   
 	}
 	
+	class PlayThread extends Thread {
+		byte tempBuffer[] = new byte[5];
+		public void run() {
+			try {
+				while (true) {
+					audioInputStream = AudioSystem.getAudioInputStream(new File("music/wob.wav"));
+					audioFormat = audioInputStream.getFormat();
+					
+					DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
+					sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
+					
+					sourceDataLine.open(audioFormat);
+					sourceDataLine.start();
+					int cnt = audioInputStream.read(tempBuffer, 0, tempBuffer.length);
+					while (cnt != -1) {
+						
+							sourceDataLine.write(tempBuffer, 0, cnt);
+						
+						cnt = audioInputStream.read(tempBuffer, 0, tempBuffer.length);
+					}
+					
+					sourceDataLine.drain();
+					sourceDataLine.close();
+					System.out.println("Audio Closed");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(0);
+			}
+		}
+	}
+	
+	AudioFormat audioFormat;
+	AudioInputStream audioInputStream;
+	SourceDataLine sourceDataLine;
+	boolean muted;
+	
 	public void startGame() {
 		runMenu();
 		menuMusic = new AudioManager("music/wob2.wav");
 	    menuMusic.play(true);
+		
+		//** add this into your application code as appropriate
+		// Open an input stream  to the audio file.
+		
+		
+//		Runnable musicRun = new Runnable (){
+//        	private volatile boolean execute;
+//          	public void run() {
+//          		InputStream in;
+//        		AudioStream as = null;
+//          		this.execute = true;
+//          		while (execute) {
+//          			try {
+//          				in = new FileInputStream("music/wob.wav");
+//          				// Create an AudioStream object from the input stream.
+//          				as = new AudioStream(in);   
+//          			} catch (FileNotFoundException e) {
+//          				// TODO Auto-generated catch block
+//          				e.printStackTrace();
+//          			} catch (IOException e) {
+//          				// TODO Auto-generated catch block
+//          				e.printStackTrace();
+//          			}
+//          			AudioPlayer.player.start(as);
+//          		    try {
+//          		        Thread.sleep(64000);
+//          		    } catch (InterruptedException e) {
+//          		    	execute = false;
+//          		    }
+//          		}
+//          	}
+//        };
+//        Thread musicThread = new Thread(musicRun);
+//        musicThread.start();
+//        
+//		new PlayThread().start();
+		
+		
+		      
+		// Use the static class member "player" from class AudioPlayer to play
+		// clip.
+		            
+		// Similarly, to stop the audio.
+//		AudioPlayer.player.stop(as); 
 	}
+	
+	
 	
 	private class GameKeyDispatcher implements KeyEventDispatcher {
         @Override
@@ -145,9 +239,9 @@ public class GameFrame extends JFrame {
             });
 
     	menuPanel.add(exitButton);
-        this.add(menuPanel);
-        this.repaint();
-        this.setVisible(true);
+        add(menuPanel);
+        repaint();
+        setVisible(true);
     }
  
     private void runGame() {
@@ -252,12 +346,19 @@ public class GameFrame extends JFrame {
     private void newTickThread() {
     	Runnable r1 = new Runnable (){
         	private volatile boolean execute;
+        	private int counter = 0;
           	public void run() {
+          		
           		this.execute = true;
           		while (execute) {
-          		    gameState.tickPlayer();
-          		    gameState.tickEnemies();
+          			//if(counter==0) {
+	          		    gameState.tickPlayer();
+	          		    gameState.tickEnemies();
+          			//}
           		    gameState.updateDisplay();
+          		    counter++;
+          		    if(counter == 20)
+          		    	counter = 0;
           		    try {
           		        Thread.sleep(200);
           		    } catch (InterruptedException e) {
@@ -267,6 +368,61 @@ public class GameFrame extends JFrame {
           	}
         };
         tickThread = new Thread(r1);
+    }
+    
+    private void runEndGame() {
+    	JPanel menuPanel = new JPanel();
+		menuPanel.setBackground(Color.black);
+		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
+
+		JLabel keymaster = makeLabel("GAME OVER", 64f);
+		keymaster.setBorder(BorderFactory.createEmptyBorder(80,0,80,0));
+		menuPanel.add(keymaster);
+		
+		
+		JLabel scoreLabel = makeLabel("Score: 33", 32f);
+		menuPanel.add(scoreLabel);
+		
+		JLabel highScoreLabel = makeLabel("NEW HIGH SCORE", 32f);
+		highScoreLabel.setBorder(BorderFactory.createEmptyBorder(0,0,80,0));
+		menuPanel.add(highScoreLabel);
+
+    	JButton restartButton = makeButton("Restart", joystix, 36);
+    	restartButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	  getContentPane().removeAll();
+            	  menuMusic.stop();
+            	  runGame();
+               }
+            });
+		
+    	menuPanel.add(restartButton);
+
+    	JButton menuButton = makeButton("Menu", joystix, 36);
+    	menuButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   getContentPane().removeAll();
+            	   runMenu();
+               }
+            });
+
+    	menuPanel.add(menuButton);
+
+    	JButton quitButton = makeButton("Quit", joystix, 36);
+    	quitButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   System.exit(0);
+               }
+            });
+
+    	menuPanel.add(quitButton);
+
+        add(menuPanel);
+        repaint();
+        setVisible(true);
     }
     
     // TODO ARE WORK
@@ -317,12 +473,7 @@ public class GameFrame extends JFrame {
     private void runOptions() {
     	//TODO: Indication of which option is pressed
     	//TODO: Save options to a file
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setBackground(Color.black);
-        this.getContentPane().setBackground(Color.black);
-        this.setSize(800, 600);
-        //this.setResizable(false);
-
+    	
 		JPanel optionsPanel = new JPanel();
 		optionsPanel.setBackground(Color.black);
 		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
@@ -345,11 +496,20 @@ public class GameFrame extends JFrame {
             	   Object source = event.getSource();
                    if (source instanceof JButton) {
                        JButton btn = (JButton)source;
-                       btn.setFont(joystix.deriveFont(36f));
+                       btn.setFont(joystixul.deriveFont(36f));
                    }
+                   
+            	   for(Component component:getContentPane().getComponents()) {
+            		   if (component instanceof JButton) {
+            			   JButton btn = (JButton) component;
+            			   if(btn.getText().equals("on")) {
+            				   btn.setFont(joystix.deriveFont(36f));
+            			   }
+            		   }
+            	   }
             	   
             	   options.setMusic(true);
-            	   menuMusic.play(true);
+            	   menuMusic.play();
                }
             });
 		musicOptions.add(musicOnButton);
@@ -363,6 +523,16 @@ public class GameFrame extends JFrame {
                        btn.setFont(joystixul.deriveFont(36f));
                        
                    }
+                   
+                   
+            	   for(Component component:getContentPane().getComponents()) {
+            		   if (component instanceof JButton) {
+            			   JButton btn = (JButton) component;
+            			   if(btn.getText().equals("on")) {
+            				   btn.setFont(joystix.deriveFont(36f));
+            			   }
+            		   }
+            	   }
                    
             	   options.setMusic(false);
             	   menuMusic.stop();
@@ -560,5 +730,5 @@ public class GameFrame extends JFrame {
     private JLabel livesLabel;
     private JLabel scoreLabel;
     private JLabel levelLabel;
-
+  
 }

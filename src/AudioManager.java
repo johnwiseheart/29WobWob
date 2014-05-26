@@ -53,6 +53,10 @@ public class AudioManager {
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
 		clip.start();
 	}
+	
+	public void play() {
+		clip.start();
+	}
 
 	/**
 	 * Stops the clip from playing
