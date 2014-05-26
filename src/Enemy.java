@@ -195,6 +195,14 @@ public class Enemy implements Character {
 		
 		return location;
 	}
+	
+	/**
+	 * Forces the enemy to enter its scrambling phase (i.e. randomly moving).
+	 */
+	public void scramble() {
+		// reset timer
+		timer = 0;
+	}
 
 	private Vector location;
 	private Vector lastLocation;
