@@ -187,6 +187,11 @@ public class GameState extends Observable{
     private void resetPlayer() {
         hasDied = false;
         player.reset(new Vector(maze.getWidth()/2, 1));
+        
+        // scramble enemies
+        for (Enemy enemy : enemies) {
+        	enemy.scramble();
+        }
     }
     
     /**
@@ -215,7 +220,7 @@ public class GameState extends Observable{
                 }
             }
             
-            enemies.add(new Enemy(v, 10, 0.3));
+            enemies.add(new Enemy(v, 10, 0.3, 10, 5));
         }
     }
     

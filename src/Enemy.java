@@ -16,13 +16,18 @@ public class Enemy implements Character {
      * @param searchDistance The distance from the player at which it will stop
      * moving towards the player and will instead move randomly
      * @param randomMoveProbability The probability that the enemy will make a
+     * @param huntDuration Number of moves for which the enemy will hunt the player
+     * @param scrambleDuration Number of moves for which the enemy will move randomly
      * random move
      */
-	public Enemy(Vector location, Integer searchDistance, Double randomMoveProbability) {
+	public Enemy(Vector location, Integer searchDistance, Double randomMoveProbability, Integer huntDuration, Integer scrambleDuration) {
 		this.location = location;
 		
 		this.searchDistance = searchDistance;
 		this.randomMoveProbability = randomMoveProbability;
+		this.huntDuration = huntDuration;
+		this.scrambleDuration = scrambleDuration;
+		this.timer = 0;
 		
 		lastLocation = null;
 	}
@@ -78,6 +83,7 @@ public class Enemy implements Character {
 						}
 						
 					}
+					
 				}
 			}
 			
@@ -94,7 +100,7 @@ public class Enemy implements Character {
 				location = lastLocation;
 				lastLocation = tmp;
 			}
-			
+		
 		} else {
 			// Move towards the player using a BFS.
 			
@@ -181,7 +187,22 @@ public class Enemy implements Character {
 	            location = optimalMove;
 			}
 		}
+	
+		// increment timer
+		timer++;
+		if (timer >= huntDuration + scrambleDuration) {
+			timer = 0;
+		}
+		
 		return location;
+	}
+	
+	/**
+	 * Forces the enemy to enter its scrambling phase (i.e. randomly moving).
+	 */
+	public void scramble() {
+		// reset timer
+		timer = 0;
 	}
 
 	private Vector location;
@@ -189,4 +210,8 @@ public class Enemy implements Character {
 
 	private Integer searchDistance;
 	private Double randomMoveProbability;
+	
+	private Integer huntDuration;
+	private Integer scrambleDuration;
+	private Integer timer;
 }
