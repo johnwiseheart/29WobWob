@@ -35,6 +35,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 public class GameFrame extends JFrame {
 
@@ -241,16 +242,16 @@ public class GameFrame extends JFrame {
         setVisible(true);
     }
  
-    private void runGame() {
-    	JPanel gamePanel = new JPanel();
-    	gamePanel.setBackground(Color.black);
-
+    public void runGame() {
+    	
     	BoxLayout boxLayout = new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS); // top to bottom
-    	setLayout(boxLayout);
+    	this.setLayout(boxLayout);
+    	
+    	JPanel metaGamePanel = new JPanel();
+    	metaGamePanel.setBackground(Color.black);
 
     	JPanel buttonPanel = new JPanel(new FlowLayout());
-    	buttonPanel.setBackground(Color.black);
-    	
+    	buttonPanel.setBackground(Color.black);   	
 
     	JPanel menuPanel = new JPanel();
     	menuPanel.setBackground(Color.black);
@@ -261,8 +262,11 @@ public class GameFrame extends JFrame {
                 ActionListener() {
                    public void actionPerformed(ActionEvent event) {
                 	   if (tickThread.isAlive()) {
-                		   //thr1.interrupt();
+                		   tickThread.interrupt();
                 	   }
+                	   gameMusic.stop();
+                	   menuMusic.play(true);
+                	   getContentPane().removeAll();
                 	   runPauseFrame();
                    }
                 });
@@ -316,21 +320,38 @@ public class GameFrame extends JFrame {
     	
     	buttonPanel.add(levelPanel);
 
-    	gamePanel.add(buttonPanel);
-
-    	MazePanel mazeDisplay = new MazePanel();
+    	metaGamePanel.add(buttonPanel);
+        
+        metaGamePanel.setMaximumSize(new Dimension(1000,100));
+    	
+    	mazeDisplay = new MazePanel();
         gameState = new GameState(31, 19);
         gameState.addObserver(mazeDisplay);
         //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
+    	gamePanel = new JPanel();
+    	gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.PAGE_AXIS));
+    	gamePanel.add(metaGamePanel);
+    	gamePanel.add(mazeDisplay);
         
-        gamePanel.setMaximumSize(new Dimension(1000,100));
+   
     	this.add(gamePanel);
-    	this.add(mazeDisplay);
-    	this.repaint();
-        this.setVisible(true);
+    	
 
         
-        Runnable r1 = new Runnable (){
+        newTickThread();
+        tickThread.start();
+        
+        gameMusic = new AudioManager("music/game2.wav");
+	    gameMusic.play(true);
+	    
+	    this.repaint();
+        this.setVisible(true);
+
+    }
+    
+    //TODO: this is bad
+    private void newTickThread() {
+    	Runnable r1 = new Runnable (){
         	private volatile boolean execute;
         	private int counter = 0;
           	public void run() {
@@ -354,11 +375,6 @@ public class GameFrame extends JFrame {
           	}
         };
         tickThread = new Thread(r1);
-        tickThread.start();
-        
-        gameMusic = new AudioManager("music/game2.wav");
-	    gameMusic.play(true);
-
     }
     
     private void runEndGame() {
@@ -420,20 +436,18 @@ public class GameFrame extends JFrame {
     private void runPauseFrame() {
 
     	JPanel pausePanel = new JPanel();
+    	//pausePanel.setMinimumSize(new Dimension(getWidth(), getHeight()));
+    	//pausePanel.setBounds(0, 0, getWidth(), getHeight());
+    	//pausePanel.setBorder(new EmptyBorder(200, 200, 200, 200));
     	pausePanel.setBackground(Color.black);
-    	pausePanel.setLayout(new BoxLayout(pausePanel, BoxLayout.PAGE_AXIS));
+    	pausePanel.setLayout(new BoxLayout(pausePanel, BoxLayout.Y_AXIS)); // top to bottom
+
 
     	JLabel heading = makeLabel("Paused", 50);
     	heading.setBorder(BorderFactory.createEmptyBorder(70,0,70,0));
     	pausePanel.add(heading);
-
-    	/*
-    	JLabel controls = makeImageLabel("img/controls.png", -1, -1);
-    	controls.setBorder(BorderFactory.createEmptyBorder(0,0,70,0));
-    	optionsPanel.add(controls);
-    	*/
     	
-    	JButton resumeButton = makeButton("resume", joystix, 36);
+    	JButton resumeButton = makeButton("menu", joystix, 36);
     	resumeButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -441,8 +455,25 @@ public class GameFrame extends JFrame {
             	   runMenu();
                }
             });
-
     	pausePanel.add(resumeButton);
+
+    	JButton menuButton = makeButton("resume", joystix, 36);
+    	menuButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   //TODO: this is bad
+            	   getContentPane().removeAll();
+            	   getContentPane().add(gamePanel);
+            	   getContentPane().repaint();
+            	   getContentPane().setVisible(true);
+            	   newTickThread();
+            	   tickThread.start();
+            	   menuMusic.stop();
+            	   gameMusic.play(true); //TODO: why does this only play once
+               }
+            });
+    	pausePanel.add(menuButton);
+    	
         this.add(pausePanel);
         this.repaint();
         this.setVisible(true);
@@ -645,7 +676,7 @@ public class GameFrame extends JFrame {
     }
     
     // TODO: stolen off the Internet we need to rewrite this
-    private static BufferedImage resizeImage( Image image, int width, int height) {
+    public static BufferedImage resizeImage( Image image, int width, int height) {
 
     	final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         final Graphics2D graphics2D = bufferedImage.createGraphics();
@@ -656,7 +687,7 @@ public class GameFrame extends JFrame {
         return bufferedImage;
     }
 
-    private static JButton makeButton(String text, Font font, float font_size) {
+    public static JButton makeButton(String text, Font font, float font_size) {
     	JButton button = new JButton(text);
     	button.setAlignmentX(Component.CENTER_ALIGNMENT);
     	button.setFont(font.deriveFont(font_size));
@@ -668,7 +699,7 @@ public class GameFrame extends JFrame {
     	return button;
     }
 
-    private static JLabel makeLabel(String text, float font_size) {
+    public  static JLabel makeLabel(String text, float font_size) {
     	JLabel label = new JLabel(text);
     	label.setAlignmentX(Component.CENTER_ALIGNMENT);
     	label.setFont(joystix.deriveFont(font_size));
@@ -678,7 +709,7 @@ public class GameFrame extends JFrame {
     	return label;
     }
 
-    private static JLabel makeImageLabel(String fileName, int height, int width) {
+    public static JLabel makeImageLabel(String fileName, int height, int width) {
     	BufferedImage image = null;
     	JLabel wobman = null;
     	try {
@@ -697,11 +728,13 @@ public class GameFrame extends JFrame {
     }
     private static AudioManager gameMusic;
     private static AudioManager menuMusic;
-    private static Font joystix = null;
-    private static Font joystixul = null;
+    public static Font joystix = null;
+    public static Font joystixul = null;
     private final static Color ourGreen = new Color(0xA1FF9C);
     private Thread tickThread;
     private GameState gameState;
+    private MazePanel mazeDisplay;
+    private JPanel gamePanel;
     private Options options;
     
     private JLabel livesLabel;
