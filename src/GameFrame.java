@@ -149,20 +149,17 @@ public class GameFrame extends JFrame {
         this.repaint();
         this.setVisible(true);
     }
-	
-	
-
  
     private void runGame() {
-    	JPanel gamePanel = new JPanel();
-    	gamePanel.setBackground(Color.black);
-
+    	
     	BoxLayout boxLayout = new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS); // top to bottom
     	this.setLayout(boxLayout);
+    	
+    	gamePanel = new JPanel();
+    	gamePanel.setBackground(Color.black);
 
     	JPanel buttonPanel = new JPanel(new FlowLayout());
-    	buttonPanel.setBackground(Color.black);
-    	
+    	buttonPanel.setBackground(Color.black);   	
 
     	JPanel menuPanel = new JPanel();
     	menuPanel.setBackground(Color.black);
@@ -173,8 +170,10 @@ public class GameFrame extends JFrame {
                 ActionListener() {
                    public void actionPerformed(ActionEvent event) {
                 	   if (tickThread.isAlive()) {
-                		   //thr1.interrupt();
+                		   tickThread.interrupt();
                 	   }
+                	   gameMusic.stop();
+                	   getContentPane().removeAll();
                 	   runPauseFrame();
                    }
                 });
@@ -229,19 +228,29 @@ public class GameFrame extends JFrame {
     	buttonPanel.add(levelPanel);
 
     	gamePanel.add(buttonPanel);
-
-    	MazePanel mazeDisplay = new MazePanel();
-        gameState = new GameState(31, 19, mazeDisplay);
-        //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         gamePanel.setMaximumSize(new Dimension(1000,100));
+    	
+    	mazeDisplay = new MazePanel();
+        gameState = new GameState(31, 19, mazeDisplay);
+        //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
+    	
     	this.add(gamePanel);
     	this.add(mazeDisplay);
     	this.repaint();
         this.setVisible(true);
 
         
-        Runnable r1 = new Runnable (){
+        newTickThread();
+        tickThread.start();
+        
+        gameMusic = new AudioManager("music/game2.wav");
+	    gameMusic.play(true);
+
+    }
+    
+    private void newTickThread() {
+    	Runnable r1 = new Runnable (){
         	private volatile boolean execute;
           	public void run() {
           		this.execute = true;
@@ -258,11 +267,6 @@ public class GameFrame extends JFrame {
           	}
         };
         tickThread = new Thread(r1);
-        tickThread.start();
-        
-        gameMusic = new AudioManager("music/game2.wav");
-	    gameMusic.play(true);
-
     }
     
     // TODO ARE WORK
@@ -270,19 +274,15 @@ public class GameFrame extends JFrame {
 
     	JPanel pausePanel = new JPanel();
     	pausePanel.setBackground(Color.black);
-    	pausePanel.setLayout(new BoxLayout(pausePanel, BoxLayout.PAGE_AXIS));
+    	BoxLayout boxLayout = new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS); // top to bottom
+    	this.setLayout(boxLayout);
+
 
     	JLabel heading = makeLabel("Paused", 50);
     	heading.setBorder(BorderFactory.createEmptyBorder(70,0,70,0));
     	pausePanel.add(heading);
-
-    	/*
-    	JLabel controls = makeImageLabel("img/controls.png", -1, -1);
-    	controls.setBorder(BorderFactory.createEmptyBorder(0,0,70,0));
-    	optionsPanel.add(controls);
-    	*/
     	
-    	JButton resumeButton = makeButton("resume", joystix, 36);
+    	JButton resumeButton = makeButton("menu", joystix, 36);
     	resumeButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -290,8 +290,24 @@ public class GameFrame extends JFrame {
             	   runMenu();
                }
             });
-
     	pausePanel.add(resumeButton);
+
+    	JButton menuButton = makeButton("resume", joystix, 36);
+    	menuButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   getContentPane().removeAll();
+            	   getContentPane().add(gamePanel);
+            	   getContentPane().add(mazeDisplay);
+            	   getContentPane().repaint();
+            	   getContentPane().setVisible(true);
+            	   newTickThread();
+            	   tickThread.start();
+            	   gameMusic.play(true);
+               }
+            });
+    	pausePanel.add(menuButton);
+    	
         this.add(pausePanel);
         this.repaint();
         this.setVisible(true);
@@ -537,6 +553,8 @@ public class GameFrame extends JFrame {
     private final static Color ourGreen = new Color(0xA1FF9C);
     private Thread tickThread;
     private GameState gameState;
+    private MazePanel mazeDisplay;
+    private JPanel gamePanel;
     private Options options;
     
     private JLabel livesLabel;
