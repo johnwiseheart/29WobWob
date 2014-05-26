@@ -124,6 +124,7 @@ public class Maze {
         	dotSound.play();
         } else if (getCell(newLoc) == CellType.KEY) {
             setCell(newLoc, CellType.SPACE); // collect key
+            //TODO: put this in the right place
             AudioManager keySound = new AudioManager("music/keypickup.wav");
         	keySound.play();
             numKeysCollected++;

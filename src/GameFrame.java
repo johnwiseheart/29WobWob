@@ -15,6 +15,7 @@ import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -22,6 +23,11 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.SourceDataLine;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -29,6 +35,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 public class GameFrame extends JFrame {
 
@@ -55,11 +64,94 @@ public class GameFrame extends JFrame {
 	    manager.addKeyEventDispatcher(new GameKeyDispatcher());   
 	}
 	
+	class PlayThread extends Thread {
+		byte tempBuffer[] = new byte[5];
+		public void run() {
+			try {
+				while (true) {
+					audioInputStream = AudioSystem.getAudioInputStream(new File("music/wob.wav"));
+					audioFormat = audioInputStream.getFormat();
+					
+					DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
+					sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
+					
+					sourceDataLine.open(audioFormat);
+					sourceDataLine.start();
+					int cnt = audioInputStream.read(tempBuffer, 0, tempBuffer.length);
+					while (cnt != -1) {
+						
+							sourceDataLine.write(tempBuffer, 0, cnt);
+						
+						cnt = audioInputStream.read(tempBuffer, 0, tempBuffer.length);
+					}
+					
+					sourceDataLine.drain();
+					sourceDataLine.close();
+					System.out.println("Audio Closed");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(0);
+			}
+		}
+	}
+	
+	AudioFormat audioFormat;
+	AudioInputStream audioInputStream;
+	SourceDataLine sourceDataLine;
+	boolean muted;
+	
 	public void startGame() {
 		runMenu();
 		menuMusic = new AudioManager("music/wob2.wav");
 	    menuMusic.play(true);
+		
+		//** add this into your application code as appropriate
+		// Open an input stream  to the audio file.
+		
+		
+//		Runnable musicRun = new Runnable (){
+//        	private volatile boolean execute;
+//          	public void run() {
+//          		InputStream in;
+//        		AudioStream as = null;
+//          		this.execute = true;
+//          		while (execute) {
+//          			try {
+//          				in = new FileInputStream("music/wob.wav");
+//          				// Create an AudioStream object from the input stream.
+//          				as = new AudioStream(in);   
+//          			} catch (FileNotFoundException e) {
+//          				// TODO Auto-generated catch block
+//          				e.printStackTrace();
+//          			} catch (IOException e) {
+//          				// TODO Auto-generated catch block
+//          				e.printStackTrace();
+//          			}
+//          			AudioPlayer.player.start(as);
+//          		    try {
+//          		        Thread.sleep(64000);
+//          		    } catch (InterruptedException e) {
+//          		    	execute = false;
+//          		    }
+//          		}
+//          	}
+//        };
+//        Thread musicThread = new Thread(musicRun);
+//        musicThread.start();
+//        
+//		new PlayThread().start();
+		
+		
+		      
+		// Use the static class member "player" from class AudioPlayer to play
+		// clip.
+		            
+		// Similarly, to stop the audio.
+//		AudioPlayer.player.stop(as); 
 	}
+	
+	
 	
 	private class GameKeyDispatcher implements KeyEventDispatcher {
         @Override
@@ -245,12 +337,19 @@ public class GameFrame extends JFrame {
         
         Runnable r1 = new Runnable (){
         	private volatile boolean execute;
+        	private int counter = 0;
           	public void run() {
+          		
           		this.execute = true;
           		while (execute) {
-          		    gameState.tickPlayer();
-          		    gameState.tickEnemies();
+          			//if(counter==0) {
+	          		    gameState.tickPlayer();
+	          		    gameState.tickEnemies();
+          			//}
           		    gameState.updateDisplay();
+          		    counter++;
+          		    if(counter == 20)
+          		    	counter = 0;
           		    try {
           		        Thread.sleep(200);
           		    } catch (InterruptedException e) {
