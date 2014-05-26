@@ -36,9 +36,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-
 public class GameFrame extends JFrame {
 
 	//TODO: stop game from farting
@@ -243,9 +240,6 @@ public class GameFrame extends JFrame {
         repaint();
         setVisible(true);
     }
-	
-	
-
  
     private void runGame() {
     	JPanel gamePanel = new JPanel();
@@ -325,7 +319,8 @@ public class GameFrame extends JFrame {
     	gamePanel.add(buttonPanel);
 
     	MazePanel mazeDisplay = new MazePanel();
-        gameState = new GameState(31, 19, mazeDisplay);
+        gameState = new GameState(31, 19);
+        gameState.addObserver(mazeDisplay);
         //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         gamePanel.setMaximumSize(new Dimension(1000,100));
