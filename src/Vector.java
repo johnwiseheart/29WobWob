@@ -68,6 +68,28 @@ public class Vector implements Serializable {
 		}
 	}
 	
+	public Direction getDirection(Vector v) {
+		if (this.x == v.x()) {
+			if (this.y < v.y()) {
+				return Direction.NORTH;
+			} else if (this.y > v.y()) {
+				return Direction.SOUTH;
+			} else {
+				return Direction.NONE;
+			}
+		} else if (this.y == v.y()) {
+			if (this.x < v.x()) {
+				return Direction.EAST;
+			} else if (this.x > v.x()) {
+				return Direction.WEST;
+			} else {
+				return Direction.NONE;
+			}			
+		} else {
+			return Direction.NONE;
+		}
+	}
+	
 	/**
 	 * Adds two vectors together component-wise.
 	 * @param other Vector to add to this one
