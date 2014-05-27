@@ -154,6 +154,7 @@ public class GameFrame extends JFrame implements Observer {
 	private class GameKeyDispatcher implements KeyEventDispatcher {
         @Override
         public boolean dispatchKeyEvent(KeyEvent event) {
+        	if (gameState != null) {
         	 switch (event.getKeyCode()) {
              case KeyEvent.VK_LEFT:
              case KeyEvent.VK_A:
@@ -177,6 +178,7 @@ public class GameFrame extends JFrame implements Observer {
                  break;
                 
              }
+        	}
         	 return false;
         }
     }
@@ -203,7 +205,7 @@ public class GameFrame extends JFrame implements Observer {
             	  runGame();
                }
             });
-		
+		playButton.setBackground(Color.black);
     	menuPanel.add(playButton);
 
     	JButton optionsButton = makeButton("Options", joystix, 36);
