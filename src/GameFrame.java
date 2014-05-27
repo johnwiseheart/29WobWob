@@ -241,6 +241,25 @@ public class GameFrame extends JFrame implements Observer {
         repaint();
         setVisible(true);
     }
+	
+	private void runFlash() {
+		JPanel buzzPanel = new JPanel();
+		buzzPanel.setBackground(Color.black);
+		buzzPanel.setLayout(new BoxLayout(buzzPanel, BoxLayout.PAGE_AXIS));
+
+		JLabel wobman = makeImageLabel("img/wobman.png", -1, -1);
+		wobman.setBorder(BorderFactory.createEmptyBorder(70,0,20,0));
+		buzzPanel.add(wobman);
+		//TODO: fix the image for wobby
+		JLabel keymaster = makeLabel("BUZZ WORD", 32f);
+		keymaster.setBorder(BorderFactory.createEmptyBorder(0,0,80,0));
+		buzzPanel.add(keymaster);
+
+    	buzzPanel.setBounds(0,0,getWidth(), getHeight());
+        add(buzzPanel);
+        repaint();
+        setVisible(true);
+    }
  
     public void runGame() {
     	
@@ -387,8 +406,8 @@ public class GameFrame extends JFrame implements Observer {
 		menuPanel.add(keymaster);
 		
 		
-		JLabel scoreLabel = makeLabel("Score: 33", 32f);
-		menuPanel.add(scoreLabel);
+		endScoreLabel = makeLabel("Score: "+score, 32f);
+		menuPanel.add(endScoreLabel);
 		
 		JLabel highScoreLabel = makeLabel("NEW HIGH SCORE", 32f);
 		highScoreLabel.setBorder(BorderFactory.createEmptyBorder(0,0,80,0));
@@ -665,6 +684,7 @@ public class GameFrame extends JFrame implements Observer {
     
     public void updateScore(int score) {
     	scoreLabel.setText(score + "");
+    	
     }
     
     public void updateLives(int lives) {
@@ -740,23 +760,35 @@ public class GameFrame extends JFrame implements Observer {
     private JLabel livesLabel;
     private JLabel scoreLabel;
     private JLabel levelLabel;
-
+    private JLabel endScoreLabel;
+    private int score;
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		GameState gs = (GameState) arg1;
-		System.out.println("FUK U M8");
+		GameState gs = (GameState) arg0;
+		//System.out.println("FUK U M8");
 		if(gs!=null) {
-		if(gs.gameFinished()) {
-			System.out.println("U WOB");
-			 if (tickThread.isAlive()) {
-      		   tickThread.interrupt();
-      	   }
-      	   gameMusic.stop();
-      	   menuMusic.play(true);
-      	   getContentPane().removeAll();
-      	   runEndGame();
+			if(gs.gameFinished()) {
+				//System.out.println("U WOB");
+				 if (tickThread.isAlive()) {
+	      		   tickThread.interrupt();
+	      	   }
+	      	   gameMusic.stop();
+	      	   menuMusic.play(true);
+	      	   getContentPane().removeAll();
+	      	   runEndGame();
+			}
+			//if last collected = dot 
+			//play dot
+			//if last colelcted = key
+			//play key
+			score = gs.getScore();
+			updateScore(score);
+			updateLevel(gs.getLevel());
+			updateLives(gs.getLives());
+			repaint();
 		}
-		}	
+		
+		
 		
 	}
   

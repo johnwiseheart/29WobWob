@@ -257,6 +257,14 @@ public class GameState extends Observable{
         return player.location().equals(maze.doorLocation());
     }
     
+    public int getLevel() {
+    	return level;
+    }
+    
+    public int getLives() {
+    	return player.getLives();
+    }
+    
     private Maze maze;
     private Player player;
     private ArrayList<Enemy> enemies;
