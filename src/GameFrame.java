@@ -284,7 +284,9 @@ public class GameFrame extends JFrame implements Observer {
                 		   tickThread.interrupt();
                 	   }
                 	   gameMusic.stop();
-                	   menuMusic.play(true);
+                	   if (options.isMusic()) {
+                		   menuMusic.play(true);
+                	   }
                 	   getContentPane().removeAll();
                 	   runPauseFrame();
                    }
@@ -459,7 +461,7 @@ public class GameFrame extends JFrame implements Observer {
 
 
     	JLabel heading = makeLabel("Paused", 50);
-    	heading.setBorder(BorderFactory.createEmptyBorder(70,0,70,0));
+    	heading.setBorder(BorderFactory.createEmptyBorder(70,0,30,0));
     	pausePanel.add(heading);
     	
     	JButton resumeButton = makeButton("menu", joystix, 36);
@@ -484,10 +486,20 @@ public class GameFrame extends JFrame implements Observer {
             	   newTickThread();
             	   tickThread.start();
             	   menuMusic.stop();
-            	   gameMusic.play(true); //TODO: why does this only play once
-               }
+            	   if (options.isMusic()) {
+            		   gameMusic.play(true); //TODO: why does this only play once
+            	   }
+               	}
             });
     	pausePanel.add(menuButton);
+    	
+    	JPanel musicOptions = genMusicOptions();
+		musicOptions.setBackground(Color.black);
+    	pausePanel.add(musicOptions);
+    	
+    	JPanel effectsOptions = genEffectsOptions();
+		effectsOptions.setBackground(Color.black);
+    	pausePanel.add(effectsOptions);
     	
         this.add(pausePanel);
         this.repaint();
@@ -495,21 +507,8 @@ public class GameFrame extends JFrame implements Observer {
     	
     }
     
-    private void runOptions() {
-    	//TODO: Indication of which option is pressed
-    	//TODO: Save options to a file
-    	
-		JPanel optionsPanel = new JPanel();
-		optionsPanel.setBackground(Color.black);
-		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
-
-		JLabel heading = makeLabel("Options", 50);
-		
-		heading.setBorder(BorderFactory.createEmptyBorder(30,0,50,0));
-		optionsPanel.add(heading);
-
-		
-		JPanel musicOptions = new JPanel(); // New Panel for music options.
+    private JPanel genMusicOptions() {
+    	JPanel musicOptions = new JPanel(); // New Panel for music options.
 		musicOptions.setLayout(new FlowLayout());
 
     	JLabel musicLabel = makeLabel("music:", 36);
@@ -564,11 +563,13 @@ public class GameFrame extends JFrame implements Observer {
                }
             });
 		musicOptions.add(musicOffButton);
-		musicOptions.setBackground(Color.black);
-    	optionsPanel.add(musicOptions);
-    	
-    	JPanel effectsOptions = new JPanel(); // New Panel for music options.
-		effectsOptions.setLayout(new FlowLayout());
+		
+		return musicOptions;
+    }
+    
+    private JPanel genEffectsOptions() {
+    	JPanel effectsOptions = new JPanel();
+    	effectsOptions.setLayout(new FlowLayout());
 
     	JLabel effectsLabel = makeLabel("sfx:", 36);
 		effectsOptions.add(effectsLabel);
@@ -588,6 +589,29 @@ public class GameFrame extends JFrame implements Observer {
                }
             });
 		effectsOptions.add(effectsOffButton);
+		
+		return effectsOptions;
+    }
+    
+    private void runOptions() {
+    	//TODO: Indication of which option is pressed
+    	//TODO: Save options to a file
+    	
+		JPanel optionsPanel = new JPanel();
+		optionsPanel.setBackground(Color.black);
+		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
+
+		JLabel heading = makeLabel("Options", 50);
+		
+		heading.setBorder(BorderFactory.createEmptyBorder(30,0,50,0));
+		optionsPanel.add(heading);
+
+		
+		JPanel musicOptions = genMusicOptions();
+		musicOptions.setBackground(Color.black);
+    	optionsPanel.add(musicOptions);
+    	
+    	JPanel effectsOptions = genEffectsOptions();
 		effectsOptions.setBackground(Color.black);
     	optionsPanel.add(effectsOptions);
 		
