@@ -109,8 +109,8 @@ public class MazePanel extends JPanel implements Observer {
         }
         
         //TODO: fix this shit its not responsive
-       // this.setSize(displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
-        setMaximumSize(new Dimension(gameState.getMaze().getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE));
+        // this.setSize(displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
+        setMaximumSize(new Dimension(displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE));
         //this.setBounds(12, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
         //this.setBounds(0, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
     }

@@ -21,7 +21,7 @@ public class Enemy implements Character, Serializable {
      * @param scrambleDuration Number of moves for which the enemy will move randomly
      * random move
      */
-	public Enemy(Vector location, Integer searchDistance, Double randomMoveProbability, Integer huntDuration, Integer scrambleDuration) {
+	public Enemy(Vector location, int searchDistance, Double randomMoveProbability, int huntDuration, int scrambleDuration) {
 		this.location = location;
 		
 		this.searchDistance = searchDistance;

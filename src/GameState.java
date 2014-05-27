@@ -10,17 +10,50 @@ public class GameState extends Observable implements Serializable {
      * @param width the starting width of the maze
      * @param height the starting height of the maze
      */
-    public GameState(int width, int height, Options.DifficultyType difficulty) {
-        maze = new Maze(width, height, new BraidedMazeGenerator());
+    public GameState(Options.DifficultyType difficulty) {
         this.difficulty = difficulty;
-        
+        int width = 0, height = 0;
+        switch (difficulty) {
+        case EASY:
+            width = 23;
+            height = 15;
+            numEnemies = 1;
+            numKeys = 2;
+            searchDistance = 5;
+            randomMoveProbability = 0.6;
+            huntDuration = 5;
+            scrambleDuration = 10;
+            break;
+        case MEDIUM:
+            width = 31;
+            height = 19;
+            numEnemies = 2;
+            numKeys = 3;
+            searchDistance = 10;
+            randomMoveProbability = 0.4;
+            huntDuration = 6;
+            scrambleDuration = 8;
+            break;
+        case HARD:
+            width = 43;
+            height = 25;
+            numEnemies = 3;
+            numKeys = 4;
+            searchDistance = 15;
+            randomMoveProbability = 0.2;
+            huntDuration = 7;
+            scrambleDuration = 6;
+            break;
+        }
+
+        maze = new Maze(width, height, new BraidedMazeGenerator());
         player = new Player(new Vector(width/2, height-2), 3);
         
         enemies = new ArrayList<Enemy>();
-        placeNewEnemies(3);
+        placeNewEnemies(numEnemies, searchDistance, randomMoveProbability,
+                        huntDuration, scrambleDuration);
         
-        this.numKey = 4;
-        placeKeys(numKey);
+        placeKeys(numKeys);
         
         level = 1;
         hasDied = false;
@@ -28,7 +61,6 @@ public class GameState extends Observable implements Serializable {
         numKeysCollected = 0;
         gameFinished = false;
         lastCollected = CellType.SPACE;
-        
         
         // On any change we just need to call setChanged() and then notifyObervers().
         // Anything observing the GameState will have it's update() method called.
@@ -182,17 +214,17 @@ public class GameState extends Observable implements Serializable {
             //AudioManager dotSound = new AudioManager("music/kk.wav");
             //dotSound.play();
             maze.setCell(newLoc, CellType.SPACE);
-            score++;
+            score += level;
         } else if (walkedOver == CellType.KEY) {
             // Collect key.
             AudioManager keySound = new AudioManager("music/keypickup.wav");
             keySound.play();
             maze.setCell(newLoc, CellType.SPACE);
             numKeysCollected++;
-            if (numKeysCollected >= numKey) {
+            if (numKeysCollected >= numKeys) {
                 maze.setCell(maze.getWidth()/2, 0, CellType.SPACE); // Remove door.
             }
-            score += 10;
+            score += 10*level;
         }
         lastCollected = walkedOver;
     }
@@ -235,7 +267,9 @@ public class GameState extends Observable implements Serializable {
      * starting location of the player
      * @param numEnemy the number of enemies to place
      */
-    private void placeNewEnemies(int numEnemy) {
+    private void placeNewEnemies(int numEnemy, int searchDistance, 
+                                 Double randomMoveProbability, int huntDuration,
+                                 int scrambleDuration) {
         enemies.clear();
         Random random = new Random();
         // Place each enemy in one of the cells of the map that always starts
@@ -255,7 +289,8 @@ public class GameState extends Observable implements Serializable {
                     continue;
                 }
             }
-            enemies.add(new Enemy(v, 10, 0.3, 10, 5));
+            enemies.add(new Enemy(v, searchDistance, randomMoveProbability, 
+                                  huntDuration, scrambleDuration));
         }
     }
     
@@ -290,9 +325,17 @@ public class GameState extends Observable implements Serializable {
         level++;
         score += 50;
         maze = new Maze(maze.getWidth(), maze.getHeight(), new BraidedMazeGenerator());
-        placeNewEnemies(level);
-        numKey++;
-        placeKeys(numKey);
+        if (level%2 == 1) {
+            numEnemies++;
+        }
+        if (scrambleDuration > 1) {
+            scrambleDuration--;
+            huntDuration++;
+        }
+        placeNewEnemies(numEnemies, searchDistance, randomMoveProbability,
+                        huntDuration, scrambleDuration);
+        numKeys++;
+        placeKeys(numKeys);
         numKeysCollected = 0;
         resetPlayer();
     }
@@ -321,7 +364,12 @@ public class GameState extends Observable implements Serializable {
     private Options.DifficultyType difficulty;
     private Player player;
     private ArrayList<Enemy> enemies;
-    private int numKey;
+    private int numEnemies;
+    private int searchDistance;
+    private Double randomMoveProbability;
+    private int huntDuration;
+    private int scrambleDuration;
+    private int numKeys;
     private int level;
     private boolean hasDied;
     private int numKeysCollected;

@@ -38,7 +38,6 @@ public class Options {
 	public enum DifficultyType {
 		EASY,
 		MEDIUM,
-		HARD,
-		IMPOSSIBLE
+		HARD
 	}
 }

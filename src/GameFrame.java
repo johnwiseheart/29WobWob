@@ -147,37 +147,34 @@ public class GameFrame extends JFrame implements Observer {
 //		AudioPlayer.player.stop(as); 
 	}
 	
-	
-	
 	private class GameKeyDispatcher implements KeyEventDispatcher {
         @Override
         public boolean dispatchKeyEvent(KeyEvent event) {
         	if (gameState != null) {
-        	 switch (event.getKeyCode()) {
-             case KeyEvent.VK_LEFT:
-             case KeyEvent.VK_A:
-                 //System.out.println("Left");
-                 gameState.setPlayerVelocity(-1, 0);
-                 break;
-             case KeyEvent.VK_RIGHT:
-             case KeyEvent.VK_D:
-                 //System.out.println("Right");
-                 gameState.setPlayerVelocity(1, 0);
-                 break;
-             case KeyEvent.VK_UP:
-             case KeyEvent.VK_W:
-                 //System.out.println("Up");
-                 gameState.setPlayerVelocity(0, -1);
-                 break;
-             case KeyEvent.VK_DOWN:
-             case KeyEvent.VK_S:
-                 //System.out.println("Down");
-                 gameState.setPlayerVelocity(0, 1);
-                 break;
-                
-             }
+        	    switch (event.getKeyCode()) {
+        	    case KeyEvent.VK_LEFT:
+        	    case KeyEvent.VK_A:
+        	        //System.out.println("Left");
+        	        gameState.setPlayerVelocity(-1, 0);
+        	        break;
+        	    case KeyEvent.VK_RIGHT:
+        	    case KeyEvent.VK_D:
+        	        //System.out.println("Right");
+        	        gameState.setPlayerVelocity(1, 0);
+        	        break;
+        	    case KeyEvent.VK_UP:
+        	    case KeyEvent.VK_W:
+        	        //System.out.println("Up");
+        	        gameState.setPlayerVelocity(0, -1);
+        	        break;
+        	    case KeyEvent.VK_DOWN:
+        	    case KeyEvent.VK_S:
+        	        //System.out.println("Down");
+        	        gameState.setPlayerVelocity(0, 1);
+        	        break;
+        	    }
         	}
-        	 return false;
+        	return false;
         }
     }
 	
@@ -364,7 +361,7 @@ public class GameFrame extends JFrame implements Observer {
     		System.out.println("Using saved state");
     		gameState = savedState;
     	} else {
-    		gameState = new GameState(31, 19, options.getDifficulty());
+    		gameState = new GameState(options.getDifficulty());
     	}
 
         gameState.addObserver(mazeDisplay);
@@ -383,10 +380,10 @@ public class GameFrame extends JFrame implements Observer {
         
         gameMusic = new AudioManager("music/game2.wav");
 	    gameMusic.play(true);
-	    
+	   
+	    mazeDisplay.repaint();
 	    this.repaint();
         this.setVisible(true);
-
     }
     
     //TODO: this is bad
@@ -872,16 +869,12 @@ public class GameFrame extends JFrame implements Observer {
 		        dieSound.play();
 			}
 			
-			//if last collected = dot 
-			//play dot
-			//if last collected = key
-			//play key
 			score = gs.getScore();
 			updateScore(score);
 			updateLevel(gs.getLevel());
 			updateLives(gs.getLives());
-			repaint();
 		}
+		repaint();
 	}
 	
 	private AudioFormat audioFormat;
