@@ -50,64 +50,17 @@ public class GameState extends Observable{
     	setPlayerVelocity(new Vector(x, y));
     }
     
-    /**
-     * Update the player on each tick
-     */
-    public void tickPlayer() {
-        Vector newLoc = player.move(maze, null);
-        // Check if the player touched an enemy.
-        for (Vector v : enemyLocations()) {
-            if (v.equals(newLoc)) {
-                hasDied = true;
-                lastCollected = CellType.SPACE;
-            }
-        }
-        
-        updateDisplay();
-        
-        if (hasDied) { // Lose a life.
-            loseLife();
-            return;
-        } else if (hasWon()) { // Move on to the next level.
-            nextLevel();
-            return;
-        }
-        
-        // Consume dot/key
-        CellType walkedOver = maze.getCell(newLoc);
-        if (walkedOver == CellType.DOT) {
-            // Eat dot.
-            // TODO: This crashes the game sometimes for me (Adam)
-            //AudioManager dotSound = new AudioManager("music/kk.wav");
-            //dotSound.play();
-            maze.setCell(newLoc, CellType.SPACE);
-            score++;
-        } else if (walkedOver == CellType.KEY) {
-            // Collect key.
-            AudioManager keySound = new AudioManager("music/keypickup.wav");
-            keySound.play();
-            maze.setCell(newLoc, CellType.SPACE);
-            numKeysCollected++;
-            if (numKeysCollected >= numKey) {
-                maze.setCell(maze.getWidth()/2, 0, CellType.SPACE); // Remove door.
-            }
-            score += 10;
-        }
-        lastCollected = walkedOver;
-    }
     
     /**
-     * Update all the enemies each tick
+     * Update the characters in each tick
      */
-    public void tickEnemies() {
-    	// Trust enemies to know what they're doing.
-        for (Enemy enemy : enemies) {
-            if(enemy.move(maze, playerLocation()).equals(playerLocation())) {
-                hasDied = true;
-            }
-        }
+    public void tickCharacters() {
+        tickPlayer();
+        tickEnemies();
         updateDisplay();
     }
+    
+    
     
     /**
      * Returns the number of keys the player has collected
@@ -180,6 +133,62 @@ public class GameState extends Observable{
      */
     private void finishGame() {
         gameFinished = true;
+    }
+    
+    /**
+     * Update the player on each tick
+     */
+    private void tickPlayer() {
+        Vector newLoc = player.move(maze, null);
+        // Check if the player touched an enemy.
+        for (Vector v : enemyLocations()) {
+            if (v.equals(newLoc)) {
+                hasDied = true;
+                lastCollected = CellType.SPACE;
+            }
+        }
+        
+        if (hasDied) { // Lose a life.
+            loseLife();
+            return;
+        } else if (hasWon()) { // Move on to the next level.
+            nextLevel();
+            return;
+        }
+        
+        // Consume dot/key
+        CellType walkedOver = maze.getCell(newLoc);
+        if (walkedOver == CellType.DOT) {
+            // Eat dot.
+            // TODO: This crashes the game sometimes for me (Adam)
+            //AudioManager dotSound = new AudioManager("music/kk.wav");
+            //dotSound.play();
+            maze.setCell(newLoc, CellType.SPACE);
+            score++;
+        } else if (walkedOver == CellType.KEY) {
+            // Collect key.
+            AudioManager keySound = new AudioManager("music/keypickup.wav");
+            keySound.play();
+            maze.setCell(newLoc, CellType.SPACE);
+            numKeysCollected++;
+            if (numKeysCollected >= numKey) {
+                maze.setCell(maze.getWidth()/2, 0, CellType.SPACE); // Remove door.
+            }
+            score += 10;
+        }
+        lastCollected = walkedOver;
+    }
+    
+    /**
+     * Update all the enemies each tick
+     */
+    private void tickEnemies() {
+        // Trust enemies to know what they're doing.
+        for (Enemy enemy : enemies) {
+            if(enemy.move(maze, playerLocation()).equals(playerLocation())) {
+                hasDied = true;
+            }
+        }
     }
     
     /**

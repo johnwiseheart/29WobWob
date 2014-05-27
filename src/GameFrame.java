@@ -357,8 +357,7 @@ public class GameFrame extends JFrame implements Observer {
           		
           		this.execute = true;
           		while (execute) {
-          		    gameState.tickPlayer();
-          		    gameState.tickEnemies();
+          		    gameState.tickCharacters();
           		    counter++;
           		    if(counter == 20)
           		    	counter = 0;
