@@ -774,6 +774,23 @@ public class GameFrame extends JFrame implements Observer {
 	      	   getContentPane().removeAll();
 	      	   runEndGame();
 			}
+			if(gs.lastCollected()==CellType.DOT) {
+				// TODO: This crashes the game sometimes for me (Adam)
+	            AudioManager dotSound = new AudioManager("music/kk.wav");
+	            dotSound.play();
+			}
+			if(gs.lastCollected()==CellType.KEY) {
+				// TODO: This crashes the game sometimes for me (Adam)
+			    AudioManager keySound = new AudioManager("music/keypickup.wav");
+			    keySound.play();
+			}
+			if(gs.hasDied()) {
+				 //TODO: put this in the right place.
+		        AudioManager dieSound = new AudioManager("music/dieing.wav");
+		        dieSound.play();
+			}
+			
+			
 			//if last collected = dot 
 			//play dot
 			//if last colelcted = key

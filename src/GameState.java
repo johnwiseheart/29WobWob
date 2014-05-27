@@ -77,15 +77,11 @@ public class GameState extends Observable{
         CellType walkedOver = maze.getCell(newLoc);
         if (walkedOver == CellType.DOT) {
             // Eat dot.
-            // TODO: This crashes the game sometimes for me (Adam)
-            //AudioManager dotSound = new AudioManager("music/kk.wav");
-            //dotSound.play();
+            
             maze.setCell(newLoc, CellType.SPACE);
             score++;
         } else if (walkedOver == CellType.KEY) {
             // Collect key.
-            AudioManager keySound = new AudioManager("music/keypickup.wav");
-            keySound.play();
             maze.setCell(newLoc, CellType.SPACE);
             numKeysCollected++;
             if (numKeysCollected >= numKey) {
@@ -165,9 +161,6 @@ public class GameState extends Observable{
      * Make the player lose a life, resetting their position or ending the game
      */
     private void loseLife() {
-        //TODO: put this in the right place.
-        AudioManager dieSound = new AudioManager("music/dieing.wav");
-        dieSound.play();
         if (player.loseLife() == 0) {
             finishGame();
         } else {
@@ -283,6 +276,10 @@ public class GameState extends Observable{
     
     public int getLives() {
     	return player.getLives();
+    }
+    
+    public boolean hasDied() {
+    	return hasDied;
     }
     
     private Maze maze;
