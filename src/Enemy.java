@@ -67,7 +67,8 @@ public class Enemy implements Character, Serializable {
 		Double prob = r.nextDouble();
 		// If we're far away or because of probability.
 		if (prob <= randomMoveProbability ||
-		    location.distanceTo(playerLocation) >= searchDistance) {
+		    location.distanceTo(playerLocation) >= searchDistance ||
+		    timer < scrambleDuration) {
 		    // Make a random move.
 			
 			ArrayList<Vector> moves = new ArrayList<Vector>();
@@ -196,6 +197,9 @@ public class Enemy implements Character, Serializable {
 			timer = 0;
 		}
 		
+		// set direction
+		direction = lastLocation.getDirection(location);
+		
 		return location;
 	}
 	
@@ -210,6 +214,8 @@ public class Enemy implements Character, Serializable {
 	private Vector location;
 	private Vector lastLocation;
 
+	Direction direction;
+	
 	private Integer searchDistance;
 	private Double randomMoveProbability;
 	
