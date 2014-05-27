@@ -1,5 +1,7 @@
+import java.io.Serializable;
 
-public class Maze {
+
+public class Maze implements Serializable {
     
     /**
      * Creates a new Maze

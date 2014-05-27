@@ -15,7 +15,6 @@ import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -32,10 +31,12 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GameFrame extends JFrame implements Observer {
 
@@ -151,6 +152,7 @@ public class GameFrame extends JFrame implements Observer {
 	private class GameKeyDispatcher implements KeyEventDispatcher {
         @Override
         public boolean dispatchKeyEvent(KeyEvent event) {
+        	if (gameState != null) {
         	 switch (event.getKeyCode()) {
              case KeyEvent.VK_LEFT:
              case KeyEvent.VK_A:
@@ -174,6 +176,7 @@ public class GameFrame extends JFrame implements Observer {
                  break;
                 
              }
+        	}
         	 return false;
         }
     }
@@ -197,11 +200,24 @@ public class GameFrame extends JFrame implements Observer {
                public void actionPerformed(ActionEvent event) {
             	  getContentPane().removeAll();
             	  menuMusic.stop();
-            	  runGame();
+            	  runGame(null);
+               }
+            });
+		playButton.setBackground(Color.black);
+    	menuPanel.add(playButton);
+    	
+    	JButton loadButton = makeButton("Load game", joystix, 36);
+		loadButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	  //getContentPane().removeAll();
+            	  //menuMusic.stop();
+            	  //runGame();
+            	  showLoadDialog();
                }
             });
 		
-    	menuPanel.add(playButton);
+    	menuPanel.add(loadButton);
 
     	JButton optionsButton = makeButton("Options", joystix, 36);
 		optionsButton.addActionListener(new
@@ -225,7 +241,7 @@ public class GameFrame extends JFrame implements Observer {
 
     	menuPanel.add(controlsButton);
 
-    	JButton exitButton = makeButton("Exit", joystix, 36);
+    	JButton exitButton = makeButton("Quit", joystix, 36);
 		exitButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -258,7 +274,7 @@ public class GameFrame extends JFrame implements Observer {
         setVisible(true);
     }
  
-    public void runGame() {
+    public void runGame(GameState savedState) {
     	
     	BoxLayout boxLayout = new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS); // top to bottom
     	this.setLayout(boxLayout);
@@ -281,7 +297,9 @@ public class GameFrame extends JFrame implements Observer {
                 		   tickThread.interrupt();
                 	   }
                 	   gameMusic.stop();
-                	   menuMusic.play(true);
+                	   if (options.isMusic()) {
+                		   menuMusic.play(true);
+                	   }
                 	   getContentPane().removeAll();
                 	   runPauseFrame();
                    }
@@ -341,7 +359,14 @@ public class GameFrame extends JFrame implements Observer {
         metaGamePanel.setMaximumSize(new Dimension(1000,100));
     	
     	mazeDisplay = new MazePanel();
-        gameState = new GameState(31, 19, options.getDifficulty());
+    	
+    	if (savedState != null) {
+    		System.out.println("Using saved state");
+    		gameState = savedState;
+    	} else {
+    		gameState = new GameState(31, 19, options.getDifficulty());
+    	}
+
         gameState.addObserver(mazeDisplay);
         gameState.addObserver(this);
         //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -411,7 +436,7 @@ public class GameFrame extends JFrame implements Observer {
                public void actionPerformed(ActionEvent event) {
             	  getContentPane().removeAll();
             	  menuMusic.stop();
-            	  runGame();
+            	  runGame(null);
                }
             });
 		
@@ -455,7 +480,7 @@ public class GameFrame extends JFrame implements Observer {
 
 
     	JLabel heading = makeLabel("Paused", 50);
-    	heading.setBorder(BorderFactory.createEmptyBorder(70,0,70,0));
+    	heading.setBorder(BorderFactory.createEmptyBorder(70,0,30,0));
     	pausePanel.add(heading);
     	
     	JButton resumeButton = makeButton("menu", joystix, 36);
@@ -480,10 +505,29 @@ public class GameFrame extends JFrame implements Observer {
             	   newTickThread();
             	   tickThread.start();
             	   menuMusic.stop();
-            	   gameMusic.play(true); //TODO: why does this only play once
-               }
+            	   if (options.isMusic()) {
+            		   gameMusic.play(true); //TODO: why does this only play once
+            	   }
+               	}
             });
     	pausePanel.add(menuButton);
+    	
+    	JButton saveButton = makeButton("save", joystix, 36);
+    	saveButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   showSaveDialog();
+               }
+            });
+    	pausePanel.add(saveButton);
+    	
+    	JPanel musicOptions = genMusicOptions();
+		musicOptions.setBackground(Color.black);
+    	pausePanel.add(musicOptions);
+    	
+    	JPanel effectsOptions = genEffectsOptions();
+		effectsOptions.setBackground(Color.black);
+    	pausePanel.add(effectsOptions);
     	
         this.add(pausePanel);
         this.repaint();
@@ -491,21 +535,8 @@ public class GameFrame extends JFrame implements Observer {
     	
     }
     
-    private void runOptions() {
-    	//TODO: Indication of which option is pressed
-    	//TODO: Save options to a file
-    	
-		JPanel optionsPanel = new JPanel();
-		optionsPanel.setBackground(Color.black);
-		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
-
-		JLabel heading = makeLabel("Options", 50);
-		
-		heading.setBorder(BorderFactory.createEmptyBorder(30,0,50,0));
-		optionsPanel.add(heading);
-
-		
-		JPanel musicOptions = new JPanel(); // New Panel for music options.
+    private JPanel genMusicOptions() {
+    	JPanel musicOptions = new JPanel(); // New Panel for music options.
 		musicOptions.setLayout(new FlowLayout());
 
     	JLabel musicLabel = makeLabel("music:", 36);
@@ -560,11 +591,13 @@ public class GameFrame extends JFrame implements Observer {
                }
             });
 		musicOptions.add(musicOffButton);
-		musicOptions.setBackground(Color.black);
-    	optionsPanel.add(musicOptions);
-    	
-    	JPanel effectsOptions = new JPanel(); // New Panel for music options.
-		effectsOptions.setLayout(new FlowLayout());
+		
+		return musicOptions;
+    }
+    
+    private JPanel genEffectsOptions() {
+    	JPanel effectsOptions = new JPanel();
+    	effectsOptions.setLayout(new FlowLayout());
 
     	JLabel effectsLabel = makeLabel("sfx:", 36);
 		effectsOptions.add(effectsLabel);
@@ -584,6 +617,29 @@ public class GameFrame extends JFrame implements Observer {
                }
             });
 		effectsOptions.add(effectsOffButton);
+		
+		return effectsOptions;
+    }
+    
+    private void runOptions() {
+    	//TODO: Indication of which option is pressed
+    	//TODO: Save options to a file
+    	
+		JPanel optionsPanel = new JPanel();
+		optionsPanel.setBackground(Color.black);
+		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
+
+		JLabel heading = makeLabel("Options", 50);
+		
+		heading.setBorder(BorderFactory.createEmptyBorder(30,0,50,0));
+		optionsPanel.add(heading);
+
+		
+		JPanel musicOptions = genMusicOptions();
+		musicOptions.setBackground(Color.black);
+    	optionsPanel.add(musicOptions);
+    	
+    	JPanel effectsOptions = genEffectsOptions();
 		effectsOptions.setBackground(Color.black);
     	optionsPanel.add(effectsOptions);
 		
@@ -672,6 +728,52 @@ public class GameFrame extends JFrame implements Observer {
         this.add(optionsPanel);
         this.repaint();
         this.setVisible(true);
+    }
+    
+    private final String WOBMAN_FILE_DESC = "Wobman save file (*.wob)";
+    private final String WOBMAN_FILE_EXT = "wob";
+    
+    private void showLoadDialog() {
+    	JFileChooser fileChooser = new JFileChooser();
+    	
+    	FileNameExtensionFilter filter = new FileNameExtensionFilter(WOBMAN_FILE_DESC, WOBMAN_FILE_EXT);
+    	fileChooser.setFileFilter(filter);
+    	
+    	if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+    		File f = fileChooser.getSelectedFile();
+    		String path = f.getAbsolutePath();
+    		
+    		GameState state = SaveManager.loadGame(path);
+    		
+    		if (state != null) {
+    			getContentPane().removeAll();
+          	  	menuMusic.stop();
+          	  	
+          	  	runGame(state);
+    		} else {
+    			// TODO: chuck a fit: didn't load properly
+    			JOptionPane.showMessageDialog(this, "Save file is damaged!");
+    		}
+    	}  	
+    }
+    
+    private void showSaveDialog() {
+    	JFileChooser fileChooser = new JFileChooser();
+    	
+    	FileNameExtensionFilter filter = new FileNameExtensionFilter(WOBMAN_FILE_DESC, WOBMAN_FILE_EXT);
+    	fileChooser.setFileFilter(filter);
+    	
+    	if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+    		File f = fileChooser.getSelectedFile();
+    		String path = f.getAbsolutePath();
+    		
+    		// append file extension
+    		if (!path.endsWith("." + WOBMAN_FILE_EXT)) {
+    			path += "." + WOBMAN_FILE_EXT;
+    		}
+    		
+    		SaveManager.saveGame(gameState, path);
+    	}
     }
     
     public void updateScore(int score) {

@@ -1,5 +1,7 @@
+import java.io.Serializable;
 
-public class Player implements Character {
+
+public class Player implements Character, Serializable {
 
 	/**
 	 * Creates a new player starting at the given location in the maze.

@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
 
-public class GameState extends Observable{
+public class GameState extends Observable implements Serializable {
     
     /**
      * Creates a new GameState
