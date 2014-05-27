@@ -6,7 +6,10 @@ public enum CellType {
     DOOR,
     KEY,
 
-    PLAYER,
+    PLAYER1_E,
+    PLAYER1_N,
+    PLAYER1_S,
+    PLAYER1_W,
 
     ENEMY1,
     ENEMY2,

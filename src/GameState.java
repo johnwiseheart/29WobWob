@@ -62,6 +62,14 @@ public class GameState extends Observable implements Serializable {
     }
     
     /**
+     * Returns the direction of the player.
+     * @return the direction of the player.
+     */
+    public Direction getPlayerDirection() {
+    	return player.getDirection();
+    }
+    
+    /**
      * Returns the number of keys the player has collected
      * @return the number of keys the player has collected
      */

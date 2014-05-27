@@ -43,7 +43,10 @@ public class MazePanel extends JPanel implements Observer {
         	images.put(CellType.DOT, resizeImage(ImageIO.read(new File("img/dot.png")),CELL_SIZE, CELL_SIZE));
         	images.put(CellType.KEY, resizeImage(ImageIO.read(new File("img/key.png")),CELL_SIZE, CELL_SIZE));
         	images.put(CellType.DOOR, resizeImage(ImageIO.read(new File("img/door.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.PLAYER, resizeImage(ImageIO.read(new File("img/p1.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.PLAYER1_E, resizeImage(ImageIO.read(new File("img/p1_east.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.PLAYER1_N, resizeImage(ImageIO.read(new File("img/p1_north.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.PLAYER1_S, resizeImage(ImageIO.read(new File("img/p1_south.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.PLAYER1_W, resizeImage(ImageIO.read(new File("img/p1_west.png")),CELL_SIZE, CELL_SIZE));
         	images.put(CellType.ENEMY1, resizeImage(ImageIO.read(new File("img/e1.png")),CELL_SIZE, CELL_SIZE));
         	images.put(CellType.ENEMY2, resizeImage(ImageIO.read(new File("img/e2.png")),CELL_SIZE, CELL_SIZE));
         	images.put(CellType.ENEMY3, resizeImage(ImageIO.read(new File("img/e3.png")),CELL_SIZE, CELL_SIZE));
@@ -78,7 +81,7 @@ public class MazePanel extends JPanel implements Observer {
             }
         }
         // Display player.
-        g2d.drawImage(images.get(CellType.PLAYER),
+        g2d.drawImage(images.get(directionTOImage(gameState.getPlayerDirection())),
                       gameState.playerLocation().x()*CELL_SIZE,
                       gameState.playerLocation().y()*CELL_SIZE, null);
         
@@ -110,6 +113,21 @@ public class MazePanel extends JPanel implements Observer {
         setMaximumSize(new Dimension(gameState.getMaze().getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE));
         //this.setBounds(12, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
         //this.setBounds(0, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
+    }
+    
+    private CellType directionTOImage(Direction direction) {
+    	switch (direction) {
+    	case NORTH:
+    		return CellType.PLAYER1_N;
+    	case EAST:
+    		return CellType.PLAYER1_E;
+    	case SOUTH:
+    		return CellType.PLAYER1_S;
+    	case WEST:
+    		return CellType.PLAYER1_W;
+    	default:
+    		return CellType.PLAYER1_E;
+    	}
     }
     
     // Part of the Observer pattern. This method is called when an object being observed notify's it has been changed.

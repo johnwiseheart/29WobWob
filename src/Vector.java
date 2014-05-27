@@ -50,6 +50,25 @@ public class Vector implements Serializable {
 	}
 	
 	/**
+	 * Returns a Direction enum indicating the current direction of this vector if it is N, S, E or W.
+	 * Otherwise return NONE.
+	 * @return Direction enum of vector.
+	 */
+	public Direction getDirection() {
+		if (this.x < 0) {
+			return Direction.WEST;
+		} else if (this.x > 0) {
+			return Direction.EAST;
+		} else if (this.y > 0) {
+			return Direction.SOUTH;
+		} else if (this.y < 0) {
+			return Direction.NORTH;
+		} else {
+			return Direction.NONE;
+		}
+	}
+	
+	/**
 	 * Adds two vectors together component-wise.
 	 * @param other Vector to add to this one
 	 * @return Sum of the two vectors

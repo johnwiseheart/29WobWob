@@ -10,6 +10,7 @@ public class Player implements Character, Serializable {
     public Player(Vector location, int lives) {
         this.location = location;
         this.velocity = new Vector(0, 0);
+        this.direction = Direction.NORTH;
         this.nextVelocity = null;
         this.lives = lives;
     }
@@ -59,6 +60,9 @@ public class Player implements Character, Serializable {
     		
     		Vector nextNewLocation = location.add(nextVelocity);
     		if (!maze.isWall(nextNewLocation)) {
+    			if (nextVelocity.getDirection() != Direction.NONE) {
+    				direction = nextVelocity.getDirection();
+    			}
     			velocity = nextVelocity;
     			nextVelocity = null;
     			
@@ -92,6 +96,14 @@ public class Player implements Character, Serializable {
     }
     
     /**
+     * Returns the direction of the player.
+     * @return the direction of the player.
+     */
+    public Direction getDirection() {
+    	return direction;
+    }
+    
+    /**
      * Resets the player to a given location
      * @param location the location to reset the player to
      */
@@ -104,5 +116,8 @@ public class Player implements Character, Serializable {
     private Vector location;
     private Vector velocity; // direction we're moving in
     private Vector nextVelocity; // direction we want to try to move in as soon as we can
+    private Direction direction;
+    
+    
     private int lives;
 }
