@@ -330,13 +330,11 @@ public class GameFrame extends JFrame {
         //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
     	gamePanel = new JPanel();
     	gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.PAGE_AXIS));
+    	gamePanel.setBackground(Color.black);
     	gamePanel.add(metaGamePanel);
     	gamePanel.add(mazeDisplay);
-        
    
     	this.add(gamePanel);
-    	
-
         
         newTickThread();
         tickThread.start();
@@ -358,10 +356,8 @@ public class GameFrame extends JFrame {
           		
           		this.execute = true;
           		while (execute) {
-          			//if(counter==0) {
-	          		    gameState.tickPlayer();
-	          		    gameState.tickEnemies();
-          			//}
+          		    gameState.tickPlayer();
+          		    gameState.tickEnemies();
           		    counter++;
           		    if(counter == 20)
           		    	counter = 0;

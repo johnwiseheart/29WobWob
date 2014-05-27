@@ -33,7 +33,7 @@ public class AudioManager {
 			AudioFormat format = soundIn.getFormat();
 			clip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class,
 					format));
-			clip.open(audio);
+		    clip.open(audio);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

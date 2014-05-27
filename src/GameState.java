@@ -12,19 +12,21 @@ public class GameState extends Observable{
     public GameState(int width, int height) {
         maze = new Maze(width, height, new BraidedMazeGenerator(), 6, 4);
         
-        this.numKey = 4;
-        placeKeys(numKey);
+        player = new Player(new Vector(width/2, height-2), 3);
         
         enemies = new ArrayList<Enemy>();
         placeNewEnemies(3);
         
-        player = new Player(new Vector(width/2, 1), 3);
+        this.numKey = 4;
+        placeKeys(numKey);
         
         level = 1;
         hasDied = false;
         score = 0;
         numKeysCollected = 0;
         gameFinished = false;
+        lastCollected = CellType.SPACE;
+        
         
         // On any change we just need to call setChanged() and then notifyObervers().
         // Anything observing the GameState will have it's update() method called.
@@ -57,6 +59,7 @@ public class GameState extends Observable{
         for (Vector v : enemyLocations()) {
             if (v.equals(newLoc)) {
                 hasDied = true;
+                lastCollected = CellType.SPACE;
             }
         }
         
@@ -72,23 +75,25 @@ public class GameState extends Observable{
         
         // Consume dot/key
         CellType walkedOver = maze.getCell(newLoc);
-        maze.setCell(newLoc, CellType.SPACE);
         if (walkedOver == CellType.DOT) {
             // Eat dot.
             // TODO: This crashes the game sometimes for me (Adam)
-            AudioManager dotSound = new AudioManager("music/kk.wav");
-            dotSound.play();
+            //AudioManager dotSound = new AudioManager("music/kk.wav");
+            //dotSound.play();
+            maze.setCell(newLoc, CellType.SPACE);
             score++;
         } else if (walkedOver == CellType.KEY) {
             // Collect key.
             AudioManager keySound = new AudioManager("music/keypickup.wav");
             keySound.play();
+            maze.setCell(newLoc, CellType.SPACE);
             numKeysCollected++;
             if (numKeysCollected >= numKey) {
                 maze.setCell(maze.getWidth()/2, 0, CellType.SPACE); // Remove door.
             }
             score += 10;
         }
+        lastCollected = walkedOver;
     }
     
     /**
@@ -102,35 +107,6 @@ public class GameState extends Observable{
             }
         }
         updateDisplay();
-    }
-    
-    /**
-     * Make the player lose a life, resetting their position or ending the game
-     */
-    private void loseLife() {
-    	//TODO: put this in the right place.
-    	AudioManager dieSound = new AudioManager("music/dieing.wav");
-    	dieSound.play();
-        if (player.loseLife() == 0) {
-            finishGame();
-        } else {
-            resetPlayer();
-        }
-    }
-    
-    /**
-     * Finish the game once the player loses all lives
-     */
-    private void finishGame() {
-        gameFinished = true;
-    }
-    
-    /**
-     * Notify all observers that the GameState has changed
-     */
-    private void updateDisplay() {
-        this.setChanged();
-        this.notifyObservers();
     }
     
     /**
@@ -181,12 +157,45 @@ public class GameState extends Observable{
         return gameFinished;
     }
     
+    public CellType lastCollected() {
+        return lastCollected;
+    }
+    
+    /**
+     * Make the player lose a life, resetting their position or ending the game
+     */
+    private void loseLife() {
+        //TODO: put this in the right place.
+        AudioManager dieSound = new AudioManager("music/dieing.wav");
+        dieSound.play();
+        if (player.loseLife() == 0) {
+            finishGame();
+        } else {
+            resetPlayer();
+        }
+    }
+    
+    /**
+     * Finish the game once the player loses all lives
+     */
+    private void finishGame() {
+        gameFinished = true;
+    }
+    
+    /**
+     * Notify all observers that the GameState has changed
+     */
+    private void updateDisplay() {
+        this.setChanged();
+        this.notifyObservers();
+    }
+    
     /**
      * Resets the player after they lose a life or a new level starts
      */
     private void resetPlayer() {
         hasDied = false;
-        player.reset(new Vector(maze.getWidth()/2, 1));
+        player.reset(new Vector(maze.getWidth()/2, maze.getHeight()-2));
         
         // scramble enemies
         for (Enemy enemy : enemies) {
@@ -219,11 +228,14 @@ public class GameState extends Observable{
                     continue;
                 }
             }
-            
             enemies.add(new Enemy(v, 10, 0.3, 10, 5));
         }
     }
     
+    /**
+     * Places a number of keys randomly
+     * @param numKey the number of keys to place
+     */
     private void placeKeys(int numKey) {
         Random random = new Random();
         // Place each key in one of the cells of the map that always starts
@@ -233,7 +245,8 @@ public class GameState extends Observable{
             int y = random.nextInt(maze.getHeight()/2)*2 + 1;
             Vector v = new Vector(x, y);
             
-            if (maze.getCell(v) == CellType.KEY) {
+            // Don't place two keys in the same place or where the player starts.
+            if (maze.getCell(v) == CellType.KEY || v.equals(player.location())) {
                 i--;
                 continue;
             }
@@ -242,6 +255,10 @@ public class GameState extends Observable{
         }
     }
     
+    /**
+     * Starts the next level, regenerating the maze, placing the enemies again,
+     * placing the keys again and resetting the player
+     */
     private void nextLevel() {
         level++;
         score += 50;
@@ -252,6 +269,10 @@ public class GameState extends Observable{
         resetPlayer();
     }
     
+    /**
+     * Whether the player has won (if it has exited the maze)
+     * @return whether the player has won
+     */
     private boolean hasWon() {
         return player.location().equals(maze.doorLocation());
     }
@@ -265,4 +286,5 @@ public class GameState extends Observable{
     private int numKeysCollected;
     private int score;
     private boolean gameFinished;
+    private CellType lastCollected;
 }
