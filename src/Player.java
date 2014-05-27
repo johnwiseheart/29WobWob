@@ -48,10 +48,11 @@ public class Player implements Character, Serializable {
      * is an invalid move in which case it adds velocity instead, unless this is
      * also invalid
      * @param maze the current state of the maze
-     * @param location not used
      * @return the new location of the player.
      */
-    public Vector move(Maze maze, Vector unused) {
+    public Vector move(GameState state) {
+    	Maze maze = state.getMaze();
+    	
     	Vector newLocation = location.add(velocity); // using the current velocity
     	
     	if (nextVelocity != null) {

@@ -19,9 +19,8 @@ public interface Character {
      * Instructs the character to move by one step, and returns where they want to move.
      * Note that this may not necessarily be valid! Appropriate checks must be made first as to whether
      * they can actually move there, and as to the consequences of the move (e.g. run into enemy, collect key).
-     * @param maze state of the maze
-     * @param a location of interest to the move (eg. the player's location)
+     * @param state Current state of the game
      * @return Potential new location of character
      */
-    Vector move(Maze maze, Vector location);
+    Vector move(GameState state);
 }

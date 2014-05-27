@@ -113,6 +113,20 @@ public class GameState extends Observable implements Serializable {
         return locations;
     }
     
+    /**
+     * Returns whether there is an enemy at the given location.
+     * @param location Location to test
+     * @return Whether there is an enemy here
+     */
+    public boolean isEnemy(Vector location) {
+    	for (Vector enemyLoc : enemyLocations()) {
+    		if (enemyLoc.equals(location)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     public boolean gameFinished() {
         return gameFinished;
     }
@@ -143,7 +157,7 @@ public class GameState extends Observable implements Serializable {
      * Update the player on each tick
      */
     private void tickPlayer() {
-        Vector newLoc = player.move(maze, null);
+        Vector newLoc = player.move(this);
         // Check if the player touched an enemy.
         for (Vector v : enemyLocations()) {
             if (v.equals(newLoc)) {
@@ -189,7 +203,7 @@ public class GameState extends Observable implements Serializable {
     private void tickEnemies() {
         // Trust enemies to know what they're doing.
         for (Enemy enemy : enemies) {
-            if(enemy.move(maze, playerLocation()).equals(playerLocation())) {
+        	if (enemy.move(this).equals(playerLocation())) {
                 hasDied = true;
             }
         }

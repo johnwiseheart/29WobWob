@@ -54,11 +54,12 @@ public class Enemy implements Character, Serializable {
 	 * Either moves the enemy towards the player using a BFS or moves randomly
 	 * (without going backwards) depending on a random probability and how far
 	 * the enemy is from the player
-	 * @param maze the current state of the maze
-	 * @param location the location of the player
+	 * @param state Current game state
 	 * @return where the enemy moved to
 	 */
-	public Vector move(Maze maze, Vector playerLocation) {
+	public Vector move(GameState state) {
+		Maze maze = state.getMaze();
+		Vector playerLocation = state.playerLocation();
 		
 		Random r = new Random();
 		int[] dirs = {-1, 0, 1};
@@ -79,7 +80,8 @@ public class Enemy implements Character, Serializable {
 						
 						Vector move = location.add(new Vector(dx, dy));
 						if (!maze.isWall(move) && !move.equals(lastLocation) && 
-						    !move.equals(maze.doorLocation())) {
+						    !move.equals(maze.doorLocation()) &&
+						    !state.isEnemy(move)) {
 							moves.add(move);
 						}
 						
@@ -172,7 +174,8 @@ public class Enemy implements Character, Serializable {
 							BFSNode newNode = new BFSNode(node, dx, dy);
 							// Don't move into walls or backwards.
 							if (!maze.isWall(newNode.location) &&
-							    !newNode.location.equals(lastLocation)) { 
+							    !newNode.location.equals(lastLocation) &&
+							    !state.isEnemy(newNode.location)) { 
 								queue.add(newNode);
 							}
 							
