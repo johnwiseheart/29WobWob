@@ -350,13 +350,11 @@ public class GameFrame extends JFrame implements Observer {
         //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
     	gamePanel = new JPanel();
     	gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.PAGE_AXIS));
+    	gamePanel.setBackground(Color.black);
     	gamePanel.add(metaGamePanel);
     	gamePanel.add(mazeDisplay);
-        
    
     	this.add(gamePanel);
-    	
-
         
         newTickThread();
         tickThread.start();
@@ -378,10 +376,8 @@ public class GameFrame extends JFrame implements Observer {
           		
           		this.execute = true;
           		while (execute) {
-          			//if(counter==0) {
-	          		    gameState.tickPlayer();
-	          		    gameState.tickEnemies();
-          			//}
+          		    gameState.tickPlayer();
+          		    gameState.tickEnemies();
           		    counter++;
           		    if(counter == 20)
           		    	counter = 0;
@@ -767,6 +763,7 @@ public class GameFrame extends JFrame implements Observer {
 		GameState gs = (GameState) arg0;
 		//System.out.println("FUK U M8");
 		if(gs!=null) {
+
 			if(gs.gameFinished()) {
 				//System.out.println("U WOB");
 				 if (tickThread.isAlive()) {
@@ -789,6 +786,7 @@ public class GameFrame extends JFrame implements Observer {
 		}
 		
 		
+
 		
 	}
   
