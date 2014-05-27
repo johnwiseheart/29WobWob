@@ -196,6 +196,9 @@ public class Enemy implements Character, Serializable {
 			timer = 0;
 		}
 		
+		// set direction
+		direction = lastLocation.getDirection(location);
+		
 		return location;
 	}
 	
@@ -210,6 +213,8 @@ public class Enemy implements Character, Serializable {
 	private Vector location;
 	private Vector lastLocation;
 
+	Direction direction;
+	
 	private Integer searchDistance;
 	private Double randomMoveProbability;
 	
