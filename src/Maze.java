@@ -1,5 +1,7 @@
+import java.io.Serializable;
 
-public class Maze {
+
+public class Maze implements Serializable {
     
     public Maze(int width, int height, MazeGenerator mazeGenerator, int numEnemy, 
                 int numKey) {

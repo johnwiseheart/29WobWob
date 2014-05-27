@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -8,7 +9,7 @@ import java.util.Random;
  * An enemy that moves by itself, doesn't collect dots and kills the player on
  * contact.
  */
-public class Enemy implements Character {
+public class Enemy implements Character, Serializable {
     
     /**
      * Creates a new Enemy
