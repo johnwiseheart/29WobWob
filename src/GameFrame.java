@@ -39,7 +39,9 @@ import javax.swing.border.EmptyBorder;
 
 public class GameFrame extends JFrame implements Observer {
 
-	//TODO: stop game from farting
+    private static final long serialVersionUID = 1L;
+
+    //TODO: stop game from farting
 	public GameFrame() {
 		 try{
             InputStream is = new FileInputStream("font/joystix.ttf");
@@ -93,11 +95,6 @@ public class GameFrame extends JFrame implements Observer {
 			}
 		}
 	}
-	
-	AudioFormat audioFormat;
-	AudioInputStream audioInputStream;
-	SourceDataLine sourceDataLine;
-	boolean muted;
 	
 	public void startGame() {
 		runMenu();
@@ -241,6 +238,25 @@ public class GameFrame extends JFrame implements Observer {
         repaint();
         setVisible(true);
     }
+	
+	private void runFlash() {
+		JPanel buzzPanel = new JPanel();
+		buzzPanel.setBackground(Color.black);
+		buzzPanel.setLayout(new BoxLayout(buzzPanel, BoxLayout.PAGE_AXIS));
+
+		JLabel wobman = makeImageLabel("img/wobman.png", -1, -1);
+		wobman.setBorder(BorderFactory.createEmptyBorder(70,0,20,0));
+		buzzPanel.add(wobman);
+		//TODO: fix the image for wobby
+		JLabel keymaster = makeLabel("BUZZ WORD", 32f);
+		keymaster.setBorder(BorderFactory.createEmptyBorder(0,0,80,0));
+		buzzPanel.add(keymaster);
+
+    	buzzPanel.setBounds(0,0,getWidth(), getHeight());
+        add(buzzPanel);
+        repaint();
+        setVisible(true);
+    }
  
     public void runGame() {
     	
@@ -325,7 +341,7 @@ public class GameFrame extends JFrame implements Observer {
         metaGamePanel.setMaximumSize(new Dimension(1000,100));
     	
     	mazeDisplay = new MazePanel();
-        gameState = new GameState(31, 19);
+        gameState = new GameState(31, 19, options.getDifficulty());
         gameState.addObserver(mazeDisplay);
         gameState.addObserver(this);
         //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -382,8 +398,8 @@ public class GameFrame extends JFrame implements Observer {
 		menuPanel.add(keymaster);
 		
 		
-		JLabel scoreLabel = makeLabel("Score: 33", 32f);
-		menuPanel.add(scoreLabel);
+		endScoreLabel = makeLabel("Score: "+score, 32f);
+		menuPanel.add(endScoreLabel);
 		
 		JLabel highScoreLabel = makeLabel("NEW HIGH SCORE", 32f);
 		highScoreLabel.setBorder(BorderFactory.createEmptyBorder(0,0,80,0));
@@ -660,6 +676,7 @@ public class GameFrame extends JFrame implements Observer {
     
     public void updateScore(int score) {
     	scoreLabel.setText(score + "");
+    	
     }
     
     public void updateLives(int lives) {
@@ -721,6 +738,54 @@ public class GameFrame extends JFrame implements Observer {
     	}
     	return wobman;
     }
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		GameState gs = (GameState) arg0;
+		//System.out.println("FUK U M8");
+		if(gs!=null) {
+
+			if(gs.gameFinished()) {
+				//System.out.println("U WOB");
+				 if (tickThread.isAlive()) {
+	      		   tickThread.interrupt();
+	      	   }
+	      	   gameMusic.stop();
+	      	   menuMusic.play(true);
+	      	   getContentPane().removeAll();
+	      	   runEndGame();
+			}
+			if (gs.lastCollected()==CellType.DOT) {
+				// TODO: This crashes the game sometimes for me (Adam)
+	            //AudioManager dotSound = new AudioManager("music/kk.wav");
+	            //dotSound.play();
+			}
+			if (gs.lastCollected()==CellType.KEY) {
+				// TODO: This crashes the game sometimes for me (Adam)
+			    AudioManager keySound = new AudioManager("music/keypickup.wav");
+			    keySound.play();
+			}
+			if (gs.hasDied()) {
+		        AudioManager dieSound = new AudioManager("music/dieing.wav");
+		        dieSound.play();
+			}
+			
+			//if last collected = dot 
+			//play dot
+			//if last collected = key
+			//play key
+			score = gs.getScore();
+			updateScore(score);
+			updateLevel(gs.getLevel());
+			updateLives(gs.getLives());
+			repaint();
+		}
+	}
+	
+	private AudioFormat audioFormat;
+    private AudioInputStream audioInputStream;
+    private SourceDataLine sourceDataLine;
+    private boolean muted;
     private static AudioManager gameMusic;
     private static AudioManager menuMusic;
     public static Font joystix = null;
@@ -735,24 +800,6 @@ public class GameFrame extends JFrame implements Observer {
     private JLabel livesLabel;
     private JLabel scoreLabel;
     private JLabel levelLabel;
-
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		GameState gs = (GameState) arg1;
-		System.out.println("FUK U M8");
-		if(gs!=null) {
-    		if(gs.gameFinished()) {
-    			System.out.println("U WOB");
-    			 if (tickThread.isAlive()) {
-          		   tickThread.interrupt();
-          	   }
-          	   gameMusic.stop();
-          	   menuMusic.play(true);
-          	   getContentPane().removeAll();
-          	   runEndGame();
-    		}
-		}	
-		
-	}
-  
+    private JLabel endScoreLabel;
+    private int score;
 }

@@ -9,8 +9,9 @@ public class GameState extends Observable{
      * @param width the starting width of the maze
      * @param height the starting height of the maze
      */
-    public GameState(int width, int height) {
+    public GameState(int width, int height, Options.DifficultyType difficulty) {
         maze = new Maze(width, height, new BraidedMazeGenerator());
+        this.difficulty = difficulty;
         
         player = new Player(new Vector(width/2, height-2), 3);
         
@@ -50,7 +51,6 @@ public class GameState extends Observable{
     	setPlayerVelocity(new Vector(x, y));
     }
     
-    
     /**
      * Update the characters in each tick
      */
@@ -59,8 +59,6 @@ public class GameState extends Observable{
         tickEnemies();
         updateDisplay();
     }
-    
-    
     
     /**
      * Returns the number of keys the player has collected
@@ -118,9 +116,6 @@ public class GameState extends Observable{
      * Make the player lose a life, resetting their position or ending the game
      */
     private void loseLife() {
-        //TODO: put this in the right place.
-        AudioManager dieSound = new AudioManager("music/dieing.wav");
-        dieSound.play();
         if (player.loseLife() == 0) {
             finishGame();
         } else {
@@ -275,6 +270,7 @@ public class GameState extends Observable{
         placeNewEnemies(level);
         numKey++;
         placeKeys(numKey);
+        numKeysCollected = 0;
         resetPlayer();
     }
     
@@ -286,7 +282,20 @@ public class GameState extends Observable{
         return player.location().equals(maze.doorLocation());
     }
     
+    public int getLevel() {
+    	return level;
+    }
+    
+    public int getLives() {
+    	return player.getLives();
+    }
+    
+    public boolean hasDied() {
+    	return hasDied;
+    }
+    
     private Maze maze;
+    private Options.DifficultyType difficulty;
     private Player player;
     private ArrayList<Enemy> enemies;
     private int numKey;

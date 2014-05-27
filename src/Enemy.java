@@ -111,7 +111,6 @@ public class Enemy implements Character {
 				Vector location;
 				// Only store the first move, it's all we need to move the enemy.
 				Vector firstMove;
-				int distance;
 				
 				/**
 				 * Creates the first BFS node in the search
@@ -120,7 +119,6 @@ public class Enemy implements Character {
 				public BFSNode(Vector start) {
 					location = start;
 					firstMove = null;
-					distance = 0;
 				}
 				
 				/**
