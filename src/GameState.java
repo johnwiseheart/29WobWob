@@ -10,7 +10,7 @@ public class GameState extends Observable{
      * @param height the starting height of the maze
      */
     public GameState(int width, int height) {
-        maze = new Maze(width, height, new BraidedMazeGenerator(), 6, 4);
+        maze = new Maze(width, height, new BraidedMazeGenerator());
         
         player = new Player(new Vector(width/2, height-2), 3);
         
@@ -262,7 +262,7 @@ public class GameState extends Observable{
     private void nextLevel() {
         level++;
         score += 50;
-        maze = new Maze(maze.getWidth(), maze.getHeight(), new BraidedMazeGenerator(), 3, 4);
+        maze = new Maze(maze.getWidth(), maze.getHeight(), new BraidedMazeGenerator());
         placeNewEnemies(level);
         numKey++;
         placeKeys(numKey);

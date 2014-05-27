@@ -1,13 +1,24 @@
 
 public class Maze {
     
-    public Maze(int width, int height, MazeGenerator mazeGenerator, int numEnemy, 
-                int numKey) {
+    /**
+     * Creates a new Maze
+     * @param width the width of the maze
+     * @param height the height of the maze
+     * @param mazeGenerator the maze generator to use to generate the maze
+     */
+    public Maze(int width, int height, MazeGenerator mazeGenerator) {
         this.width = width;
         this.height = height;
         grid = mazeGenerator.generateMaze(width, height);
     }
     
+    /**
+     * Gets the CellType of a particular cell given by integer coordinates
+     * @param x the x coordinate of the cell
+     * @param y the y coordinate of the cell
+     * @return the CellType of that cell
+     */
     public CellType getCell(int x, int y) {
     	if (x < 0 || x >= this.width || y < 0 || y >= this.height)
     		return CellType.WALL;
@@ -15,10 +26,20 @@ public class Maze {
         return grid[x][y];
     }
     
+    /**
+     * Gets the CellType of a particular cell given by a Vector
+     * @param location the location of the cell
+     * @return the CellType of that cell
+     */
     public CellType getCell(Vector location) {
     	return getCell(location.x(), location.y());
     }
     
+    /**
+     * Whether the cell at a particular location is considered a wall
+     * @param location the location of the cell
+     * @return whether that cell is considered a wall
+     */
     public boolean isWall(Vector location) {
     	CellType cell = getCell(location);
     	
@@ -47,22 +68,45 @@ public class Maze {
     	}
     }
     
+    /**
+     * Sets the CellType of a particular cell given by integer coordinates
+     * @param x the x coordinate of the cell
+     * @param y the y coordinate of the cell
+     * @param cell the CellType to change that cell to
+     */
     public void setCell(int x, int y, CellType cell) {
         grid[x][y] = cell;
     }
     
+    /**
+     * Sets the CellType of a particular cell given by a Vector
+     * @param location the location of the cell
+     * @param cell the CellType to change that cell to
+     */
     public void setCell(Vector location, CellType cell) {
     	setCell(location.x(), location.y(), cell);
     }
     
+    /**
+     * Returns the width of the maze
+     * @return the width of the maze
+     */
     public int getWidth() {
         return width;
     }
   
+    /**
+     * Returns the height of the maze
+     * @return the height of the maze
+     */
     public int getHeight() {
         return height;
     }
     
+    /**
+     * Returns the location of the door
+     * @return the location of the door
+     */
     public Vector doorLocation() {
         return new Vector(width/2, 0);
     }
