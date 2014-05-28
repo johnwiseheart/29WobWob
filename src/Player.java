@@ -118,7 +118,5 @@ public class Player implements Character, Serializable {
     private Vector velocity; // direction we're moving in
     private Vector nextVelocity; // direction we want to try to move in as soon as we can
     private Direction direction;
-    
-    
     private int lives;
 }

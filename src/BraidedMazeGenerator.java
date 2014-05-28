@@ -241,6 +241,7 @@ public class BraidedMazeGenerator implements MazeGenerator {
         }
         
         grid[width/2][0] = CellType.DOOR;
+        grid[width/2][height-2] = CellType.SPACE;
         
         return grid;
     }

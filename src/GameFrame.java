@@ -22,11 +22,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.SourceDataLine;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -52,7 +47,8 @@ public class GameFrame extends JFrame implements Observer {
             attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
             joystixul = joystix.deriveFont(attributes);
         } catch (Exception e) {
-        } 
+        }
+		audioManager = new AudioManager();
 		options = new Options();
 		setTitle("Wobman the Key Master");
 		setMinimumSize(new Dimension(800,600));
@@ -65,86 +61,9 @@ public class GameFrame extends JFrame implements Observer {
 	    manager.addKeyEventDispatcher(new GameKeyDispatcher());   
 	}
 	
-	class PlayThread extends Thread {
-		byte tempBuffer[] = new byte[5];
-		public void run() {
-			try {
-				while (true) {
-					audioInputStream = AudioSystem.getAudioInputStream(new File("music/wob.wav"));
-					audioFormat = audioInputStream.getFormat();
-					
-					DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
-					sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
-					
-					sourceDataLine.open(audioFormat);
-					sourceDataLine.start();
-					int cnt = audioInputStream.read(tempBuffer, 0, tempBuffer.length);
-					while (cnt != -1) {
-						
-							sourceDataLine.write(tempBuffer, 0, cnt);
-						
-						cnt = audioInputStream.read(tempBuffer, 0, tempBuffer.length);
-					}
-					
-					sourceDataLine.drain();
-					sourceDataLine.close();
-					System.out.println("Audio Closed");
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.exit(0);
-			}
-		}
-	}
-	
 	public void startGame() {
 		runMenu();
-		menuMusic = new AudioManager("music/wob2.wav");
-	    menuMusic.play(true);
-		
-		//** add this into your application code as appropriate
-		// Open an input stream  to the audio file.
-		
-		
-//		Runnable musicRun = new Runnable (){
-//        	private volatile boolean execute;
-//          	public void run() {
-//          		InputStream in;
-//        		AudioStream as = null;
-//          		this.execute = true;
-//          		while (execute) {
-//          			try {
-//          				in = new FileInputStream("music/wob.wav");
-//          				// Create an AudioStream object from the input stream.
-//          				as = new AudioStream(in);   
-//          			} catch (FileNotFoundException e) {
-//          				// TODO Auto-generated catch block
-//          				e.printStackTrace();
-//          			} catch (IOException e) {
-//          				// TODO Auto-generated catch block
-//          				e.printStackTrace();
-//          			}
-//          			AudioPlayer.player.start(as);
-//          		    try {
-//          		        Thread.sleep(64000);
-//          		    } catch (InterruptedException e) {
-//          		    	execute = false;
-//          		    }
-//          		}
-//          	}
-//        };
-//        Thread musicThread = new Thread(musicRun);
-//        musicThread.start();
-//        
-//		new PlayThread().start();
-		
-		
-		      
-		// Use the static class member "player" from class AudioPlayer to play
-		// clip.
-		            
-		// Similarly, to stop the audio.
-//		AudioPlayer.player.stop(as); 
+		audioManager.play(AudioManager.ClipName.MENU, true);
 	}
 	
 	private class GameKeyDispatcher implements KeyEventDispatcher {
@@ -196,7 +115,7 @@ public class GameFrame extends JFrame implements Observer {
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
             	  getContentPane().removeAll();
-            	  menuMusic.stop();
+            	  audioManager.stop(AudioManager.ClipName.MENU);
             	  runGame(null);
                }
             });
@@ -293,9 +212,9 @@ public class GameFrame extends JFrame implements Observer {
                 	   if (tickThread.isAlive()) {
                 		   tickThread.interrupt();
                 	   }
-                	   gameMusic.stop();
+                	   audioManager.stop(AudioManager.ClipName.GAME);
                 	   if (options.isMusic()) {
-                		   menuMusic.play(true);
+                	       audioManager.play(AudioManager.ClipName.MENU, true);
                 	   }
                 	   getContentPane().removeAll();
                 	   runPauseFrame();
@@ -310,8 +229,10 @@ public class GameFrame extends JFrame implements Observer {
             	   if (tickThread.isAlive())
             		   tickThread.interrupt();
             	   getContentPane().removeAll();
-            	   gameMusic.stop();
-            	   menuMusic.play(true);
+            	   audioManager.stop(AudioManager.ClipName.GAME);
+            	   if (options.isMusic()) {
+            	       audioManager.play(AudioManager.ClipName.MENU, true);
+            	   }
             	   runMenu();
                }
             });
@@ -335,7 +256,7 @@ public class GameFrame extends JFrame implements Observer {
     	scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.PAGE_AXIS));
 
     	scorePanel.add(makeLabel("Score", 20));
-    	scoreLabel = makeLabel("3889", 20);
+    	scoreLabel = makeLabel("0", 20);
     	scorePanel.add(scoreLabel);
     	
     	
@@ -378,8 +299,9 @@ public class GameFrame extends JFrame implements Observer {
         newTickThread();
         tickThread.start();
         
-        gameMusic = new AudioManager("music/game2.wav");
-	    gameMusic.play(true);
+        if (options.isMusic()) {
+            audioManager.play(AudioManager.ClipName.GAME, true);
+        }
 	   
 	    mazeDisplay.repaint();
 	    this.repaint();
@@ -415,12 +337,11 @@ public class GameFrame extends JFrame implements Observer {
 		menuPanel.setBackground(Color.black);
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
 
-		JLabel keymaster = makeLabel("GAME OVER", 64f);
-		keymaster.setBorder(BorderFactory.createEmptyBorder(80,0,80,0));
-		menuPanel.add(keymaster);
+		JLabel gameOver = makeLabel("GAME OVER", 64f);
+		gameOver.setBorder(BorderFactory.createEmptyBorder(80,0,80,0));
+		menuPanel.add(gameOver);
 		
-		
-		endScoreLabel = makeLabel("Score: "+score, 32f);
+		endScoreLabel = makeLabel("Score: "+ score, 32f);
 		menuPanel.add(endScoreLabel);
 		
 		JLabel highScoreLabel = makeLabel("NEW HIGH SCORE", 32f);
@@ -432,7 +353,7 @@ public class GameFrame extends JFrame implements Observer {
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
             	  getContentPane().removeAll();
-            	  menuMusic.stop();
+            	  audioManager.stop(AudioManager.ClipName.MENU);
             	  runGame(null);
                }
             });
@@ -501,9 +422,9 @@ public class GameFrame extends JFrame implements Observer {
             	   getContentPane().setVisible(true);
             	   newTickThread();
             	   tickThread.start();
-            	   menuMusic.stop();
+            	   audioManager.stop(AudioManager.ClipName.MENU);
             	   if (options.isMusic()) {
-            		   gameMusic.play(true); //TODO: why does this only play once
+            	       audioManager.play(AudioManager.ClipName.GAME, true);
             	   }
                	}
             });
@@ -558,7 +479,7 @@ public class GameFrame extends JFrame implements Observer {
             	   }
             	   
             	   options.setMusic(true);
-            	   menuMusic.play();
+            	   audioManager.play(AudioManager.ClipName.MENU, true);
                }
             });
 		musicOptions.add(musicOnButton);
@@ -584,7 +505,7 @@ public class GameFrame extends JFrame implements Observer {
             	   }
                    
             	   options.setMusic(false);
-            	   menuMusic.stop();
+            	   audioManager.stop(AudioManager.ClipName.MENU);
                }
             });
 		musicOptions.add(musicOffButton);
@@ -654,6 +575,7 @@ public class GameFrame extends JFrame implements Observer {
                }
             });
 		difficultyOptions.add(difficultyEasyButton);
+		
     	JButton difficultyMedButton = makeButton("med", joystix, 36);
     	difficultyMedButton.addActionListener(new
             ActionListener() {
@@ -662,6 +584,7 @@ public class GameFrame extends JFrame implements Observer {
                }
             });
     	difficultyOptions.add(difficultyMedButton);
+    	
     	JButton difficultyHardButton = makeButton("hard", joystix, 36);
     	difficultyHardButton.addActionListener(new
             ActionListener() {
@@ -670,16 +593,7 @@ public class GameFrame extends JFrame implements Observer {
                }
             });
     	difficultyOptions.add(difficultyHardButton);
-    	/*
-    	JButton difficultyInsaneButton = makeButton("INSANE", 36);
-    	difficultyInsaneButton.addActionListener(new
-            ActionListener() {
-               public void actionPerformed(ActionEvent event) {
-            	   options.setDifficulty(options.HARD); 
-               }
-            });
-    	difficultyOptions.add(difficultyInsaneButton);
-    	*/
+    	
 		difficultyOptions.setBackground(Color.black);
     	optionsPanel.add(difficultyOptions);
     	
@@ -744,7 +658,7 @@ public class GameFrame extends JFrame implements Observer {
     		
     		if (state != null) {
     			getContentPane().removeAll();
-          	  	menuMusic.stop();
+    			audioManager.stop(AudioManager.ClipName.MENU);
           	  	
           	  	runGame(state);
     		} else {
@@ -841,32 +755,29 @@ public class GameFrame extends JFrame implements Observer {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		GameState gs = (GameState) arg0;
-		//System.out.println("FUK U M8");
 		if(gs!=null) {
-
 			if(gs.gameFinished()) {
-				//System.out.println("U WOB");
-				 if (tickThread.isAlive()) {
-	      		   tickThread.interrupt();
-	      	   }
-	      	   gameMusic.stop();
-	      	   menuMusic.play(true);
-	      	   getContentPane().removeAll();
-	      	   runEndGame();
+			    if (tickThread.isAlive()) {
+                    tickThread.interrupt();
+                }
+			    // TODO: the audio chucks a shit here for some reason.
+                audioManager.stop(AudioManager.ClipName.GAME);
+                if (options.isMusic()) {
+                    audioManager.play(AudioManager.ClipName.MENU, true);
+                }
+	      	    getContentPane().removeAll();
+	      	    runEndGame();
 			}
-			if (gs.lastCollected()==CellType.DOT) {
-				// TODO: This crashes the game sometimes for me (Adam)
-	            //AudioManager dotSound = new AudioManager("music/kk.wav");
-	            //dotSound.play();
-			}
-			if (gs.lastCollected()==CellType.KEY) {
-				// TODO: This crashes the game sometimes for me (Adam)
-			    AudioManager keySound = new AudioManager("music/keypickup.wav");
-			    keySound.play();
-			}
-			if (gs.hasDied()) {
-		        AudioManager dieSound = new AudioManager("music/dieing.wav");
-		        dieSound.play();
+			if (options.isEffects()) {
+    			if (gs.lastCollected()==CellType.DOT) {
+    			    audioManager.play(AudioManager.ClipName.DOT);
+    			}
+    			if (gs.lastCollected()==CellType.KEY) {
+    			    audioManager.play(AudioManager.ClipName.KEY);
+    			}
+    			if (gs.hasDied()) {
+    			    audioManager.play(AudioManager.ClipName.DIE);
+    			}
 			}
 			
 			score = gs.getScore();
@@ -877,12 +788,7 @@ public class GameFrame extends JFrame implements Observer {
 		repaint();
 	}
 	
-	private AudioFormat audioFormat;
-    private AudioInputStream audioInputStream;
-    private SourceDataLine sourceDataLine;
-    private boolean muted;
-    private static AudioManager gameMusic;
-    private static AudioManager menuMusic;
+    AudioManager audioManager;
     public static Font joystix = null;
     public static Font joystixul = null;
     private final static Color ourGreen = new Color(0xA1FF9C);

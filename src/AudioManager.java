@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.HashMap;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -7,63 +8,88 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 
 /**
- * Represents and manages a piece of audio that can be played in the game.
- * 
- * @author john
- * 
+ * Manages all sounds that can be played in the game.
  */
 public class AudioManager {
 
-	public AudioManager(String file_name) {
-		load(file_name);
+	public AudioManager() {
+		// Create a clip for every sound.
+	    clips = new HashMap<ClipName, Clip>();
+	    clips.put(ClipName.DIE, load("music/dieing.wav"));
+	    clips.put(ClipName.DOT, load("music/kk.wav"));
+	    clips.put(ClipName.KEY, load("music/keypickup.wav"));
+	    clips.put(ClipName.MENU, load("music/wob2.wav"));
+	    clips.put(ClipName.GAME, load("music/game2.wav"));
 	}
 
 	/**
-	 * Loads a piece of audio into the clip.
+	 * Loads a piece of audio into a clip.
 	 * 
 	 * @param file_name
 	 *            The location and name of the file in the local file system.
+	 * @return a clip containing the audio in that file.
 	 */
-	public void load(String file_name) {
+	public Clip load(String file_name) {
 		File file = new File(file_name);
-		AudioInputStream audio;
 		try {
-			audio = AudioSystem.getAudioInputStream(file);
-			AudioInputStream soundIn = AudioSystem.getAudioInputStream(file);
-			AudioFormat format = soundIn.getFormat();
-			clip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class,
-					format));
+			AudioInputStream audio = AudioSystem.getAudioInputStream(file);
+			AudioFormat format = audio.getFormat();
+			Clip clip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class,
+					                          format));
 		    clip.open(audio);
+		    return clip;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    return null;
 		}
 	}
 
 	/**
-	 * Starts the clip playing.
-	 * 
+	 * Starts a clip playing.
+	 * @param name the clip to play
 	 * @param loop
 	 *            Whether or not the clip should loop
 	 */
-	public void play(boolean loop) {
-		if (clip.isRunning())
-			return;
-		if (loop)
+	public void play(ClipName name, boolean loop) {
+	    Clip clip = clips.get(name);
+		if (loop) {
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
-		clip.start();
+		} else {
+		    play(name);
+		}
 	}
 	
-	public void play() {
-		clip.start();
+	/**
+     * Starts a clip playing
+     * @param name the clip to play
+     */
+	public void play(ClipName name) {
+	    Clip clip = clips.get(name);
+	    if (clip.isActive()) {
+	        clip.loop(1);
+	    } else {
+	        clip.start();
+	    }
+	    
 	}
 
 	/**
-	 * Stops the clip from playing
+	 * Stops a clip from playing
+	 * @param name the clip to stop
 	 */
-	public void stop() {
-		clip.stop();
+	public void stop(ClipName name) {
+	    Clip clip = clips.get(name);
+	    if (clip.isRunning()) {
+	        clip.stop();
+	    }
+	}
+	
+	public enum ClipName {
+	    DIE,
+	    DOT,
+	    KEY,
+	    MENU,
+	    GAME
 	}
 
-	private Clip clip;
+	private HashMap<ClipName, Clip> clips;
 }

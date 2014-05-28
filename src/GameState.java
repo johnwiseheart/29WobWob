@@ -13,7 +13,7 @@ public class GameState extends Observable implements Serializable {
     public GameState(Options.DifficultyType difficulty) {
         this.difficulty = difficulty;
         int width = 0, height = 0;
-        switch (difficulty) {
+        switch (this.difficulty) {
         case EASY:
             width = 23;
             height = 15;
@@ -88,8 +88,9 @@ public class GameState extends Observable implements Serializable {
      * Update the characters in each tick
      */
     public void tickCharacters() {
-        tickPlayer();
+        hasDied = false;
         tickEnemies();
+        tickPlayer();
         updateDisplay();
     }
     
@@ -189,14 +190,15 @@ public class GameState extends Observable implements Serializable {
      * Update the player on each tick
      */
     private void tickPlayer() {
-        Vector newLoc = player.move(this);
         // Check if the player touched an enemy.
         for (Vector v : enemyLocations()) {
-            if (v.equals(newLoc)) {
+            if (v.equals(player.location())) {
                 hasDied = true;
                 lastCollected = CellType.SPACE;
             }
         }
+        
+        Vector newLoc = player.move(this);
         
         if (hasDied) { // Lose a life.
             loseLife();
@@ -210,15 +212,9 @@ public class GameState extends Observable implements Serializable {
         CellType walkedOver = maze.getCell(newLoc);
         if (walkedOver == CellType.DOT) {
             // Eat dot.
-            // TODO: This crashes the game sometimes for me (Adam)
-            //AudioManager dotSound = new AudioManager("music/kk.wav");
-            //dotSound.play();
             maze.setCell(newLoc, CellType.SPACE);
             score += level;
         } else if (walkedOver == CellType.KEY) {
-            // Collect key.
-            AudioManager keySound = new AudioManager("music/keypickup.wav");
-            keySound.play();
             maze.setCell(newLoc, CellType.SPACE);
             numKeysCollected++;
             if (numKeysCollected >= numKeys) {
@@ -253,7 +249,6 @@ public class GameState extends Observable implements Serializable {
      * Resets the player after they lose a life or a new level starts
      */
     private void resetPlayer() {
-        hasDied = false;
         player.reset(new Vector(maze.getWidth()/2, maze.getHeight()-2));
         
         // scramble enemies
