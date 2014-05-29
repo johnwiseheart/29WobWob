@@ -138,12 +138,8 @@ public class GameState extends Observable implements Serializable {
      * Returns the current locations of all the enemies
      * @return the current locations of all the enemies
      */
-    public ArrayList<Vector> enemyLocations() {
-        ArrayList<Vector> locations = new ArrayList<Vector>();
-        for (Enemy enemy : enemies) {
-            locations.add(enemy.location());
-        }
-        return locations;
+    public ArrayList<Enemy> getEnemies() {
+        return enemies;
     }
     
     /**
@@ -152,8 +148,8 @@ public class GameState extends Observable implements Serializable {
      * @return Whether there is an enemy here
      */
     public boolean isEnemy(Vector location) {
-    	for (Vector enemyLoc : enemyLocations()) {
-    		if (enemyLoc.equals(location)) {
+    	for (Enemy enemy : getEnemies()) {
+    		if (enemy.location().equals(location)) {
     			return true;
     		}
     	}
@@ -191,8 +187,8 @@ public class GameState extends Observable implements Serializable {
      */
     private void tickPlayer() {
         // Check if the player touched an enemy.
-        for (Vector v : enemyLocations()) {
-            if (v.equals(player.location())) {
+        for (Enemy e : getEnemies()) {
+            if (e.location().equals(player.location())) {
                 hasDied = true;
                 lastCollected = CellType.SPACE;
             }

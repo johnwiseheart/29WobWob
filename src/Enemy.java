@@ -210,6 +210,10 @@ public class Enemy implements Character, Serializable {
 		// reset timer
 		timer = 0;
 	}
+	
+	public Direction getDirection() {
+		return direction;
+	}
 
 	private Vector location;
 	private Vector lastLocation;

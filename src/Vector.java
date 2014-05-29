@@ -71,9 +71,9 @@ public class Vector implements Serializable {
 	public Direction getDirection(Vector v) {
 		if (this.x == v.x()) {
 			if (this.y < v.y()) {
-				return Direction.NORTH;
-			} else if (this.y > v.y()) {
 				return Direction.SOUTH;
+			} else if (this.y > v.y()) {
+				return Direction.NORTH;
 			} else {
 				return Direction.NONE;
 			}

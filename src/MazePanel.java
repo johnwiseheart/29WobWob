@@ -47,10 +47,22 @@ public class MazePanel extends JPanel implements Observer {
         	images.put(CellType.PLAYER1_N, resizeImage(ImageIO.read(new File("img/p1_north.png")),CELL_SIZE, CELL_SIZE));
         	images.put(CellType.PLAYER1_S, resizeImage(ImageIO.read(new File("img/p1_south.png")),CELL_SIZE, CELL_SIZE));
         	images.put(CellType.PLAYER1_W, resizeImage(ImageIO.read(new File("img/p1_west.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY1, resizeImage(ImageIO.read(new File("img/e1.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY2, resizeImage(ImageIO.read(new File("img/e2.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY3, resizeImage(ImageIO.read(new File("img/e3.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY4, resizeImage(ImageIO.read(new File("img/e4.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY1_E, resizeImage(ImageIO.read(new File("img/e1_east.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY1_N, resizeImage(ImageIO.read(new File("img/e1_north.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY1_S, resizeImage(ImageIO.read(new File("img/e1_south.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY1_W, resizeImage(ImageIO.read(new File("img/e1_west.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY2_E, resizeImage(ImageIO.read(new File("img/e2_east.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY2_N, resizeImage(ImageIO.read(new File("img/e2_north.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY2_S, resizeImage(ImageIO.read(new File("img/e2_south.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY2_W, resizeImage(ImageIO.read(new File("img/e2_west.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY3_E, resizeImage(ImageIO.read(new File("img/e3_east.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY3_N, resizeImage(ImageIO.read(new File("img/e3_north.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY3_S, resizeImage(ImageIO.read(new File("img/e3_south.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY3_W, resizeImage(ImageIO.read(new File("img/e3_west.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY4_E, resizeImage(ImageIO.read(new File("img/e4_east.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY4_N, resizeImage(ImageIO.read(new File("img/e4_north.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY4_S, resizeImage(ImageIO.read(new File("img/e4_south.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY4_W, resizeImage(ImageIO.read(new File("img/e4_west.png")),CELL_SIZE, CELL_SIZE));
         	
         	images.put(CellType.WALL_VERT, resizeImage(ImageIO.read(new File("img/wall_straight.png")),CELL_SIZE, CELL_SIZE));
         	images.put(CellType.WALL_HOR, rotateCw(resizeImage(ImageIO.read(new File("img/wall_straight.png")),CELL_SIZE, CELL_SIZE)));
@@ -81,30 +93,87 @@ public class MazePanel extends JPanel implements Observer {
             }
         }
         // Display player.
-        g2d.drawImage(images.get(directionTOImage(gameState.getPlayerDirection())),
+        g2d.drawImage(images.get(directionTOPlayerImage(gameState.getPlayerDirection())),
                       gameState.playerLocation().x()*CELL_SIZE,
                       gameState.playerLocation().y()*CELL_SIZE, null);
         
         // Display enemies.
         int i = 0;
-        for (Vector enemyLocation : gameState.enemyLocations()) {
-            CellType c = CellType.ENEMY1;
+        for (Enemy enemy : gameState.getEnemies()) {
+            CellType c = CellType.ENEMY1_N;
+            Direction d;
             switch(i%4) {
             case 0:
-                c = CellType.ENEMY1;
+            	d = enemy.getDirection();
+            	switch(d) {
+            	case EAST:
+            		c = CellType.ENEMY1_E;
+            		break;
+            	case NORTH:
+            		c = CellType.ENEMY1_N;
+            		break;
+            	case SOUTH:
+            		c = CellType.ENEMY1_S;
+            		break;
+            	case WEST:
+            		c = CellType.ENEMY1_W;
+            		break;
+            	}
                 break;
             case 1:
-                c = CellType.ENEMY2;
+            	d = enemy.getDirection();
+            	switch(d) {
+            	case EAST:
+            		c = CellType.ENEMY2_E;
+            		break;
+            	case NORTH:
+            		c = CellType.ENEMY2_N;
+            		break;
+            	case SOUTH:
+            		c = CellType.ENEMY2_S;
+            		break;
+            	case WEST:
+            		c = CellType.ENEMY2_W;
+            		break;
+            	}
                 break;
             case 2:
-                c = CellType.ENEMY3;
+            	d = enemy.getDirection();
+            	switch(d) {
+            	case EAST:
+            		c = CellType.ENEMY3_E;
+            		break;
+            	case NORTH:
+            		c = CellType.ENEMY3_N;
+            		break;
+            	case SOUTH:
+            		c = CellType.ENEMY3_S;
+            		break;
+            	case WEST:
+            		c = CellType.ENEMY3_W;
+            		break;
+            	}
                 break;
             case 3:
-                c = CellType.ENEMY4;
+            	d = enemy.getDirection();
+            	switch(d) {
+            	case EAST:
+            		c = CellType.ENEMY4_E;
+            		break;
+            	case NORTH:
+            		c = CellType.ENEMY4_N;
+            		break;
+            	case SOUTH:
+            		c = CellType.ENEMY4_S;
+            		break;
+            	case WEST:
+            		c = CellType.ENEMY4_W;
+            		break;
+            	}
                 break;
             }
-            g2d.drawImage(images.get(c), enemyLocation.x()*CELL_SIZE,
-                          enemyLocation.y()*CELL_SIZE, null);
+            g2d.drawImage(images.get(c), enemy.location().x()*CELL_SIZE,
+                          enemy.location().y()*CELL_SIZE, null);
             i++;
         }
         
@@ -115,7 +184,7 @@ public class MazePanel extends JPanel implements Observer {
         //this.setBounds(0, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
     }
     
-    private CellType directionTOImage(Direction direction) {
+    private CellType directionTOPlayerImage(Direction direction) {
     	switch (direction) {
     	case NORTH:
     		return CellType.PLAYER1_N;
@@ -129,6 +198,7 @@ public class MazePanel extends JPanel implements Observer {
     		return CellType.PLAYER1_E;
     	}
     }
+    
     
     // Part of the Observer pattern. This method is called when an object being observed notify's it has been changed.
     public void update(Observable o, Object arg) {
