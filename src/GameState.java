@@ -187,14 +187,15 @@ public class GameState extends Observable implements Serializable {
      */
     private void tickPlayer() {
         // Check if the player touched an enemy.
+        Vector oldLoc = player.location();
+        Vector newLoc = player.move(this);
+
         for (Enemy e : getEnemies()) {
             if (e.location().equals(player.location())) {
                 hasDied = true;
                 lastCollected = CellType.SPACE;
             }
         }
-        
-        Vector newLoc = player.move(this);
         
         if (hasDied) { // Lose a life.
             loseLife();

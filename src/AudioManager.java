@@ -64,12 +64,18 @@ public class AudioManager {
      */
 	public void play(ClipName name) {
 	    Clip clip = clips.get(name);
-	    if (clip.isActive()) {
-	        clip.loop(1);
+	    
+	    // Java is platform independent, right?
+	    if (System.getProperty("os.name").equals("Linux")) {
+	        if (clip.isActive()) {
+	            clip.loop(1);
+	        } else {
+	            clip.loop(0);
+	        }
 	    } else {
+	        clip.stop();
 	        clip.start();
 	    }
-	    
 	}
 
 	/**
@@ -78,7 +84,7 @@ public class AudioManager {
 	 */
 	public void stop(ClipName name) {
 	    Clip clip = clips.get(name);
-	    if (clip.isRunning()) {
+	    if (clip.isActive()) {
 	        clip.stop();
 	    }
 	}
