@@ -33,13 +33,19 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+/**
+ * 
+ * @author Lucas & John
+ *
+ */
 public class GameFrame extends JFrame implements Observer {
 
     private static final long serialVersionUID = 1L;
 
-    //TODO: stop game from farting
+    //TODO: Make sure game keeps farting
 	public GameFrame() {
-		 try{
+		
+		try {
             InputStream is = new FileInputStream("font/joystix.ttf");
             joystix = Font.createFont(Font.TRUETYPE_FONT, is);
             
@@ -61,11 +67,20 @@ public class GameFrame extends JFrame implements Observer {
 	    manager.addKeyEventDispatcher(new GameKeyDispatcher());   
 	}
 	
+	/**
+	 * Starter function that is called to start the visual part of this game.
+	 */
 	public void startGame() {
 		runMenu();
 		audioManager.play(AudioManager.ClipName.MENU, true);
 	}
 	
+	/**
+	 * Our implementation of KeyEvenDispatcher that handles keyboard input for our game.
+	 * It only handles 8 keys, the arrow keys and wasd as this is all we use.
+	 * @author Group
+	 *
+	 */
 	private class GameKeyDispatcher implements KeyEventDispatcher {
         @Override
         public boolean dispatchKeyEvent(KeyEvent event) {
@@ -97,6 +112,9 @@ public class GameFrame extends JFrame implements Observer {
         }
     }
 	
+	/**
+	 * Generates a menu JPanel which contains the menu title and buttons and adds it to the GameFrame then sets to visible.
+	 */
 	private void runMenu() {
 		JPanel menuPanel = new JPanel();
 		menuPanel.setBackground(Color.black);
@@ -170,7 +188,9 @@ public class GameFrame extends JFrame implements Observer {
         repaint();
         setVisible(true);
     }
-	
+	/**
+	 * 
+	 */
 	private void runFlash() {
 		JPanel buzzPanel = new JPanel();
 		buzzPanel.setBackground(Color.black);
@@ -189,7 +209,17 @@ public class GameFrame extends JFrame implements Observer {
         repaint();
         setVisible(true);
     }
- 
+	
+	/**
+	 * Generates the game screen JPanel which has the scoring panel and the MazePanel in it,
+	 * then adds it to the GameFrame and sets visible to true. 
+	 * This also involves setting up the whole GameState. This involves either creating a new GameState or loading
+	 * one if specified in savedState. Sets up GameState to have the Observers this and MazePanel so that on any
+	 * change to the state they can be updated.
+	 * It also starts a tickThread, which will tick the player and enemies many times per second to keep their positions updated.
+	 * 
+	 * @param savedState A saved GameState to start with as opposed to a newly generated one.
+	 */
     public void runGame(GameState savedState) {
     	
     	BoxLayout boxLayout = new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS); // top to bottom
@@ -309,6 +339,9 @@ public class GameFrame extends JFrame implements Observer {
     }
     
     //TODO: this is bad
+    /**
+     * 
+     */
     private void newTickThread() {
     	Runnable r1 = new Runnable (){
         	private volatile boolean execute;
@@ -332,6 +365,9 @@ public class GameFrame extends JFrame implements Observer {
         tickThread = new Thread(r1);
     }
     
+    /**
+     * 
+     */
     private void runEndGame() {
     	JPanel menuPanel = new JPanel();
 		menuPanel.setBackground(Color.black);
@@ -386,7 +422,9 @@ public class GameFrame extends JFrame implements Observer {
         setVisible(true);
     }
     
-    // TODO ARE WORK
+    /**
+     * 
+     */
     private void runPauseFrame() {
 
     	JPanel pausePanel = new JPanel();
@@ -453,6 +491,10 @@ public class GameFrame extends JFrame implements Observer {
     	
     }
     
+    /**
+     * 
+     * @return
+     */
     private JPanel genMusicOptions() {
     	JPanel musicOptions = new JPanel(); // New Panel for music options.
 		musicOptions.setLayout(new FlowLayout());
@@ -468,12 +510,22 @@ public class GameFrame extends JFrame implements Observer {
                        JButton btn = (JButton)source;
                        btn.setFont(joystixul.deriveFont(36f));
                    }
-                   
-            	   for(Component component:getContentPane().getComponents()) {
-            		   if (component instanceof JButton) {
-            			   JButton btn = (JButton) component;
-            			   if(btn.getText().equals("on")) {
-            				   btn.setFont(joystix.deriveFont(36f));
+                   // TODO: OK SO WTF, can't think of a good way to do this, WE HAVE TO GO TOO DEEP.
+            	   for(Component component : getContentPane().getComponents()) {
+            		   if (component instanceof JPanel) {
+            			   JPanel panel = (JPanel) component;
+            			   for (Component c : panel.getComponents()) {
+            				   if (c instanceof JPanel) {
+            					   JPanel p = (JPanel) c;
+	            				   for (Component comp : p.getComponents()) {
+		            				   if (comp instanceof JButton) {
+		            					   JButton btn = (JButton) comp;
+		            					   if(btn.getText().equals("off")) {
+		                    				   btn.setFont(joystix.deriveFont(36f));
+		                    			   }
+		            				   }
+	            				   }
+            			   	   }
             			   }
             		   }
             	   }
@@ -495,11 +547,22 @@ public class GameFrame extends JFrame implements Observer {
                    }
                    
                    
-            	   for(Component component:getContentPane().getComponents()) {
-            		   if (component instanceof JButton) {
-            			   JButton btn = (JButton) component;
-            			   if(btn.getText().equals("on")) {
-            				   btn.setFont(joystix.deriveFont(36f));
+                // TODO: OK SO WTF, can't think of a good way to do this, WE HAVE TO GO TOO DEEP.
+            	   for(Component component : getContentPane().getComponents()) {
+            		   if (component instanceof JPanel) {
+            			   JPanel panel = (JPanel) component;
+            			   for (Component c : panel.getComponents()) {
+            				   if (c instanceof JPanel) {
+            					   JPanel p = (JPanel) c;
+	            				   for (Component comp : p.getComponents()) {
+		            				   if (comp instanceof JButton) {
+		            					   JButton btn = (JButton) comp;
+		            					   if(btn.getText().equals("on")) {
+		                    				   btn.setFont(joystix.deriveFont(36f));
+		                    			   }
+		            				   }
+	            				   }
+            			   	   }
             			   }
             		   }
             	   }
@@ -523,7 +586,7 @@ public class GameFrame extends JFrame implements Observer {
 		effectsOnButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
-            	   options.setEffects(true); 
+            	   options.setEffects(true);
                }
             });
 		effectsOptions.add(effectsOnButton);
