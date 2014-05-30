@@ -32,7 +32,7 @@ public class Enemy implements Character, Serializable {
 		this.scrambleDuration = scrambleDuration;
 		this.timer = 0;
 		
-		lastLocation = null;
+		lastLocation = location;
 	}
 	
 	public Vector previousLocation() {
