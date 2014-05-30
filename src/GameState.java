@@ -20,10 +20,10 @@ public class GameState extends Observable implements Serializable {
             height = 15;
             numEnemies = 1;
             numKeys = 2;
-            searchDistance = 5;
+            searchDistance = 8;
             randomMoveProbability = 0.6;
             huntDuration = 5;
-            scrambleDuration = 10;
+            scrambleDuration = 5;
             break;
         case MEDIUM:
             width = 31;
@@ -31,9 +31,9 @@ public class GameState extends Observable implements Serializable {
             numEnemies = 2;
             numKeys = 3;
             searchDistance = 10;
-            randomMoveProbability = 0.4;
+            randomMoveProbability = 0.5;
             huntDuration = 6;
-            scrambleDuration = 8;
+            scrambleDuration = 12;
             break;
         case HARD:
             width = 43;
@@ -41,9 +41,9 @@ public class GameState extends Observable implements Serializable {
             numEnemies = 3;
             numKeys = 4;
             searchDistance = 15;
-            randomMoveProbability = 0.2;
+            randomMoveProbability = 0.4;
             huntDuration = 7;
-            scrambleDuration = 6;
+            scrambleDuration = 20;
             break;
         }
 

@@ -24,6 +24,7 @@ import java.util.Observer;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -146,6 +147,8 @@ public class GameFrame extends JFrame implements Observer {
 		playButton.setBackground(Color.black);
     	menuPanel.add(playButton);
     	
+    	
+    	
     	JButton loadButton = makeButton("Load game", joystix, 36);
 		loadButton.addActionListener(new
             ActionListener() {
@@ -155,6 +158,17 @@ public class GameFrame extends JFrame implements Observer {
             });
 		
     	menuPanel.add(loadButton);
+
+    	JButton instructionsButton = makeButton("Instructions", joystix, 36);
+		instructionsButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   getContentPane().removeAll();
+            	   runInstructions();
+               }
+            });
+		instructionsButton.setBackground(Color.black);
+    	menuPanel.add(instructionsButton);
 
     	JButton optionsButton = makeButton("Options", joystix, 36);
 		optionsButton.addActionListener(new
@@ -333,10 +347,10 @@ public class GameFrame extends JFrame implements Observer {
         if (options.isMusic()) {
             audioManager.play(AudioManager.ClipName.GAME, true);
         }
-	   
+        repaint();
 	    mazeDisplay.repaint();
-	    this.repaint();
-        this.setVisible(true);
+	   
+        setVisible(true);
     }
     
     /**
@@ -350,10 +364,8 @@ public class GameFrame extends JFrame implements Observer {
           		
           		execute = true;
           		while (execute) {
-          		    tick++;
-          		    if(tick == 25) {
+          		    if(tick == 0) {
           		    	// update characters and reset tick
-          		    	tick = 0;
           		    	int level = gameState.getLevel();
           		    	gameState.updateCharacters();
           		    	if(level!=gameState.getLevel()) {
@@ -366,6 +378,8 @@ public class GameFrame extends JFrame implements Observer {
           		    // update display with the current tick
           		    gameState.refreshDisplay(tick);
           		    //gameState.updateCharacters();
+          		    
+          		    tick = (tick + 1) % 25;
           		    
           		    try {
           		        Thread.sleep(8);
@@ -392,10 +406,6 @@ public class GameFrame extends JFrame implements Observer {
 		
 		endScoreLabel = makeLabel("Score: "+ score, 32f);
 		menuPanel.add(endScoreLabel);
-		
-		JLabel highScoreLabel = makeLabel("NEW HIGH SCORE", 32f);
-		highScoreLabel.setBorder(BorderFactory.createEmptyBorder(0,0,80,0));
-		menuPanel.add(highScoreLabel);
 
     	JButton restartButton = makeButton("Restart", joystix, 36);
     	restartButton.addActionListener(new
@@ -449,15 +459,7 @@ public class GameFrame extends JFrame implements Observer {
     	heading.setBorder(BorderFactory.createEmptyBorder(70,0,30,0));
     	pausePanel.add(heading);
     	
-    	JButton menuButton = makeButton("menu", joystix, 36);
-    	menuButton.addActionListener(new
-            ActionListener() {
-               public void actionPerformed(ActionEvent event) {
-            	   getContentPane().removeAll();
-            	   runMenu();
-               }
-            });
-    	pausePanel.add(menuButton);
+    	pausePanel.add(Box.createVerticalGlue());
 
     	JButton resumeButton = makeButton("resume", joystix, 36);
     	resumeButton.addActionListener(new
@@ -478,6 +480,23 @@ public class GameFrame extends JFrame implements Observer {
             });
     	pausePanel.add(resumeButton);
     	
+    	pausePanel.add(Box.createVerticalGlue());
+    	
+    	JButton instructionsButton = makeButton("Instructions", joystix, 36);
+		instructionsButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   getContentPane().removeAll();
+            	   runInstructions();
+               }
+            });
+		instructionsButton.setBackground(Color.black);
+		
+		
+    	pausePanel.add(instructionsButton);
+    	
+    	pausePanel.add(Box.createVerticalGlue());
+    	
     	JButton saveButton = makeButton("save", joystix, 36);
     	saveButton.addActionListener(new
             ActionListener() {
@@ -487,14 +506,26 @@ public class GameFrame extends JFrame implements Observer {
             });
     	pausePanel.add(saveButton);
     	
-    	JPanel musicOptions = genMusicOptions();
-		musicOptions.setBackground(Color.black);
-    	pausePanel.add(musicOptions);
+    	pausePanel.add(Box.createVerticalGlue());
     	
-    	JPanel effectsOptions = genEffectsOptions();
-		effectsOptions.setBackground(Color.black);
-    	pausePanel.add(effectsOptions);
-        this.add(pausePanel);
+    	pausePanel.add(genMusicOptions());
+    	
+    	pausePanel.add(Box.createVerticalGlue());
+    	pausePanel.add(genEffectsOptions());
+    	pausePanel.add(Box.createVerticalGlue());
+        
+    	JButton menuButton = makeButton("menu", joystix, 36);
+    	menuButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   getContentPane().removeAll();
+            	   runMenu();
+               }
+            });
+    	pausePanel.add(menuButton);
+    	pausePanel.add(Box.createVerticalGlue());
+    	
+    	this.add(pausePanel);
         this.repaint();
         this.setVisible(true);
     	
@@ -544,6 +575,7 @@ public class GameFrame extends JFrame implements Observer {
 		musicOnButton.addActionListener(musicActionListener);
 		musicOffButton.addActionListener(musicActionListener);
 		
+		musicOptions.setBackground(Color.black);
 		return musicOptions;
     }
     
@@ -589,6 +621,8 @@ public class GameFrame extends JFrame implements Observer {
 		
 		effectsOnButton.addActionListener(effectsActionListener);
 		effectsOffButton.addActionListener(effectsActionListener);
+		
+		effectsOptions.setBackground(Color.black);
 		
 		return effectsOptions;
 
@@ -644,7 +678,9 @@ public class GameFrame extends JFrame implements Observer {
 		diffEasyButton.addActionListener(diffActionListener);
 		diffMedButton.addActionListener(diffActionListener);
 		diffHardButton.addActionListener(diffActionListener);
- 
+		
+		difficultyOptions.setBackground(Color.black);
+		
 		return difficultyOptions;
     }
     
@@ -663,20 +699,15 @@ public class GameFrame extends JFrame implements Observer {
 		JLabel heading = makeLabel("Options", 50);
 		
 		heading.setBorder(BorderFactory.createEmptyBorder(30,0,50,0));
+		optionsPanel.add(Box.createVerticalGlue());
 		optionsPanel.add(heading);
-
-		
-		JPanel musicOptions = genMusicOptions();
-		musicOptions.setBackground(Color.black);
-    	optionsPanel.add(musicOptions);
-    	
-    	JPanel effectsOptions = genEffectsOptions();
-		effectsOptions.setBackground(Color.black);
-    	optionsPanel.add(effectsOptions);
-		
-    	JPanel difficultyOptions = genDifficultyOptions();
-    	difficultyOptions.setBackground(Color.black);
-    	optionsPanel.add(difficultyOptions);
+		optionsPanel.add(Box.createVerticalGlue());
+    	optionsPanel.add(genMusicOptions());
+    	optionsPanel.add(Box.createVerticalGlue());
+    	optionsPanel.add(genEffectsOptions());
+    	optionsPanel.add(Box.createVerticalGlue());
+    	optionsPanel.add(genDifficultyOptions());
+    	optionsPanel.add(Box.createVerticalGlue());
     	
     	JButton backButton = makeButton("Back", joystix, 36);
 		backButton.addActionListener(new
@@ -688,6 +719,7 @@ public class GameFrame extends JFrame implements Observer {
             });
 
     	optionsPanel.add(backButton);
+    	optionsPanel.add(Box.createVerticalGlue());
         this.add(optionsPanel);
         this.repaint();
         this.setVisible(true);
@@ -704,11 +736,11 @@ public class GameFrame extends JFrame implements Observer {
 		controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.PAGE_AXIS));
 
 		JLabel heading = makeLabel("Controls", 50);
-		heading.setBorder(BorderFactory.createEmptyBorder(30,0,70,0));
+		controlsPanel.add(Box.createVerticalGlue());
 		controlsPanel.add(heading);
 
 		JLabel controls = makeImageLabel("files/img/controls.png", -1, -1);
-		controls.setBorder(BorderFactory.createEmptyBorder(0,0,70,0));
+		controlsPanel.add(Box.createVerticalGlue());
 		controlsPanel.add(controls);
 		
     	JButton backButton = makeButton("Back", joystix, 36);
@@ -719,11 +751,48 @@ public class GameFrame extends JFrame implements Observer {
             	   runMenu();
                }
             });
+		controlsPanel.add(Box.createVerticalGlue());
 
     	controlsPanel.add(backButton);
+    	controlsPanel.add(Box.createVerticalGlue());
         this.add(controlsPanel);
         this.repaint();
         this.setVisible(true);
+    }
+    
+    /**
+     * Runs the controls screen
+     */
+    
+    private void runInstructions() {
+
+		JPanel instructionsPanel = new JPanel();
+		instructionsPanel.setBackground(Color.black);
+		instructionsPanel.setLayout(new BoxLayout(instructionsPanel, BoxLayout.PAGE_AXIS));
+		instructionsPanel.add(Box.createVerticalGlue());
+		JLabel heading = makeLabel("Instructions", 50);
+		heading.setBorder(BorderFactory.createEmptyBorder(30,0,70,0));
+		instructionsPanel.add(heading);
+		instructionsPanel.add(Box.createVerticalGlue());
+		JLabel text = makeLabel("<html><center>You are Wobman. You must get to the exit of the maze, but not without getting all the keys - else you may not unlock the door. Make sure to avoid the enemies as they try to stop you.</center></html>", 20);
+		text.setAlignmentX(Component.CENTER_ALIGNMENT);
+		text.setMaximumSize(new Dimension(600,200));
+		instructionsPanel.add(text);
+		instructionsPanel.add(Box.createVerticalGlue());
+    	JButton backButton = makeButton("Back", joystix, 36);
+		backButton.addActionListener(new
+            ActionListener() {
+               public void actionPerformed(ActionEvent event) {
+            	   getContentPane().removeAll();
+            	   runMenu();
+               }
+            });
+		instructionsPanel.add(Box.createVerticalGlue());
+    	instructionsPanel.add(backButton);
+    	instructionsPanel.add(Box.createVerticalGlue());
+        add(instructionsPanel);
+        repaint();
+        setVisible(true);
     }
     
     private final String WOBMAN_FILE_DESC = "Wobman save file (*.wob)";
@@ -820,20 +889,20 @@ public class GameFrame extends JFrame implements Observer {
 
     public static JLabel makeImageLabel(String fileName, int height, int width) {
     	BufferedImage image = null;
-    	JLabel wobman = null;
+    	JLabel label = null;
     	try {
     		image = ImageIO.read(new File(fileName));
     		if(height!=-1)
-    			wobman = new JLabel(new ImageIcon(resizeImage(image, height, width)));
+    			label = new JLabel(new ImageIcon(resizeImage(image, height, width)));
     		else
-    			wobman = new JLabel(new ImageIcon(image));
-    		wobman.setAlignmentX(Component.CENTER_ALIGNMENT);
+    			label = new JLabel(new ImageIcon(image));
+    		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     	} catch (IOException e) {
     		// TODO Auto-generated catch block
     		e.printStackTrace();
     	}
-    	return wobman;
+    	return label;
     }
 
 	@Override

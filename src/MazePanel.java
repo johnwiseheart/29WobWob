@@ -23,21 +23,7 @@ public class MazePanel extends JPanel implements Observer {
 	private static final long serialVersionUID = -600678118735264063L;
 	public MazePanel() {
         gameState = null;
-    }
-
-    public void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D)g;
-        if (gameState == null) {
-            return;
-        }
-        Maze displayMaze = gameState.getMaze();
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                             RenderingHints.VALUE_ANTIALIAS_ON);
-        super.paintComponent(g);
-
-        g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
-        
-        HashMap<CellType, BufferedImage> images = new HashMap<CellType, BufferedImage>();
+        images = new HashMap<CellType, BufferedImage>();
         try {
         	images.put(CellType.DOT, resizeImage(ImageIO.read(new File("files/img/dot.png")),CELL_SIZE, CELL_SIZE));
         	images.put(CellType.KEY, resizeImage(ImageIO.read(new File("files/img/key.png")),CELL_SIZE, CELL_SIZE));
@@ -82,6 +68,21 @@ public class MazePanel extends JPanel implements Observer {
     
         } catch (IOException e) {
         }
+    }
+
+    public void paintComponent(Graphics g) {
+        Graphics2D g2d = (Graphics2D)g;
+        if (gameState == null) {
+            return;
+        }
+        Maze displayMaze = gameState.getMaze();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                             RenderingHints.VALUE_ANTIALIAS_ON);
+        super.paintComponent(g);
+
+        g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
+        
+        
         
         // Display maze.
         for (int x=0; x<displayMaze.getWidth(); x++) {
@@ -221,6 +222,8 @@ public class MazePanel extends JPanel implements Observer {
         //TODO: fix this shit its not responsive
         // this.setSize(displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
         setMaximumSize(new Dimension(displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE));
+        //setPreferredSize(new Dimension(displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE));
+        //this.setBounds((this.getWidth()/2)-(displayMaze.getWidth()/2), (this.getHeight()/2)-(displayMaze.getHeight()/2), displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
         //this.setBounds(12, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
         //this.setBounds(0, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
     }
@@ -280,4 +283,5 @@ public class MazePanel extends JPanel implements Observer {
     
     private GameState gameState;
     public static final int CELL_SIZE = 25;
+    HashMap<CellType, BufferedImage> images;
 }
