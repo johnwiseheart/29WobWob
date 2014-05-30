@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class GameState extends Observable implements Serializable {
     
+    private static final long serialVersionUID = 1L;
     /**
      * Creates a new GameState
      * @param width the starting width of the maze
@@ -162,6 +163,7 @@ public class GameState extends Observable implements Serializable {
     public CellType lastCollected() {
         return lastCollected;
     }
+
     
     /**
      * Make the player lose a life, resetting their position or ending the game
@@ -186,7 +188,6 @@ public class GameState extends Observable implements Serializable {
      */
     private void updatePlayer() {
         // Check if the player touched an enemy.
-        Vector oldLoc = player.location();
         Vector newLoc = player.move(this);
 
         for (Enemy e : getEnemies()) {

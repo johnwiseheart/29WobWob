@@ -15,13 +15,13 @@ public class AudioManager {
 	public AudioManager() {
 		// Create a clip for every sound.
 	    clips = new HashMap<ClipName, Clip>();
-	    clips.put(ClipName.DIE, load("music/dieing.wav"));
-	    clips.put(ClipName.DOT, load("music/kk.wav"));
-	    clips.put(ClipName.KEY, load("music/keypickup.wav"));
-	    clips.put(ClipName.MENU, load("music/wob2.wav"));
-	    clips.put(ClipName.GAME, load("music/game2.wav"));
-	    clips.put(ClipName.LEVELUP, load("music/levelup.wav"));
-	    clips.put(ClipName.END, load("music/end.wav"));
+
+	    clips.put(ClipName.DIE, load("files/music/dieing.wav"));
+	    clips.put(ClipName.DOT, load("files/music/kk.wav"));
+	    clips.put(ClipName.KEY, load("files/music/keypickup.wav"));
+	    clips.put(ClipName.MENU, load("files/music/wob2.wav"));
+	    clips.put(ClipName.GAME, load("files/music/game2.wav"));
+	    clips.put(ClipName.END, load("files/music/end.wav"));
 	}
 
 	/**
@@ -53,6 +53,9 @@ public class AudioManager {
 	 */
 	public void play(ClipName name, boolean loop) {
 	    Clip clip = clips.get(name);
+	    if (clip == null) {
+	        return;
+	    }
 		if (loop) {
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
 		} else {
@@ -66,6 +69,9 @@ public class AudioManager {
      */
 	public void play(ClipName name) {
 	    Clip clip = clips.get(name);
+	    if (clip == null) {
+            return;
+        }
 	    
 	    // Java is platform independent, right?
 	    if (System.getProperty("os.name").equals("Linux")) {
@@ -86,9 +92,10 @@ public class AudioManager {
 	 */
 	public void stop(ClipName name) {
 	    Clip clip = clips.get(name);
-	    if (clip.isActive()) {
-	        clip.stop();
-	    }
+	    if (clip == null) {
+            return;
+        }
+	    clip.stop();
 	}
 	
 	public enum ClipName {

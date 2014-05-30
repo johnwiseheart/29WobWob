@@ -2,12 +2,11 @@ import java.io.Serializable;
 
 /**
  * Represents a 2D quantity with integer components, such as a point in the maze, the velocity of a character, etc.
- * @author george
- *
  */
 public class Vector implements Serializable {
 
-	/**
+    private static final long serialVersionUID = 1L;
+    /**
 	 * Creates a vector with the given x and y components.
 	 * @param x x component
 	 * @param y y component

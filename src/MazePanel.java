@@ -39,48 +39,46 @@ public class MazePanel extends JPanel implements Observer {
         
         HashMap<CellType, BufferedImage> images = new HashMap<CellType, BufferedImage>();
         try {
-        	//images.put(CellType.WALL, resizeImage(ImageIO.read(new File("wall.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.DOT, resizeImage(ImageIO.read(new File("img/dot.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.KEY, resizeImage(ImageIO.read(new File("img/key.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.DOOR, resizeImage(ImageIO.read(new File("img/door.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.PLAYER1_E, resizeImage(ImageIO.read(new File("img/p1_east.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.PLAYER1_N, resizeImage(ImageIO.read(new File("img/p1_north.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.PLAYER1_S, resizeImage(ImageIO.read(new File("img/p1_south.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.PLAYER1_W, resizeImage(ImageIO.read(new File("img/p1_west.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY1_E, resizeImage(ImageIO.read(new File("img/e1_east.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY1_N, resizeImage(ImageIO.read(new File("img/e1_north.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY1_S, resizeImage(ImageIO.read(new File("img/e1_south.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY1_W, resizeImage(ImageIO.read(new File("img/e1_west.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY2_E, resizeImage(ImageIO.read(new File("img/e2_east.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY2_N, resizeImage(ImageIO.read(new File("img/e2_north.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY2_S, resizeImage(ImageIO.read(new File("img/e2_south.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY2_W, resizeImage(ImageIO.read(new File("img/e2_west.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY3_E, resizeImage(ImageIO.read(new File("img/e3_east.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY3_N, resizeImage(ImageIO.read(new File("img/e3_north.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY3_S, resizeImage(ImageIO.read(new File("img/e3_south.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY3_W, resizeImage(ImageIO.read(new File("img/e3_west.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY4_E, resizeImage(ImageIO.read(new File("img/e4_east.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY4_N, resizeImage(ImageIO.read(new File("img/e4_north.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY4_S, resizeImage(ImageIO.read(new File("img/e4_south.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.ENEMY4_W, resizeImage(ImageIO.read(new File("img/e4_west.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.DOT, resizeImage(ImageIO.read(new File("files/img/dot.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.KEY, resizeImage(ImageIO.read(new File("files/img/key.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.DOOR, resizeImage(ImageIO.read(new File("files/img/door.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.PLAYER1_E, resizeImage(ImageIO.read(new File("files/img/p1_east.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.PLAYER1_N, resizeImage(ImageIO.read(new File("files/img/p1_north.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.PLAYER1_S, resizeImage(ImageIO.read(new File("files/img/p1_south.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.PLAYER1_W, resizeImage(ImageIO.read(new File("files/img/p1_west.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY1_E, resizeImage(ImageIO.read(new File("files/img/e1_east.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY1_N, resizeImage(ImageIO.read(new File("files/img/e1_north.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY1_S, resizeImage(ImageIO.read(new File("files/img/e1_south.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY1_W, resizeImage(ImageIO.read(new File("files/img/e1_west.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY2_E, resizeImage(ImageIO.read(new File("files/img/e2_east.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY2_N, resizeImage(ImageIO.read(new File("files/img/e2_north.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY2_S, resizeImage(ImageIO.read(new File("files/img/e2_south.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY2_W, resizeImage(ImageIO.read(new File("files/img/e2_west.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY3_E, resizeImage(ImageIO.read(new File("files/img/e3_east.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY3_N, resizeImage(ImageIO.read(new File("files/img/e3_north.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY3_S, resizeImage(ImageIO.read(new File("files/img/e3_south.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY3_W, resizeImage(ImageIO.read(new File("files/img/e3_west.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY4_E, resizeImage(ImageIO.read(new File("files/img/e4_east.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY4_N, resizeImage(ImageIO.read(new File("files/img/e4_north.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY4_S, resizeImage(ImageIO.read(new File("files/img/e4_south.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.ENEMY4_W, resizeImage(ImageIO.read(new File("files/img/e4_west.png")),CELL_SIZE, CELL_SIZE));
         	
-        	images.put(CellType.WALL_VERT, resizeImage(ImageIO.read(new File("img/wall_straight.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.WALL_HOR, rotateImage(resizeImage(ImageIO.read(new File("img/wall_straight.png")),CELL_SIZE, CELL_SIZE), 1));
-        	images.put(CellType.WALL_CORN_NW, rotateImage(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE), 3));
-        	images.put(CellType.WALL_CORN_NE, resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.WALL_CORN_SW, rotateImage(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE), 2));
-        	images.put(CellType.WALL_CORN_SE, rotateImage(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE), 1));
-        	images.put(CellType.WALL_CROSS, resizeImage(ImageIO.read(new File("img/wall_cross.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.WALL_T_N, resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.WALL_T_S, rotateImage(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE), 2));
-        	images.put(CellType.WALL_T_E, rotateImage(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE), 1));
-        	images.put(CellType.WALL_T_W, rotateImage(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE), 3));
-        	images.put(CellType.WALL_END_N, resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.WALL_END_S, rotateImage(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE), 2));
-        	images.put(CellType.WALL_END_E, rotateImage(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE), 1));
-        	images.put(CellType.WALL_END_W, rotateImage(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE), 3));
-        	images.put(CellType.WALL_BLOCK, resizeImage(ImageIO.read(new File("img/wall_block.png")),CELL_SIZE, CELL_SIZE));
-        	
+        	images.put(CellType.WALL_VERT, resizeImage(ImageIO.read(new File("files/img/wall_straight.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.WALL_HOR, rotateImage(resizeImage(ImageIO.read(new File("files/img/wall_straight.png")),CELL_SIZE, CELL_SIZE), 1));
+        	images.put(CellType.WALL_CORN_NW, rotateImage(resizeImage(ImageIO.read(new File("files/img/wall_corner.png")),CELL_SIZE, CELL_SIZE), 3));
+        	images.put(CellType.WALL_CORN_NE, resizeImage(ImageIO.read(new File("files/img/wall_corner.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.WALL_CORN_SW, rotateImage(resizeImage(ImageIO.read(new File("files/img/wall_corner.png")),CELL_SIZE, CELL_SIZE), 2));
+        	images.put(CellType.WALL_CORN_SE, rotateImage(resizeImage(ImageIO.read(new File("files/img/wall_corner.png")),CELL_SIZE, CELL_SIZE), 1));
+        	images.put(CellType.WALL_CROSS, resizeImage(ImageIO.read(new File("files/img/wall_cross.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.WALL_T_N, resizeImage(ImageIO.read(new File("files/img/wall_t.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.WALL_T_S, rotateImage(resizeImage(ImageIO.read(new File("files/img/wall_t.png")),CELL_SIZE, CELL_SIZE), 2));
+        	images.put(CellType.WALL_T_E, rotateImage(resizeImage(ImageIO.read(new File("files/img/wall_t.png")),CELL_SIZE, CELL_SIZE), 1));
+        	images.put(CellType.WALL_T_W, rotateImage(resizeImage(ImageIO.read(new File("files/img/wall_t.png")),CELL_SIZE, CELL_SIZE), 3));
+        	images.put(CellType.WALL_END_N, resizeImage(ImageIO.read(new File("files/img/wall_end.png")),CELL_SIZE, CELL_SIZE));
+        	images.put(CellType.WALL_END_S, rotateImage(resizeImage(ImageIO.read(new File("files/img/wall_end.png")),CELL_SIZE, CELL_SIZE), 2));
+        	images.put(CellType.WALL_END_E, rotateImage(resizeImage(ImageIO.read(new File("files/img/wall_end.png")),CELL_SIZE, CELL_SIZE), 1));
+        	images.put(CellType.WALL_END_W, rotateImage(resizeImage(ImageIO.read(new File("files/img/wall_end.png")),CELL_SIZE, CELL_SIZE), 3));
+        	images.put(CellType.WALL_BLOCK, resizeImage(ImageIO.read(new File("files/img/wall_block.png")),CELL_SIZE, CELL_SIZE));
     
         } catch (IOException e) {
         }
@@ -136,6 +134,9 @@ public class MazePanel extends JPanel implements Observer {
             	case WEST:
             		c = CellType.ENEMY1_W;
             		break;
+                default:
+                    c = null;
+                    break;
             	}
                 break;
             case 1:
@@ -153,6 +154,9 @@ public class MazePanel extends JPanel implements Observer {
             	case WEST:
             		c = CellType.ENEMY2_W;
             		break;
+            	default:
+                    c = null;
+                    break;
             	}
                 break;
             case 2:
@@ -170,6 +174,9 @@ public class MazePanel extends JPanel implements Observer {
             	case WEST:
             		c = CellType.ENEMY3_W;
             		break;
+            	default:
+                    c = null;
+                    break;
             	}
                 break;
             case 3:
@@ -187,6 +194,9 @@ public class MazePanel extends JPanel implements Observer {
             	case WEST:
             		c = CellType.ENEMY4_W;
             		break;
+            	default:
+                    c = null;
+                    break;
             	}
                 break;
             }
@@ -230,8 +240,7 @@ public class MazePanel extends JPanel implements Observer {
     	}
     }
     
-    
-    // Part of the Observer pattern. This method is called when an object being observed notify's it has been changed.
+    // Part of the Observer pattern. This method is called when an object being observed notifies it has been changed.
     public void update(Observable o, Object arg) {
     	gameState = (GameState) o;
     	repaint();

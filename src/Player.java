@@ -3,7 +3,8 @@ import java.io.Serializable;
 
 public class Player implements Character, Serializable {
 
-	/**
+    private static final long serialVersionUID = 1L;
+    /**
 	 * Creates a new player starting at the given location in the maze.
 	 * @param location starting point of player in maze
 	 */

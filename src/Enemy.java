@@ -11,6 +11,7 @@ import java.util.Random;
  */
 public class Enemy implements Character, Serializable {
     
+    private static final long serialVersionUID = 1L;
     /**
      * Creates a new Enemy
      * @param location The location the enemy starts at

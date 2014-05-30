@@ -3,6 +3,7 @@ import java.io.Serializable;
 
 public class Maze implements Serializable {
     
+    private static final long serialVersionUID = 1L;
     /**
      * Creates a new Maze
      * @param width the width of the maze
