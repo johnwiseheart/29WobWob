@@ -23,6 +23,7 @@ public class Enemy implements Character, Serializable {
      */
 	public Enemy(Vector location, int searchDistance, Double randomMoveProbability, int huntDuration, int scrambleDuration) {
 		this.location = location;
+		this.direction = Direction.NORTH;
 		
 		this.searchDistance = searchDistance;
 		this.randomMoveProbability = randomMoveProbability;
