@@ -194,8 +194,13 @@ public class MazePanel extends JPanel implements Observer {
             Vector enemyGridLoc = enemy.location(); // location in grid coords
             Vector enemyGridPrevLoc = enemy.previousLocation(); // prev location in grid coords
             
-            Vector enemySmoothOffset = enemyGridLoc.subtract(enemyGridPrevLoc).multiply(gameState.getTick());
-            Vector enemySmoothLoc = enemyGridPrevLoc.multiply(CELL_SIZE).add(enemySmoothOffset); // location in pixels
+            Vector enemySmoothLoc;
+            if (enemyGridPrevLoc == null) {
+            	enemySmoothLoc = enemyGridLoc.multiply(CELL_SIZE);
+            } else {
+	            Vector enemySmoothOffset = enemyGridLoc.subtract(enemyGridPrevLoc).multiply(gameState.getTick());
+	            enemySmoothLoc = enemyGridPrevLoc.multiply(CELL_SIZE).add(enemySmoothOffset); // location in pixels
+            }
             
             g2d.drawImage(images.get(c),
             			  enemySmoothLoc.x(),
