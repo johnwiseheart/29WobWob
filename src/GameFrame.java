@@ -350,7 +350,7 @@ public class GameFrame extends JFrame implements Observer {
         repaint();
 	    mazeDisplay.repaint();
 	   
-        //setVisible(true);
+        setVisible(true);
     }
     
     /**
@@ -699,11 +699,15 @@ public class GameFrame extends JFrame implements Observer {
 		JLabel heading = makeLabel("Options", 50);
 		
 		heading.setBorder(BorderFactory.createEmptyBorder(30,0,50,0));
+		optionsPanel.add(Box.createVerticalGlue());
 		optionsPanel.add(heading);
-
+		optionsPanel.add(Box.createVerticalGlue());
     	optionsPanel.add(genMusicOptions());
+    	optionsPanel.add(Box.createVerticalGlue());
     	optionsPanel.add(genEffectsOptions());
+    	optionsPanel.add(Box.createVerticalGlue());
     	optionsPanel.add(genDifficultyOptions());
+    	optionsPanel.add(Box.createVerticalGlue());
     	
     	JButton backButton = makeButton("Back", joystix, 36);
 		backButton.addActionListener(new
@@ -715,6 +719,7 @@ public class GameFrame extends JFrame implements Observer {
             });
 
     	optionsPanel.add(backButton);
+    	optionsPanel.add(Box.createVerticalGlue());
         this.add(optionsPanel);
         this.repaint();
         this.setVisible(true);
@@ -731,11 +736,11 @@ public class GameFrame extends JFrame implements Observer {
 		controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.PAGE_AXIS));
 
 		JLabel heading = makeLabel("Controls", 50);
-		heading.setBorder(BorderFactory.createEmptyBorder(30,0,70,0));
+		controlsPanel.add(Box.createVerticalGlue());
 		controlsPanel.add(heading);
 
 		JLabel controls = makeImageLabel("files/img/controls.png", -1, -1);
-		controls.setBorder(BorderFactory.createEmptyBorder(0,0,70,0));
+		controlsPanel.add(Box.createVerticalGlue());
 		controlsPanel.add(controls);
 		
     	JButton backButton = makeButton("Back", joystix, 36);
@@ -746,8 +751,10 @@ public class GameFrame extends JFrame implements Observer {
             	   runMenu();
                }
             });
+		controlsPanel.add(Box.createVerticalGlue());
 
     	controlsPanel.add(backButton);
+    	controlsPanel.add(Box.createVerticalGlue());
         this.add(controlsPanel);
         this.repaint();
         this.setVisible(true);
@@ -762,16 +769,16 @@ public class GameFrame extends JFrame implements Observer {
 		JPanel instructionsPanel = new JPanel();
 		instructionsPanel.setBackground(Color.black);
 		instructionsPanel.setLayout(new BoxLayout(instructionsPanel, BoxLayout.PAGE_AXIS));
-
+		instructionsPanel.add(Box.createVerticalGlue());
 		JLabel heading = makeLabel("Instructions", 50);
 		heading.setBorder(BorderFactory.createEmptyBorder(30,0,70,0));
 		instructionsPanel.add(heading);
-		
+		instructionsPanel.add(Box.createVerticalGlue());
 		JLabel text = makeLabel("<html><center>You are Wobman. You must get to the exit of the maze, but not without getting all the keys - else you may not unlock the door. Make sure to avoid the enemies as they try to stop you.</center></html>", 20);
 		text.setAlignmentX(Component.CENTER_ALIGNMENT);
 		text.setMaximumSize(new Dimension(600,200));
 		instructionsPanel.add(text);
-
+		instructionsPanel.add(Box.createVerticalGlue());
     	JButton backButton = makeButton("Back", joystix, 36);
 		backButton.addActionListener(new
             ActionListener() {
@@ -780,11 +787,12 @@ public class GameFrame extends JFrame implements Observer {
             	   runMenu();
                }
             });
-
+		instructionsPanel.add(Box.createVerticalGlue());
     	instructionsPanel.add(backButton);
-        this.add(instructionsPanel);
-        this.repaint();
-        this.setVisible(true);
+    	instructionsPanel.add(Box.createVerticalGlue());
+        add(instructionsPanel);
+        repaint();
+        setVisible(true);
     }
     
     private final String WOBMAN_FILE_DESC = "Wobman save file (*.wob)";
