@@ -37,7 +37,7 @@ import javax.swing.JRadioButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
- * 
+ * The frame that holds all of the game's UI.
  * @author Lucas & John
  *
  */
