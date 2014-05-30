@@ -92,10 +92,28 @@ public class MazePanel extends JPanel implements Observer {
             		g2d.drawImage(images.get(displayMaze.getCell(x, y)),x*CELL_SIZE, y*CELL_SIZE, null);
             }
         }
+        
         // Display player.
+        Vector playerGridLoc = gameState.getPlayer().location(); // location in grid coords
+        Vector playerGridPrevLoc = gameState.getPlayer().previousLocation(); // prev location in grid coords
+        
+        Vector playerSmoothLoc = playerGridLoc.multiply(CELL_SIZE); // default
+        
+        if (playerGridPrevLoc != null) {
+	        // difference between current and prev locations, multiplied by tick for smooth interpolation between
+	        // previous and current locations
+	        Vector playerSmoothOffset = playerGridLoc.subtract(playerGridPrevLoc);
+	        
+	        // make sure they're not "flying"
+	        if (playerSmoothOffset.length() <= 1) {
+	        	playerSmoothOffset = playerSmoothOffset.multiply(gameState.getTick());
+	        	playerSmoothLoc = playerGridPrevLoc.multiply(CELL_SIZE).add(playerSmoothOffset); // location in pixels
+	        }
+        }
+        
         g2d.drawImage(images.get(directionTOPlayerImage(gameState.getPlayerDirection())),
-                      gameState.playerLocation().x()*CELL_SIZE,
-                      gameState.playerLocation().y()*CELL_SIZE, null);
+                      playerSmoothLoc.x(),
+                      playerSmoothLoc.y(), null);
         
         // Display enemies.
         int i = 0;
@@ -172,8 +190,16 @@ public class MazePanel extends JPanel implements Observer {
             	}
                 break;
             }
-            g2d.drawImage(images.get(c), enemy.location().x()*CELL_SIZE,
-                          enemy.location().y()*CELL_SIZE, null);
+            
+            Vector enemyGridLoc = enemy.location(); // location in grid coords
+            Vector enemyGridPrevLoc = enemy.previousLocation(); // prev location in grid coords
+            
+            Vector enemySmoothOffset = enemyGridLoc.subtract(enemyGridPrevLoc).multiply(gameState.getTick());
+            Vector enemySmoothLoc = enemyGridPrevLoc.multiply(CELL_SIZE).add(enemySmoothOffset); // location in pixels
+            
+            g2d.drawImage(images.get(c),
+            			  enemySmoothLoc.x(),
+                          enemySmoothLoc.y(), null);
             i++;
         }
         

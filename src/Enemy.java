@@ -33,6 +33,10 @@ public class Enemy implements Character, Serializable {
 		lastLocation = null;
 	}
 	
+	public Vector previousLocation() {
+		return lastLocation;
+	}
+	
 	/**
 	 * Returns the enemy's location
 	 * @return the enemy's location
@@ -59,7 +63,7 @@ public class Enemy implements Character, Serializable {
 	 */
 	public Vector move(GameState state) {
 		Maze maze = state.getMaze();
-		Vector playerLocation = state.playerLocation();
+		Vector playerLocation = state.getPlayer().location();
 		
 		Random r = new Random();
 		int[] dirs = {-1, 0, 1};

@@ -64,7 +64,7 @@ public class GameState extends Observable implements Serializable {
         
         // On any change we just need to call setChanged() and then notifyObervers().
         // Anything observing the GameState will have it's update() method called.
-        updateDisplay();
+        //refreshDisplay(0);
     }
     
     /**
@@ -85,13 +85,12 @@ public class GameState extends Observable implements Serializable {
     }
     
     /**
-     * Update the characters in each tick
+     * Update the character positions
      */
-    public void tickCharacters() {
+    public void updateCharacters() {
         hasDied = false;
-        tickEnemies();
-        tickPlayer();
-        updateDisplay();
+        updateEnemies();
+        updatePlayer();
     }
     
     /**
@@ -127,16 +126,16 @@ public class GameState extends Observable implements Serializable {
     }
     
     /**
-     * Returns the player's current location
-     * @return the player's current location
+     * Returns the player
+     * @return player
      */
-    public Vector playerLocation() {
-        return player.location();
+    public Player getPlayer() {
+    	return player;
     }
     
     /**
-     * Returns the current locations of all the enemies
-     * @return the current locations of all the enemies
+     * Returns an array of enemies
+     * @return enemies array
      */
     public ArrayList<Enemy> getEnemies() {
         return enemies;
@@ -185,7 +184,7 @@ public class GameState extends Observable implements Serializable {
     /**
      * Update the player on each tick
      */
-    private void tickPlayer() {
+    private void updatePlayer() {
         // Check if the player touched an enemy.
         Vector oldLoc = player.location();
         Vector newLoc = player.move(this);
@@ -225,21 +224,32 @@ public class GameState extends Observable implements Serializable {
     /**
      * Update all the enemies each tick
      */
-    private void tickEnemies() {
+    private void updateEnemies() {
         // Trust enemies to know what they're doing.
         for (Enemy enemy : enemies) {
-        	if (enemy.move(this).equals(playerLocation())) {
+        	if (enemy.move(this).equals(player.location())) {
                 hasDied = true;
             }
         }
     }
     
     /**
-     * Notify all observers that the GameState has changed
+     * Refresh the game display with the given tick (number of frames since character positions were updated).
+     * @param tick New tick
      */
-    private void updateDisplay() {
+    public void refreshDisplay(int tick) {
+    	this.tick = tick;
+    	
         this.setChanged();
         this.notifyObservers();
+    }
+    
+    /**
+     * Returns the current tick (number of frames since characters were updated).
+     * @return Current tick
+     */
+    public int getTick() {
+    	return tick;
     }
     
     /**
@@ -368,4 +378,5 @@ public class GameState extends Observable implements Serializable {
     private int score;
     private boolean gameFinished;
     private CellType lastCollected;
+    private int tick;
 }

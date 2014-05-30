@@ -345,17 +345,24 @@ public class GameFrame extends JFrame implements Observer {
     private void newTickThread() {
     	Runnable r1 = new Runnable (){
         	private volatile boolean execute;
-        	private int counter = 0;
+        	private int tick = 0; // counts frames in between character moves
           	public void run() {
           		
           		this.execute = true;
           		while (execute) {
-          		    gameState.tickCharacters();
-          		    counter++;
-          		    if(counter == 20)
-          		    	counter = 0;
+          		    
+          		    tick++;
+          		    if(tick == 25) {
+          		    	// update characters and reset tick
+          		    	tick = 0;
+          		    	gameState.updateCharacters();
+          		    }
+          		    
+          		    // update display with the current tick
+          		    gameState.refreshDisplay(tick);
+          		    
           		    try {
-          		        Thread.sleep(200);
+          		        Thread.sleep(8);
           		    } catch (InterruptedException e) {
           		    	execute = false;
           		    }
@@ -819,34 +826,38 @@ public class GameFrame extends JFrame implements Observer {
 	public void update(Observable arg0, Object arg1) {
 		GameState gs = (GameState) arg0;
 		if(gs!=null) {
-			if(gs.gameFinished()) {
-			    if (tickThread.isAlive()) {
-                    tickThread.interrupt();
-                }
-			    // TODO: the audio chucks a shit here for some reason.
-                audioManager.stop(AudioManager.ClipName.GAME);
-                if (options.isMusic()) {
-                    audioManager.play(AudioManager.ClipName.MENU, true);
-                }
-	      	    getContentPane().removeAll();
-	      	    runEndGame();
+			if (gs.getTick() == 0) {
+				// character positions have updated, therefore interesting stuff can happen!
+				
+				if(gs.gameFinished()) {
+				    if (tickThread.isAlive()) {
+	                    tickThread.interrupt();
+	                }
+				    // TODO: the audio chucks a shit here for some reason.
+	                audioManager.stop(AudioManager.ClipName.GAME);
+	                if (options.isMusic()) {
+	                    audioManager.play(AudioManager.ClipName.MENU, true);
+	                }
+		      	    getContentPane().removeAll();
+		      	    runEndGame();
+				}
+				if (options.isEffects()) {
+	    			if (gs.lastCollected()==CellType.DOT) {
+	    			    audioManager.play(AudioManager.ClipName.DOT);
+	    			}
+	    			if (gs.lastCollected()==CellType.KEY) {
+	    			    audioManager.play(AudioManager.ClipName.KEY);
+	    			}
+	    			if (gs.hasDied()) {
+	    			    audioManager.play(AudioManager.ClipName.DIE);
+	    			}
+				}
+				
+				score = gs.getScore();
+				updateScore(score);
+				updateLevel(gs.getLevel());
+				updateLives(gs.getLives());
 			}
-			if (options.isEffects()) {
-    			if (gs.lastCollected()==CellType.DOT) {
-    			    audioManager.play(AudioManager.ClipName.DOT);
-    			}
-    			if (gs.lastCollected()==CellType.KEY) {
-    			    audioManager.play(AudioManager.ClipName.KEY);
-    			}
-    			if (gs.hasDied()) {
-    			    audioManager.play(AudioManager.ClipName.DIE);
-    			}
-			}
-			
-			score = gs.getScore();
-			updateScore(score);
-			updateLevel(gs.getLevel());
-			updateLives(gs.getLives());
 		}
 		repaint();
 	}
