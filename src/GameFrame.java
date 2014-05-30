@@ -46,7 +46,6 @@ public class GameFrame extends JFrame implements Observer {
 
     private static final long serialVersionUID = 1L;
 
-    //TODO: Make sure game keeps farting
 	public GameFrame() {
 
 		 try{
@@ -82,10 +81,8 @@ public class GameFrame extends JFrame implements Observer {
 	}
 	
 	/**
-	 * Our implementation of KeyEvenDispatcher that handles keyboard input for our game.
+	 * Our implementation of KeyEventDispatcher that handles keyboard input for our game.
 	 * It only handles 8 keys, the arrow keys and wasd as this is all we use.
-	 * @author Group
-	 *
 	 */
 	private class GameKeyDispatcher implements KeyEventDispatcher {
         @Override
@@ -94,22 +91,18 @@ public class GameFrame extends JFrame implements Observer {
         	    switch (event.getKeyCode()) {
         	    case KeyEvent.VK_LEFT:
         	    case KeyEvent.VK_A:
-        	        //System.out.println("Left");
         	        gameState.setPlayerVelocity(-1, 0);
         	        break;
         	    case KeyEvent.VK_RIGHT:
         	    case KeyEvent.VK_D:
-        	        //System.out.println("Right");
         	        gameState.setPlayerVelocity(1, 0);
         	        break;
         	    case KeyEvent.VK_UP:
         	    case KeyEvent.VK_W:
-        	        //System.out.println("Up");
         	        gameState.setPlayerVelocity(0, -1);
         	        break;
         	    case KeyEvent.VK_DOWN:
         	    case KeyEvent.VK_S:
-        	        //System.out.println("Down");
         	        gameState.setPlayerVelocity(0, 1);
         	        break;
         	    }
@@ -126,15 +119,17 @@ public class GameFrame extends JFrame implements Observer {
 		menuPanel.setBackground(Color.black);
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
 
-
+		// Title image.
 		JLabel wobman = makeImageLabel("files/img/wobman.png", -1, -1);
 		wobman.setBorder(BorderFactory.createEmptyBorder(50,0,20,0));
 		menuPanel.add(wobman);
 
+		// Subtitle.
 		JLabel keymaster = makeLabel("The Key Master", 32f);
 		keymaster.setBorder(BorderFactory.createEmptyBorder(0,0,70,0));
 		menuPanel.add(keymaster);
 
+		// Play button.
     	JButton playButton = makeButton("Play", joystix, 36);
 		playButton.addActionListener(new
             ActionListener() {
@@ -147,8 +142,7 @@ public class GameFrame extends JFrame implements Observer {
 		playButton.setBackground(Color.black);
     	menuPanel.add(playButton);
     	
-    	
-    	
+    	// Load button.
     	JButton loadButton = makeButton("Load game", joystix, 36);
 		loadButton.addActionListener(new
             ActionListener() {
@@ -159,6 +153,7 @@ public class GameFrame extends JFrame implements Observer {
 		
     	menuPanel.add(loadButton);
 
+    	// Instructions button.
     	JButton instructionsButton = makeButton("Instructions", joystix, 36);
 		instructionsButton.addActionListener(new
             ActionListener() {
@@ -170,6 +165,7 @@ public class GameFrame extends JFrame implements Observer {
 		instructionsButton.setBackground(Color.black);
     	menuPanel.add(instructionsButton);
 
+    	// Options button.
     	JButton optionsButton = makeButton("Options", joystix, 36);
 		optionsButton.addActionListener(new
             ActionListener() {
@@ -181,6 +177,7 @@ public class GameFrame extends JFrame implements Observer {
 
     	menuPanel.add(optionsButton);
 
+    	// Controls button.
     	JButton controlsButton = makeButton("Controls", joystix, 36);
 		controlsButton.addActionListener(new
             ActionListener() {
@@ -192,6 +189,7 @@ public class GameFrame extends JFrame implements Observer {
 
     	menuPanel.add(controlsButton);
 
+    	// Exit button.
     	JButton exitButton = makeButton("Quit", joystix, 36);
 		exitButton.addActionListener(new
             ActionListener() {
@@ -202,28 +200,6 @@ public class GameFrame extends JFrame implements Observer {
 
     	menuPanel.add(exitButton);
         add(menuPanel);
-        repaint();
-        setVisible(true);
-    }
-	/**
-	 * 
-	 */
-	//TODO: remove
-	private void runFlash() {
-		JPanel buzzPanel = new JPanel();
-		buzzPanel.setBackground(Color.black);
-		buzzPanel.setLayout(new BoxLayout(buzzPanel, BoxLayout.PAGE_AXIS));
-
-		JLabel wobman = makeImageLabel("files/img/wobman.png", -1, -1);
-		wobman.setBorder(BorderFactory.createEmptyBorder(70,0,20,0));
-		buzzPanel.add(wobman);
-		//TODO: fix the image for wobby
-		JLabel keymaster = makeLabel("BUZZ WORD", 32f);
-		keymaster.setBorder(BorderFactory.createEmptyBorder(0,0,80,0));
-		buzzPanel.add(keymaster);
-
-    	buzzPanel.setBounds(0,0,getWidth(), getHeight());
-        add(buzzPanel);
         repaint();
         setVisible(true);
     }
@@ -253,6 +229,7 @@ public class GameFrame extends JFrame implements Observer {
     	menuPanel.setBackground(Color.black);
     	menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
 
+    	// Pause button.
     	JButton pauseButton = makeButton("Pause", joystix, 20);
     	pauseButton.addActionListener(new
                 ActionListener() {
@@ -269,6 +246,7 @@ public class GameFrame extends JFrame implements Observer {
     	menuPanel.add(pauseButton);
     	JButton menuButton = makeButton("Menu", joystix, 20);
 
+    	// Menu button.
     	menuButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
@@ -285,6 +263,7 @@ public class GameFrame extends JFrame implements Observer {
     	menuPanel.add(menuButton);
     	buttonPanel.add(menuPanel);
     	
+    	// Lives.
     	JPanel livePanel = new JPanel();
     	livePanel.setBackground(Color.black);
     	livePanel.setLayout(new BoxLayout(livePanel, BoxLayout.PAGE_AXIS));
@@ -296,6 +275,7 @@ public class GameFrame extends JFrame implements Observer {
     	buttonPanel.add(livePanel);
     	buttonPanel.add(makeImageLabel("files/img/wobman.png", 337, 62));
 
+    	// Score.
     	JPanel scorePanel = new JPanel();
     	scorePanel.setBackground(Color.black);
     	scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.PAGE_AXIS));
@@ -304,9 +284,9 @@ public class GameFrame extends JFrame implements Observer {
     	scoreLabel = makeLabel("0", 20);
     	scorePanel.add(scoreLabel);
     	
-    	
     	buttonPanel.add(scorePanel);
     	
+    	// Level.
     	JPanel levelPanel = new JPanel();
     	levelPanel.setBackground(Color.black);
     	levelPanel.setLayout(new BoxLayout(levelPanel, BoxLayout.PAGE_AXIS));
@@ -332,7 +312,6 @@ public class GameFrame extends JFrame implements Observer {
 
         gameState.addObserver(mazeDisplay);
         gameState.addObserver(this);
-        //mazeDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
     	gamePanel = new JPanel();
     	gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.PAGE_AXIS));
     	gamePanel.setBackground(Color.black);
@@ -354,7 +333,7 @@ public class GameFrame extends JFrame implements Observer {
     }
     
     /**
-     *  Recreates the tick thread that keeps the player and enemies moving
+     *  Recreates the tick thread that keeps the player and enemies moving.
      */
     private void newTickThread() {
     	Runnable r1 = new Runnable (){
@@ -377,7 +356,6 @@ public class GameFrame extends JFrame implements Observer {
           		    
           		    // update display with the current tick
           		    gameState.refreshDisplay(tick);
-          		    //gameState.updateCharacters();
           		    
           		    tick = (tick + 1) % 25;
           		    
@@ -407,6 +385,7 @@ public class GameFrame extends JFrame implements Observer {
 		endScoreLabel = makeLabel("Score: "+ score, 32f);
 		menuPanel.add(endScoreLabel);
 
+		// Restart button.
     	JButton restartButton = makeButton("Restart", joystix, 36);
     	restartButton.addActionListener(new
             ActionListener() {
@@ -418,6 +397,7 @@ public class GameFrame extends JFrame implements Observer {
 		
     	menuPanel.add(restartButton);
 
+    	// Main menu button.
     	JButton menuButton = makeButton("Menu", joystix, 36);
     	menuButton.addActionListener(new
             ActionListener() {
@@ -429,6 +409,7 @@ public class GameFrame extends JFrame implements Observer {
 
     	menuPanel.add(menuButton);
 
+    	// Quit button.
     	JButton quitButton = makeButton("Quit", joystix, 36);
     	quitButton.addActionListener(new
             ActionListener() {
@@ -446,7 +427,7 @@ public class GameFrame extends JFrame implements Observer {
     }
     
     /**
-     * Runs the pause game screen
+     * Runs the pause game screen.
      */
     private void runPauseFrame() {
 
@@ -465,7 +446,6 @@ public class GameFrame extends JFrame implements Observer {
     	resumeButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
-            	   //TODO: this is bad
             	   getContentPane().removeAll();
             	   getContentPane().add(gamePanel);
             	   getContentPane().repaint();
@@ -482,6 +462,7 @@ public class GameFrame extends JFrame implements Observer {
     	
     	pausePanel.add(Box.createVerticalGlue());
     	
+    	// Instructions button.
     	JButton instructionsButton = makeButton("Instructions", joystix, 36);
 		instructionsButton.addActionListener(new
             ActionListener() {
@@ -497,6 +478,7 @@ public class GameFrame extends JFrame implements Observer {
     	
     	pausePanel.add(Box.createVerticalGlue());
     	
+    	// Save button.
     	JButton saveButton = makeButton("save", joystix, 36);
     	saveButton.addActionListener(new
             ActionListener() {
@@ -528,7 +510,6 @@ public class GameFrame extends JFrame implements Observer {
     	this.add(pausePanel);
         this.repaint();
         this.setVisible(true);
-    	
     }
     
     /**
@@ -557,7 +538,7 @@ public class GameFrame extends JFrame implements Observer {
 		group.add(musicOffButton);
 		musicOptions.add(musicOffButton);
 		
-		
+		// Mutes or unmutes all music.
 		ActionListener musicActionListener = new ActionListener() {
 		      public void actionPerformed(ActionEvent actionEvent) {
 		        AbstractButton aButton = (AbstractButton) actionEvent.getSource();
@@ -606,9 +587,9 @@ public class GameFrame extends JFrame implements Observer {
 		group.add(effectsOffButton);
 		effectsOptions.add(effectsOffButton);
 		
-		
+		// Mutes or unmutes all effects.
 		ActionListener effectsActionListener = new ActionListener() {
-		      public void actionPerformed(ActionEvent actionEvent) {
+		    public void actionPerformed(ActionEvent actionEvent) {
 		        AbstractButton aButton = (AbstractButton) actionEvent.getSource();
 		        if(aButton.getText().equals("On")) {
 		        	options.setEffects(true);
@@ -616,7 +597,7 @@ public class GameFrame extends JFrame implements Observer {
 		        	options.setEffects(false);
 		        }
 		        
-		      }
+		    }
 		};
 		
 		effectsOnButton.addActionListener(effectsActionListener);
@@ -625,7 +606,6 @@ public class GameFrame extends JFrame implements Observer {
 		effectsOptions.setBackground(Color.black);
 		
 		return effectsOptions;
-
     }
     
     /**
@@ -661,8 +641,9 @@ public class GameFrame extends JFrame implements Observer {
 		group.add(diffHardButton);
 		difficultyOptions.add(diffHardButton);
 		
+		// Sets the chosen difficulty.
 		ActionListener diffActionListener = new ActionListener() {
-		      public void actionPerformed(ActionEvent actionEvent) {
+		    public void actionPerformed(ActionEvent actionEvent) {
 		        AbstractButton aButton = (AbstractButton) actionEvent.getSource();
 		        if(aButton.getText().equals("Easy")) {
 		        	options.setDifficulty(Options.DifficultyType.EASY); 
@@ -671,9 +652,8 @@ public class GameFrame extends JFrame implements Observer {
 		        } else {
 		        	options.setDifficulty(Options.DifficultyType.HARD); 
 		        }
-		      }
+		    }
 		};
-		
 		
 		diffEasyButton.addActionListener(diffActionListener);
 		diffMedButton.addActionListener(diffActionListener);
@@ -687,11 +667,7 @@ public class GameFrame extends JFrame implements Observer {
     /**
      * Runs the options screen
      */
-    
     private void runOptions() {
-    	//TODO: Indication of which option is pressed
-    	//TODO: Save options to a file
-    	
 		JPanel optionsPanel = new JPanel();
 		optionsPanel.setBackground(Color.black);
 		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
@@ -709,6 +685,7 @@ public class GameFrame extends JFrame implements Observer {
     	optionsPanel.add(genDifficultyOptions());
     	optionsPanel.add(Box.createVerticalGlue());
     	
+    	// Back button.
     	JButton backButton = makeButton("Back", joystix, 36);
 		backButton.addActionListener(new
             ActionListener() {
@@ -728,9 +705,7 @@ public class GameFrame extends JFrame implements Observer {
     /**
      * Runs the controls screen
      */
-    
     private void runControls() {
-
 		JPanel controlsPanel = new JPanel();
 		controlsPanel.setBackground(Color.black);
 		controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.PAGE_AXIS));
@@ -743,6 +718,7 @@ public class GameFrame extends JFrame implements Observer {
 		controlsPanel.add(Box.createVerticalGlue());
 		controlsPanel.add(controls);
 		
+		// Back button.
     	JButton backButton = makeButton("Back", joystix, 36);
 		backButton.addActionListener(new
             ActionListener() {
@@ -763,9 +739,7 @@ public class GameFrame extends JFrame implements Observer {
     /**
      * Runs the controls screen
      */
-    
     private void runInstructions() {
-
 		JPanel instructionsPanel = new JPanel();
 		instructionsPanel.setBackground(Color.black);
 		instructionsPanel.setLayout(new BoxLayout(instructionsPanel, BoxLayout.PAGE_AXIS));
@@ -779,6 +753,7 @@ public class GameFrame extends JFrame implements Observer {
 		text.setMaximumSize(new Dimension(600,200));
 		instructionsPanel.add(text);
 		instructionsPanel.add(Box.createVerticalGlue());
+		// Back button.
     	JButton backButton = makeButton("Back", joystix, 36);
 		backButton.addActionListener(new
             ActionListener() {
@@ -816,12 +791,15 @@ public class GameFrame extends JFrame implements Observer {
           	  	
           	  	runGame(state);
     		} else {
-    			// TODO: chuck a fit: didn't load properly
+    			// Didn't load properly.
     			JOptionPane.showMessageDialog(this, "Save file is damaged!");
     		}
     	}  	
     }
     
+    /**
+     * Shows a loading dialog for loading a saved game.
+     */
     private void showSaveDialog() {
     	JFileChooser fileChooser = new JFileChooser();
     	
@@ -841,19 +819,37 @@ public class GameFrame extends JFrame implements Observer {
     	}
     }
     
+    /**
+     * Updates the score label.
+     * @param score the new score.
+     */
     public void updateScore(int score) {
     	scoreLabel.setText(score + "");
-    	
     }
     
+    /**
+     * Updates the lives label.
+     * @param score the new number of lives.
+     */
     public void updateLives(int lives) {
     	livesLabel.setText(lives + "");
     }
     
+    /**
+     * Updates the level label.
+     * @param score the new level.
+     */
     public void updateLevel(int level) {
     	levelLabel.setText(level + "");
     }
     
+    /**
+     * Resizes an image.
+     * @param image the image to resize.
+     * @param width the width to resize to.
+     * @param height the height to resize to.
+     * @return the resized image.
+     */
     public static BufferedImage resizeImage( Image image, int width, int height) {
 
     	final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -865,6 +861,13 @@ public class GameFrame extends JFrame implements Observer {
         return bufferedImage;
     }
 
+    /**
+     * Makes a button.
+     * @param text the text on the button.
+     * @param font the font to use for the button.
+     * @param font_size the size of the font to use for the button.
+     * @return the button created.
+     */
     public static JButton makeButton(String text, Font font, float font_size) {
     	JButton button = new JButton(text);
     	button.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -877,6 +880,12 @@ public class GameFrame extends JFrame implements Observer {
     	return button;
     }
 
+    /**
+     * Makes a text label.
+     * @param text the text on the label.
+     * @param font_size the size of the font to use for the label.
+     * @return the label created.
+     */
     public  static JLabel makeLabel(String text, float font_size) {
     	JLabel label = new JLabel(text);
     	label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -887,6 +896,13 @@ public class GameFrame extends JFrame implements Observer {
     	return label;
     }
 
+    /**
+     * Makes an image label.
+     * @param fileName the file name of the image to put on the label.
+     * @param height the height of the label.
+     * @param width the width of the label.
+     * @return the label created.
+     */
     public static JLabel makeImageLabel(String fileName, int height, int width) {
     	BufferedImage image = null;
     	JLabel label = null;
@@ -899,8 +915,7 @@ public class GameFrame extends JFrame implements Observer {
     		label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     	} catch (IOException e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();
+    	    // File not found.
     	}
     	return label;
     }
@@ -913,6 +928,7 @@ public class GameFrame extends JFrame implements Observer {
 				// character positions have updated, therefore interesting stuff can happen!
 				
 				if(gs.gameFinished()) {
+				    // Finish game.
 	                audioManager.stop(AudioManager.ClipName.GAME);
 	                if (options.isMusic()) {
 	                    audioManager.play(AudioManager.ClipName.END);
@@ -920,6 +936,7 @@ public class GameFrame extends JFrame implements Observer {
 		      	    getContentPane().removeAll();
 		      	    runEndGame();
 				}
+				// Play appropriate effect sound.
 				if (options.isEffects()) {
 	    			if (gs.lastCollected()==CellType.DOT) {
 	    			    audioManager.play(AudioManager.ClipName.DOT);
@@ -931,7 +948,7 @@ public class GameFrame extends JFrame implements Observer {
 	    			    audioManager.play(AudioManager.ClipName.DIE);
 	    			}
 				}
-				
+				// Update labels
 				score = gs.getScore();
 				updateScore(score);
 				updateLevel(gs.getLevel());

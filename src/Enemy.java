@@ -35,13 +35,17 @@ public class Enemy implements Character, Serializable {
 		lastLocation = location;
 	}
 	
+	/**
+	 * Returns the enemy's previous location.
+	 * @return the enemy's previous location.
+	 */
 	public Vector previousLocation() {
 		return lastLocation;
 	}
 	
 	/**
-	 * Returns the enemy's location
-	 * @return the enemy's location
+	 * Returns the enemy's location.
+	 * @return the enemy's location.
 	 */
 	public Vector location() {
 		return location;

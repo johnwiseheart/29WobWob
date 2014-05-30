@@ -3,6 +3,9 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
 
+/**
+ * Represents the current state of the game. Is serialized when the game is saved.
+ */
 public class GameState extends Observable implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -62,10 +65,6 @@ public class GameState extends Observable implements Serializable {
         numKeysCollected = 0;
         gameFinished = false;
         lastCollected = CellType.SPACE;
-        
-        // On any change we just need to call setChanged() and then notifyObervers().
-        // Anything observing the GameState will have it's update() method called.
-        //refreshDisplay(0);
     }
     
     /**
@@ -156,14 +155,21 @@ public class GameState extends Observable implements Serializable {
     	return false;
     }
     
+    /**
+     * Returns whether the game has finished.
+     * @return whether the game has finished.
+     */
     public boolean gameFinished() {
         return gameFinished;
     }
     
+    /**
+     * Returns the player's last collected item.
+     * @return the player's last collected item.
+     */
     public CellType lastCollected() {
         return lastCollected;
     }
-
     
     /**
      * Make the player lose a life, resetting their position or ending the game
@@ -327,16 +333,21 @@ public class GameState extends Observable implements Serializable {
     private void nextLevel() {
         level++;
         score += 50;
+        // Regenerate the maze.
         maze = new Maze(maze.getWidth(), maze.getHeight(), new BraidedMazeGenerator());
+        // Make more, harder enemies.
         if (level%2 == 1) {
             numEnemies++;
         }
+        
         if (scrambleDuration > 1) {
             scrambleDuration--;
             huntDuration++;
         }
         placeNewEnemies(numEnemies, searchDistance, randomMoveProbability,
                         huntDuration, scrambleDuration);
+        
+        // Place more keys.
         numKeys++;
         placeKeys(numKeys);
         numKeysCollected = 0;
@@ -351,14 +362,26 @@ public class GameState extends Observable implements Serializable {
         return player.location().equals(maze.doorLocation());
     }
     
+    /**
+     * Returns the current level.
+     * @return the current level.
+     */
     public int getLevel() {
     	return level;
     }
     
+    /**
+     * Returns the number of lives.
+     * @return the number of lives.
+     */
     public int getLives() {
     	return player.getLives();
     }
     
+    /**
+     * Returns whether the player just died.
+     * @return whether the player just died.
+     */
     public boolean hasDied() {
     	return hasDied;
     }
