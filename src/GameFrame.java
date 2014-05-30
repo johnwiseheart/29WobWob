@@ -392,10 +392,6 @@ public class GameFrame extends JFrame implements Observer {
 		
 		endScoreLabel = makeLabel("Score: "+ score, 32f);
 		menuPanel.add(endScoreLabel);
-		
-		JLabel highScoreLabel = makeLabel("NEW HIGH SCORE", 32f);
-		highScoreLabel.setBorder(BorderFactory.createEmptyBorder(0,0,80,0));
-		menuPanel.add(highScoreLabel);
 
     	JButton restartButton = makeButton("Restart", joystix, 36);
     	restartButton.addActionListener(new
