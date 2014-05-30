@@ -357,7 +357,13 @@ public class GameFrame extends JFrame implements Observer {
           		    if(tick == 25) {
           		    	// update characters and reset tick
           		    	tick = 0;
+          		    	int level = gameState.getLevel();
           		    	gameState.updateCharacters();
+          		    	if(level!=gameState.getLevel()) {
+          		    		if(options.isEffects()) {
+          		    			audioManager.play(AudioManager.ClipName.LEVELUP);
+          		    		}
+          		    	}
           		    }
           		    
           		    // update display with the current tick
@@ -411,6 +417,8 @@ public class GameFrame extends JFrame implements Observer {
                public void actionPerformed(ActionEvent event) {
             	   getContentPane().removeAll();
             	   runMenu();
+            	   audioManager.play(AudioManager.ClipName.MENU);
+            	   
                }
             });
 
@@ -839,7 +847,7 @@ public class GameFrame extends JFrame implements Observer {
 				    // TODO: the audio chucks a shit here for some reason.
 	                audioManager.stop(AudioManager.ClipName.GAME);
 	                if (options.isMusic()) {
-	                    audioManager.play(AudioManager.ClipName.MENU, true);
+	                    audioManager.play(AudioManager.ClipName.END, true);
 	                }
 		      	    getContentPane().removeAll();
 		      	    runEndGame();

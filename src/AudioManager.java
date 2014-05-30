@@ -20,6 +20,8 @@ public class AudioManager {
 	    clips.put(ClipName.KEY, load("music/keypickup.wav"));
 	    clips.put(ClipName.MENU, load("music/wob2.wav"));
 	    clips.put(ClipName.GAME, load("music/game2.wav"));
+	    clips.put(ClipName.LEVELUP, load("music/levelup.wav"));
+	    clips.put(ClipName.END, load("music/end.wav"));
 	}
 
 	/**
@@ -94,7 +96,9 @@ public class AudioManager {
 	    DOT,
 	    KEY,
 	    MENU,
-	    GAME
+	    GAME,
+	    LEVELUP,
+	    END
 	}
 
 	private HashMap<ClipName, Clip> clips;
