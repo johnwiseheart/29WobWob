@@ -23,6 +23,7 @@ public class Enemy implements Character, Serializable {
      */
 	public Enemy(Vector location, int searchDistance, Double randomMoveProbability, int huntDuration, int scrambleDuration) {
 		this.location = location;
+		this.direction = Direction.NORTH;
 		
 		this.searchDistance = searchDistance;
 		this.randomMoveProbability = randomMoveProbability;
@@ -31,6 +32,10 @@ public class Enemy implements Character, Serializable {
 		this.timer = 0;
 		
 		lastLocation = null;
+	}
+	
+	public Vector previousLocation() {
+		return lastLocation;
 	}
 	
 	/**
@@ -59,7 +64,7 @@ public class Enemy implements Character, Serializable {
 	 */
 	public Vector move(GameState state) {
 		Maze maze = state.getMaze();
-		Vector playerLocation = state.playerLocation();
+		Vector playerLocation = state.getPlayer().location();
 		
 		Random r = new Random();
 		int[] dirs = {-1, 0, 1};

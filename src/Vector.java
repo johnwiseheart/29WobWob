@@ -100,6 +100,32 @@ public class Vector implements Serializable {
 	}
 	
 	/**
+	 * Subtracts a vector from this vector component-wise.
+	 * @param other Vector to subtract from this one
+	 * @return Result of subtraction
+	 */
+	public Vector subtract(Vector other) {
+		return new Vector(this.x - other.x, this.y - other.y);
+	}
+	
+	/**
+	 * Multiplies this vector by a scalar.
+	 * @param scalar Scalar to multiply by
+	 * @return Result of multiplication
+	 */
+	public Vector multiply(int scalar) {
+		return new Vector(scalar*x, scalar*y);
+	}
+	
+	/**
+	 * Returns the length of the vector.
+	 * @return Length
+	 */
+	public Double length() {
+		return Math.sqrt(x*x + y*y);
+	}
+	
+	/**
 	 * Finds the distance between the end-points of two vectors
 	 * @param the other vector involved
 	 * @return the distance between the end points of the two vectors

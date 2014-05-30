@@ -23,6 +23,10 @@ public class Player implements Character, Serializable {
     	this.location = location;
     }
     
+    public Vector previousLocation() {
+    	return lastLocation;
+    }
+    
     /**
      * Returns the location of this player.
      * @return the location of this player.
@@ -71,6 +75,8 @@ public class Player implements Character, Serializable {
     		}
     	}
     	
+    	lastLocation = location; // preserve last location
+    	
     	if (!maze.isWall(newLocation)) {
     	    location = newLocation;
     		return newLocation;
@@ -115,6 +121,7 @@ public class Player implements Character, Serializable {
     }
     
     private Vector location;
+    private Vector lastLocation;
     private Vector velocity; // direction we're moving in
     private Vector nextVelocity; // direction we want to try to move in as soon as we can
     private Direction direction;

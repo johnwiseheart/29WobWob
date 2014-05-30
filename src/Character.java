@@ -3,6 +3,13 @@
  */
 public interface Character {
     
+	/**
+	 * Gets the previous location of the character in the maze (used
+	 * for interpolating the character sprite between two locations).
+	 * @return Previous location of character
+	 */
+	Vector previousLocation();
+	
     /**
      * Gets the current location of the character in the maze.
      * @return Location of character
