@@ -364,10 +364,8 @@ public class GameFrame extends JFrame implements Observer {
           		
           		execute = true;
           		while (execute) {
-          		    tick++;
-          		    if(tick == 25) {
+          		    if(tick == 0) {
           		    	// update characters and reset tick
-          		    	tick = 0;
           		    	int level = gameState.getLevel();
           		    	gameState.updateCharacters();
           		    	if(level!=gameState.getLevel()) {
@@ -380,6 +378,8 @@ public class GameFrame extends JFrame implements Observer {
           		    // update display with the current tick
           		    gameState.refreshDisplay(tick);
           		    //gameState.updateCharacters();
+          		    
+          		    tick = (tick + 1) % 25;
           		    
           		    try {
           		        Thread.sleep(8);
