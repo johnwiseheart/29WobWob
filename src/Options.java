@@ -28,6 +28,10 @@ public class Options {
 		return difficulty;
 	}
 	
+	public boolean isDifficulty(DifficultyType diff) {
+		return difficulty.equals(diff);
+	}
+	
 	public void setDifficulty(DifficultyType difficulty) {
 		this.difficulty = difficulty;
 	}

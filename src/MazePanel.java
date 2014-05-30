@@ -65,20 +65,20 @@ public class MazePanel extends JPanel implements Observer {
         	images.put(CellType.ENEMY4_W, resizeImage(ImageIO.read(new File("img/e4_west.png")),CELL_SIZE, CELL_SIZE));
         	
         	images.put(CellType.WALL_VERT, resizeImage(ImageIO.read(new File("img/wall_straight.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.WALL_HOR, rotateCw(resizeImage(ImageIO.read(new File("img/wall_straight.png")),CELL_SIZE, CELL_SIZE)));
-        	images.put(CellType.WALL_CORN_NW, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(CellType.WALL_HOR, rotateImage(resizeImage(ImageIO.read(new File("img/wall_straight.png")),CELL_SIZE, CELL_SIZE), 1));
+        	images.put(CellType.WALL_CORN_NW, rotateImage(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE), 3));
         	images.put(CellType.WALL_CORN_NE, resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.WALL_CORN_SW, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE))));
-        	images.put(CellType.WALL_CORN_SE, rotateCw(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE)));
+        	images.put(CellType.WALL_CORN_SW, rotateImage(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE), 2));
+        	images.put(CellType.WALL_CORN_SE, rotateImage(resizeImage(ImageIO.read(new File("img/wall_corner.png")),CELL_SIZE, CELL_SIZE), 1));
         	images.put(CellType.WALL_CROSS, resizeImage(ImageIO.read(new File("img/wall_cross.png")),CELL_SIZE, CELL_SIZE));
         	images.put(CellType.WALL_T_N, resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.WALL_T_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE))));
-        	images.put(CellType.WALL_T_E, rotateCw(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE)));
-        	images.put(CellType.WALL_T_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(CellType.WALL_T_S, rotateImage(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE), 2));
+        	images.put(CellType.WALL_T_E, rotateImage(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE), 1));
+        	images.put(CellType.WALL_T_W, rotateImage(resizeImage(ImageIO.read(new File("img/wall_t.png")),CELL_SIZE, CELL_SIZE), 3));
         	images.put(CellType.WALL_END_N, resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE));
-        	images.put(CellType.WALL_END_S, rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE))));
-        	images.put(CellType.WALL_END_E, rotateCw(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE)));
-        	images.put(CellType.WALL_END_W, rotateCw(rotateCw(rotateCw(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE)))));
+        	images.put(CellType.WALL_END_S, rotateImage(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE), 2));
+        	images.put(CellType.WALL_END_E, rotateImage(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE), 1));
+        	images.put(CellType.WALL_END_W, rotateImage(resizeImage(ImageIO.read(new File("img/wall_end.png")),CELL_SIZE, CELL_SIZE), 3));
         	images.put(CellType.WALL_BLOCK, resizeImage(ImageIO.read(new File("img/wall_block.png")),CELL_SIZE, CELL_SIZE));
         	
     
@@ -206,14 +206,7 @@ public class MazePanel extends JPanel implements Observer {
     	repaint();
     }
     
-    /*
-    public void updateDisplay(Maze newMaze) {
-        displayMaze = newMaze;
-        repaint();
-    }
-    */
     
-    // TODO: stolen off the internet we need to rewrite this
     public static BufferedImage resizeImage( Image image, int width, int height) {
 
     	final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -224,18 +217,25 @@ public class MazePanel extends JPanel implements Observer {
         
         return bufferedImage;
     }
- // TODO: stolen off the internet we need to rewrite this.
-    public static BufferedImage rotateCw( BufferedImage img )
-    {
-		int			width  = img.getWidth();
-		int			height = img.getHeight();
-		BufferedImage	newImage = new BufferedImage( height, width, img.getType() );
+    
+    public static BufferedImage rotateImage( BufferedImage oldImage, int numberOfTimes ) {
+		int	width = oldImage.getWidth();
+		int	height = oldImage.getHeight();
+		
+		BufferedImage currImg = oldImage;
+		BufferedImage image = null;
+		
+		for(int h=0;h<numberOfTimes;h++) {	
+			image = new BufferedImage(height, width, currImg.getType());
+			for( int i=0 ; i < width ; i++ ) {
+				for( int j=0 ; j < height ; j++ ) {
+					image.setRGB( height-1-j, i, currImg.getRGB(i,j) );
+				}
+			}
+			currImg = image;
+		}
 
-		for( int i=0 ; i < width ; i++ )
-			for( int j=0 ; j < height ; j++ )
-				newImage.setRGB( height-1-j, i, img.getRGB(i,j) );
-
-		return newImage;
+		return image;
     }
     
     private GameState gameState;

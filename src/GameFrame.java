@@ -22,8 +22,11 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -31,6 +34,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -57,8 +61,8 @@ public class GameFrame extends JFrame implements Observer {
 		audioManager = new AudioManager();
 		options = new Options();
 		setTitle("Wobman the Key Master");
-		setMinimumSize(new Dimension(800,600));
-		setSize(800, 600);
+		setMinimumSize(new Dimension(1200,750));
+		setSize(1000, 800);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBackground(Color.black);
         getContentPane().setBackground(Color.black);
@@ -71,6 +75,7 @@ public class GameFrame extends JFrame implements Observer {
 	 * Starter function that is called to start the visual part of this game.
 	 */
 	public void startGame() {
+		setLocationRelativeTo(null);
 		runMenu();
 		audioManager.play(AudioManager.ClipName.MENU, true);
 	}
@@ -121,11 +126,11 @@ public class GameFrame extends JFrame implements Observer {
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.PAGE_AXIS));
 
 		JLabel wobman = makeImageLabel("img/wobman.png", -1, -1);
-		wobman.setBorder(BorderFactory.createEmptyBorder(70,0,20,0));
+		wobman.setBorder(BorderFactory.createEmptyBorder(50,0,20,0));
 		menuPanel.add(wobman);
-		//TODO: fix the image for wobby
+
 		JLabel keymaster = makeLabel("The Key Master", 32f);
-		keymaster.setBorder(BorderFactory.createEmptyBorder(0,0,80,0));
+		keymaster.setBorder(BorderFactory.createEmptyBorder(0,0,70,0));
 		menuPanel.add(keymaster);
 
     	JButton playButton = makeButton("Play", joystix, 36);
@@ -144,9 +149,6 @@ public class GameFrame extends JFrame implements Observer {
 		loadButton.addActionListener(new
             ActionListener() {
                public void actionPerformed(ActionEvent event) {
-            	  //getContentPane().removeAll();
-            	  //menuMusic.stop();
-            	  //runGame();
             	  showLoadDialog();
                }
             });
@@ -191,6 +193,7 @@ public class GameFrame extends JFrame implements Observer {
 	/**
 	 * 
 	 */
+	//TODO: remove
 	private void runFlash() {
 		JPanel buzzPanel = new JPanel();
 		buzzPanel.setBackground(Color.black);
@@ -338,9 +341,8 @@ public class GameFrame extends JFrame implements Observer {
         this.setVisible(true);
     }
     
-    //TODO: this is bad
     /**
-     * 
+     *  Recreates the tick thread that keeps the player and enemies moving
      */
     private void newTickThread() {
     	Runnable r1 = new Runnable (){
@@ -366,7 +368,7 @@ public class GameFrame extends JFrame implements Observer {
     }
     
     /**
-     * 
+     * Runs the end of game screen
      */
     private void runEndGame() {
     	JPanel menuPanel = new JPanel();
@@ -423,14 +425,11 @@ public class GameFrame extends JFrame implements Observer {
     }
     
     /**
-     * 
+     * Runs the pause game screen
      */
     private void runPauseFrame() {
 
     	JPanel pausePanel = new JPanel();
-    	//pausePanel.setMinimumSize(new Dimension(getWidth(), getHeight()));
-    	//pausePanel.setBounds(0, 0, getWidth(), getHeight());
-    	//pausePanel.setBorder(new EmptyBorder(200, 200, 200, 200));
     	pausePanel.setBackground(Color.black);
     	pausePanel.setLayout(new BoxLayout(pausePanel, BoxLayout.Y_AXIS)); // top to bottom
 
@@ -484,7 +483,6 @@ public class GameFrame extends JFrame implements Observer {
     	JPanel effectsOptions = genEffectsOptions();
 		effectsOptions.setBackground(Color.black);
     	pausePanel.add(effectsOptions);
-    	
         this.add(pausePanel);
         this.repaint();
         this.setVisible(true);
@@ -492,8 +490,8 @@ public class GameFrame extends JFrame implements Observer {
     }
     
     /**
-     * 
-     * @return
+     * Generates the music options panel
+     * @return the music options panel
      */
     private JPanel genMusicOptions() {
     	JPanel musicOptions = new JPanel(); // New Panel for music options.
@@ -501,106 +499,140 @@ public class GameFrame extends JFrame implements Observer {
 
     	JLabel musicLabel = makeLabel("music:", 36);
 		musicOptions.add(musicLabel);
-    	JButton musicOnButton = makeButton("on", joystixul, 36);
-		musicOnButton.addActionListener(new
-            ActionListener() {
-               public void actionPerformed(ActionEvent event) {
-            	   Object source = event.getSource();
-                   if (source instanceof JButton) {
-                       JButton btn = (JButton)source;
-                       btn.setFont(joystixul.deriveFont(36f));
-                   }
-                   // TODO: OK SO WTF, can't think of a good way to do this, WE HAVE TO GO TOO DEEP.
-            	   for(Component component : getContentPane().getComponents()) {
-            		   if (component instanceof JPanel) {
-            			   JPanel panel = (JPanel) component;
-            			   for (Component c : panel.getComponents()) {
-            				   if (c instanceof JPanel) {
-            					   JPanel p = (JPanel) c;
-	            				   for (Component comp : p.getComponents()) {
-		            				   if (comp instanceof JButton) {
-		            					   JButton btn = (JButton) comp;
-		            					   if(btn.getText().equals("off")) {
-		                    				   btn.setFont(joystix.deriveFont(36f));
-		                    			   }
-		            				   }
-	            				   }
-            			   	   }
-            			   }
-            		   }
-            	   }
-            	   
-            	   options.setMusic(true);
-            	   audioManager.play(AudioManager.ClipName.MENU, true);
-               }
-            });
+		ButtonGroup group = new ButtonGroup();
+		
+		JRadioButton musicOnButton = new JRadioButton("On", options.isMusic());
+		musicOnButton.setFont(joystix.deriveFont(36f));
+		musicOnButton.setForeground(ourGreen);
+		group.add(musicOnButton);
 		musicOptions.add(musicOnButton);
-    	JButton musicOffButton = makeButton("off", joystix, 36);
-		musicOffButton.addActionListener(new
-            ActionListener() {
-               public void actionPerformed(ActionEvent event) {
-            	   Object source = event.getSource();
-                   if (source instanceof JButton) {
-                       JButton btn = (JButton)source;
-                       btn.setFont(joystixul.deriveFont(36f));
-                       
-                   }
-                   
-                   
-                // TODO: OK SO WTF, can't think of a good way to do this, WE HAVE TO GO TOO DEEP.
-            	   for(Component component : getContentPane().getComponents()) {
-            		   if (component instanceof JPanel) {
-            			   JPanel panel = (JPanel) component;
-            			   for (Component c : panel.getComponents()) {
-            				   if (c instanceof JPanel) {
-            					   JPanel p = (JPanel) c;
-	            				   for (Component comp : p.getComponents()) {
-		            				   if (comp instanceof JButton) {
-		            					   JButton btn = (JButton) comp;
-		            					   if(btn.getText().equals("on")) {
-		                    				   btn.setFont(joystix.deriveFont(36f));
-		                    			   }
-		            				   }
-	            				   }
-            			   	   }
-            			   }
-            		   }
-            	   }
-                   
-            	   options.setMusic(false);
-            	   audioManager.stop(AudioManager.ClipName.MENU);
-               }
-            });
+		
+		JRadioButton musicOffButton = new JRadioButton("Off", !options.isMusic());
+		musicOffButton.setFont(joystix.deriveFont(36f));
+		musicOffButton.setForeground(ourGreen);
+		group.add(musicOffButton);
 		musicOptions.add(musicOffButton);
+		
+		
+		ActionListener musicActionListener = new ActionListener() {
+		      public void actionPerformed(ActionEvent actionEvent) {
+		        AbstractButton aButton = (AbstractButton) actionEvent.getSource();
+		        if(aButton.getText().equals("On")) {
+		        	options.setMusic(true);
+		        	audioManager.play(AudioManager.ClipName.MENU, true);
+		        } else {
+		        	options.setMusic(false);
+		        	audioManager.stop(AudioManager.ClipName.MENU);
+		        }
+		        
+		      }
+		};
+		
+		musicOnButton.addActionListener(musicActionListener);
+		musicOffButton.addActionListener(musicActionListener);
 		
 		return musicOptions;
     }
     
+    /**
+     * Generates the effects options panel
+     * @return the effects options panel
+     */
     private JPanel genEffectsOptions() {
-    	JPanel effectsOptions = new JPanel();
-    	effectsOptions.setLayout(new FlowLayout());
+    	
+    	JPanel effectsOptions = new JPanel(); // New Panel for music options.
+		effectsOptions.setLayout(new FlowLayout());
 
-    	JLabel effectsLabel = makeLabel("sfx:", 36);
+    	JLabel effectsLabel = makeLabel("effects:", 36);
 		effectsOptions.add(effectsLabel);
-    	JButton effectsOnButton = makeButton("on", joystixul, 36);
-		effectsOnButton.addActionListener(new
-            ActionListener() {
-               public void actionPerformed(ActionEvent event) {
-            	   options.setEffects(true);
-               }
-            });
+		ButtonGroup group = new ButtonGroup();
+		
+		JRadioButton effectsOnButton = new JRadioButton("On", options.isEffects());
+		effectsOnButton.setFont(joystix.deriveFont(36f));
+		effectsOnButton.setForeground(ourGreen);
+		group.add(effectsOnButton);
 		effectsOptions.add(effectsOnButton);
-    	JButton effectsOffButton = makeButton("off", joystix, 36);
-		effectsOffButton.addActionListener(new
-            ActionListener() {
-               public void actionPerformed(ActionEvent event) {
-            	   options.setEffects(false);
-               }
-            });
+		
+		JRadioButton effectsOffButton = new JRadioButton("Off", !options.isEffects());
+		effectsOffButton.setFont(joystix.deriveFont(36f));
+		effectsOffButton.setForeground(ourGreen);
+		group.add(effectsOffButton);
 		effectsOptions.add(effectsOffButton);
 		
+		
+		ActionListener effectsActionListener = new ActionListener() {
+		      public void actionPerformed(ActionEvent actionEvent) {
+		        AbstractButton aButton = (AbstractButton) actionEvent.getSource();
+		        if(aButton.getText().equals("On")) {
+		        	options.setEffects(true);
+		        } else {
+		        	options.setEffects(false);
+		        }
+		        
+		      }
+		};
+		
+		effectsOnButton.addActionListener(effectsActionListener);
+		effectsOffButton.addActionListener(effectsActionListener);
+		
 		return effectsOptions;
+
     }
+    
+    /**
+     * Generates the difficulty options panel
+     * @return the difficulty options panel
+     */
+    private JPanel genDifficultyOptions() {
+    	JPanel difficultyOptions = new JPanel(); // New Panel for music options.
+    	difficultyOptions.setLayout(new FlowLayout());
+    	
+    	JLabel difficultyLabel = makeLabel("effects:", 36);
+		difficultyOptions.add(difficultyLabel);
+		ButtonGroup group = new ButtonGroup();
+		
+		JRadioButton diffEasyButton = new JRadioButton("Easy", options.isDifficulty(Options.DifficultyType.EASY));
+		diffEasyButton.setFont(joystix.deriveFont(36f));
+		diffEasyButton.setForeground(ourGreen);
+		group.add(diffEasyButton);
+		difficultyOptions.add(diffEasyButton);
+		
+		JRadioButton diffMedButton = new JRadioButton("Med", options.isDifficulty(Options.DifficultyType.MEDIUM));
+		diffMedButton.setFont(joystix.deriveFont(36f));
+		diffMedButton.setForeground(ourGreen);
+		group.add(diffMedButton);
+		difficultyOptions.add(diffMedButton);
+		
+		JRadioButton diffHardButton = new JRadioButton("Hard", options.isDifficulty(Options.DifficultyType.HARD));
+		diffHardButton.setFont(joystix.deriveFont(36f));
+		diffHardButton.setForeground(ourGreen);
+		group.add(diffHardButton);
+		difficultyOptions.add(diffHardButton);
+		
+		ActionListener diffActionListener = new ActionListener() {
+		      public void actionPerformed(ActionEvent actionEvent) {
+		        AbstractButton aButton = (AbstractButton) actionEvent.getSource();
+		        if(aButton.getText().equals("Easy")) {
+		        	options.setDifficulty(Options.DifficultyType.EASY); 
+		        } else if(aButton.getText().equals("Med")) {
+		        	options.setDifficulty(Options.DifficultyType.MEDIUM); 
+		        } else {
+		        	options.setDifficulty(Options.DifficultyType.HARD); 
+		        }
+		      }
+		};
+		
+		
+		diffEasyButton.addActionListener(diffActionListener);
+		diffMedButton.addActionListener(diffActionListener);
+		diffHardButton.addActionListener(diffActionListener);
+ 
+		return difficultyOptions;
+    }
+    
+    /**
+     * Runs the options screen
+     */
     
     private void runOptions() {
     	//TODO: Indication of which option is pressed
@@ -624,40 +656,8 @@ public class GameFrame extends JFrame implements Observer {
 		effectsOptions.setBackground(Color.black);
     	optionsPanel.add(effectsOptions);
 		
-    	JPanel difficultyOptions = new JPanel(); // New Panel for music options.
-    	difficultyOptions.setLayout(new FlowLayout());
-
-    	JLabel difficultyLabel = makeLabel("diff:", 36);
-    	difficultyOptions.add(difficultyLabel);
-    	JButton difficultyEasyButton = makeButton("easy", joystixul, 36);
-    	
-    	difficultyEasyButton.addActionListener(new
-            ActionListener() {
-               public void actionPerformed(ActionEvent event) {
-            	   options.setDifficulty(Options.DifficultyType.EASY); 
-               }
-            });
-		difficultyOptions.add(difficultyEasyButton);
-		
-    	JButton difficultyMedButton = makeButton("med", joystix, 36);
-    	difficultyMedButton.addActionListener(new
-            ActionListener() {
-               public void actionPerformed(ActionEvent event) {
-            	   options.setDifficulty(Options.DifficultyType.MEDIUM); 
-               }
-            });
-    	difficultyOptions.add(difficultyMedButton);
-    	
-    	JButton difficultyHardButton = makeButton("hard", joystix, 36);
-    	difficultyHardButton.addActionListener(new
-            ActionListener() {
-               public void actionPerformed(ActionEvent event) {
-            	   options.setDifficulty(Options.DifficultyType.HARD); 
-               }
-            });
-    	difficultyOptions.add(difficultyHardButton);
-    	
-		difficultyOptions.setBackground(Color.black);
+    	JPanel difficultyOptions = genDifficultyOptions();
+    	difficultyOptions.setBackground(Color.black);
     	optionsPanel.add(difficultyOptions);
     	
     	JButton backButton = makeButton("Back", joystix, 36);
@@ -675,19 +675,23 @@ public class GameFrame extends JFrame implements Observer {
         this.setVisible(true);
     }
     
+    /**
+     * Runs the controls screen
+     */
+    
     private void runControls() {
 
-		JPanel optionsPanel = new JPanel();
-		optionsPanel.setBackground(Color.black);
-		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.PAGE_AXIS));
+		JPanel controlsPanel = new JPanel();
+		controlsPanel.setBackground(Color.black);
+		controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.PAGE_AXIS));
 
 		JLabel heading = makeLabel("Controls", 50);
 		heading.setBorder(BorderFactory.createEmptyBorder(30,0,70,0));
-		optionsPanel.add(heading);
+		controlsPanel.add(heading);
 
 		JLabel controls = makeImageLabel("img/controls.png", -1, -1);
 		controls.setBorder(BorderFactory.createEmptyBorder(0,0,70,0));
-		optionsPanel.add(controls);
+		controlsPanel.add(controls);
 		
     	JButton backButton = makeButton("Back", joystix, 36);
 		backButton.addActionListener(new
@@ -698,8 +702,8 @@ public class GameFrame extends JFrame implements Observer {
                }
             });
 
-    	optionsPanel.add(backButton);
-        this.add(optionsPanel);
+    	controlsPanel.add(backButton);
+        this.add(controlsPanel);
         this.repaint();
         this.setVisible(true);
     }
@@ -763,7 +767,6 @@ public class GameFrame extends JFrame implements Observer {
     	levelLabel.setText(level + "");
     }
     
-    // TODO: stolen off the Internet we need to rewrite this
     public static BufferedImage resizeImage( Image image, int width, int height) {
 
     	final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -771,7 +774,7 @@ public class GameFrame extends JFrame implements Observer {
         graphics2D.setComposite(AlphaComposite.Src);
         graphics2D.drawImage(image, 0, 0, width, height, null);
         graphics2D.dispose();
-
+        
         return bufferedImage;
     }
 
