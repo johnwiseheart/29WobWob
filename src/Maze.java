@@ -1,6 +1,8 @@
 import java.io.Serializable;
 
-
+/**
+ * Represents a maze including walls, spaces, collectibles and a door.
+ */
 public class Maze implements Serializable {
     
     private static final long serialVersionUID = 1L;

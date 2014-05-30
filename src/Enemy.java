@@ -221,6 +221,10 @@ public class Enemy implements Character, Serializable {
 		timer = 0;
 	}
 	
+	/**
+	 * Returns the enemy's direction.
+	 * @return the enemy's direction.
+	 */
 	public Direction getDirection() {
 		return direction;
 	}
@@ -228,7 +232,7 @@ public class Enemy implements Character, Serializable {
 	private Vector location;
 	private Vector lastLocation;
 
-	Direction direction;
+	private Direction direction;
 	
 	private Integer searchDistance;
 	private Double randomMoveProbability;

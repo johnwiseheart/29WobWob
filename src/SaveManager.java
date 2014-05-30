@@ -7,7 +7,7 @@ import java.io.ObjectOutputStream;
 
 /**
  * Contains functions that aid in loading and saving data to and from
- * the filesystem for persistence of game states and options.
+ * the file system for persistence of game states and options.
  * @author george
  *
  */
@@ -25,7 +25,6 @@ public class SaveManager {
 		try {
 			stream = new FileOutputStream(path);
 		} catch (FileNotFoundException e) {
-			// u ded
 			return false;
 		}
 		

@@ -2,7 +2,6 @@
  * This class represents the different options that can be set by the user for the game.
  * It stores them while the program is running.
  * @author Lucas
- *
  */
 public class Options {
 	

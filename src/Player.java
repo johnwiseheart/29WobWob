@@ -1,6 +1,8 @@
 import java.io.Serializable;
 
-
+/**
+ * A player in our game. Moves based on input and has a certain number of lives.
+ */
 public class Player implements Character, Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,6 +26,10 @@ public class Player implements Character, Serializable {
     	this.location = location;
     }
     
+    /**
+     * Returns the previous location of this player.
+     * @return the previous location of this player.
+     */
     public Vector previousLocation() {
     	return lastLocation;
     }
@@ -42,7 +48,6 @@ public class Player implements Character, Serializable {
      * @param velocity amount by which to move in the x and y directions
      */
     public void setVelocity(Vector velocity) {
-    	//this.velocity = velocity;
     	
     	// set this as the velocity to consider next time we try to move
     	this.nextVelocity = velocity;
