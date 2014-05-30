@@ -13,14 +13,21 @@ import java.util.Observable;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-
+/**
+ * This class extends JPanel and contains helper functions to add the maze and it's contents to the panel.
+ * It updates its self every time the GameState is changed as it observes GameState.
+ * 
+ * @author Group
+ *
+ */
 
 public class MazePanel extends JPanel implements Observer {
     
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -600678118735264063L;
+	
+	/**
+	 * On creation MazePanel sets up a large HashMap which converts from CellType's to actual images.
+	 */
 	public MazePanel() {
         gameState = null;
         images = new HashMap<CellType, BufferedImage>();
@@ -70,6 +77,14 @@ public class MazePanel extends JPanel implements Observer {
         }
     }
 
+	/**
+	 * This function is called on a repaint(). It gets the current state of the maze then draws it as images using the
+	 * the HashMap created in the constructor that converts from the Maze stored as CellType's into the actual images
+	 * to be drawn.
+	 * Then the player and enemies are drawn on top of the maze. They have their own methods of converting from directions
+	 * to the corresponding image. Player calls a function to convert it and the enemies do it with a large switch case 
+	 * statement as there wasn't really any better way we could think of.
+	 */
     public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
         if (gameState == null) {
@@ -219,15 +234,15 @@ public class MazePanel extends JPanel implements Observer {
             i++;
         }
         
-        //TODO: fix this shit its not responsive
-        // this.setSize(displayMaze.getWidth()*CELL_SIZE,displayMaze.getHeight()*CELL_SIZE);
         setMaximumSize(new Dimension(displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE));
-        //setPreferredSize(new Dimension(displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE));
-        //this.setBounds((this.getWidth()/2)-(displayMaze.getWidth()/2), (this.getHeight()/2)-(displayMaze.getHeight()/2), displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
-        //this.setBounds(12, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
-        //this.setBounds(0, 100, displayMaze.getWidth()*CELL_SIZE, displayMaze.getHeight()*CELL_SIZE);
     }
     
+    /**
+     * Small helper function to convert from Direction enum into the Player direction CellType.
+     * 
+     * @param direction Direction that player is currently facing.
+     * @return CellType representing the corresponding direction the Player is facing.
+     */
     private CellType directionTOPlayerImage(Direction direction) {
     	switch (direction) {
     	case NORTH:
@@ -243,13 +258,22 @@ public class MazePanel extends JPanel implements Observer {
     	}
     }
     
-    // Part of the Observer pattern. This method is called when an object being observed notifies it has been changed.
+    /**
+     * Part of the Observer pattern. This method is called when an object being observed notifies it has been changed.
+     */
     public void update(Observable o, Object arg) {
     	gameState = (GameState) o;
     	repaint();
     }
     
-    
+    /**
+     * Resizes a given image to a given width height.
+     * 
+     * @param image Image to resize.
+     * @param width New width.
+     * @param height New height.
+     * @return A new BufferedImage that is a resized version of the given Image.
+     */
     public static BufferedImage resizeImage( Image image, int width, int height) {
 
     	final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -261,6 +285,12 @@ public class MazePanel extends JPanel implements Observer {
         return bufferedImage;
     }
     
+    /**
+     * Rotates a given BufferedImage clockwise as many times as given. 
+     * @param oldImage BufferedImage to rotate.
+     * @param numberOfTimes Number of times to rotate.
+     * @return New rotated BufferedImage.
+     */
     public static BufferedImage rotateImage( BufferedImage oldImage, int numberOfTimes ) {
 		int	width = oldImage.getWidth();
 		int	height = oldImage.getHeight();
