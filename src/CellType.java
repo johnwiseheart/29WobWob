@@ -1,4 +1,10 @@
-
+/**
+ * This enum was created to aid in representing our maze. These are sued to represent all the different types of squares that
+ * can occur in our maze. In the last step of rendering our maze these are translated using a HashMap, into the actual images 
+ * to be drawn.
+ * @author Group
+ *
+ */
 public enum CellType {
 	SPACE,
     DOT,
